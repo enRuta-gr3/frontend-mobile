@@ -1,0 +1,82 @@
+[
+  {
+    "id": "1",
+    "origen": "Montevideo",
+    "destino": "Punta del Este",
+    "fecha": "20/05/2025",
+    "hora": "08:30",
+    "precio": "450"
+  },
+  {
+    "id": "2",
+    "origen": "Colonia",
+    "destino": "Montevideo",
+    "fecha": "21/05/2025",
+    "hora": "10:15",
+    "precio": "390"
+  },
+  {
+    "id": "3",
+    "origen": "Maldonado",
+    "destino": "Rocha",
+    "fecha": "22/05/2025",
+    "hora": "12:00",
+    "precio": "510"
+  },
+  {
+    "id": "4",
+    "origen": "Paysandú",
+    "destino": "Salto",
+    "fecha": "22/05/2025",
+    "hora": "14:45",
+    "precio": "320"
+  },
+  {
+    "id": "5",
+    "origen": "Rivera",
+    "destino": "Tacuarembó",
+    "fecha": "23/05/2025",
+    "hora": "07:00",
+    "precio": "460"
+  },
+  {
+    "id": "6",
+    "origen": "Canelones",
+    "destino": "Montevideo",
+    "fecha": "23/05/2025",
+    "hora": "09:15",
+    "precio": "220"
+  },
+  {
+    "id": "7",
+    "origen": "Mercedes",
+    "destino": "Dolores",
+    "fecha": "24/05/2025",
+    "hora": "13:20",
+    "precio": "180"
+  },
+  {
+    "id": "8",
+    "origen": "Treinta y Tres",
+    "destino": "Melo",
+    "fecha": "24/05/2025",
+    "hora": "15:30",
+    "precio": "370"
+  },
+  {
+    "id": "9",
+    "origen": "Artigas",
+    "destino": "Salto",
+    "fecha": "25/05/2025",
+    "hora": "06:45",
+    "precio": "590"
+  },
+  {
+    "id": "10",
+    "origen": "Durazno",
+    "destino": "Florida",
+    "fecha": "25/05/2025",
+    "hora": "11:10",
+    "precio": "310"
+  }
+] 
