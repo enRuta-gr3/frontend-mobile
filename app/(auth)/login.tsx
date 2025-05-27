@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Alert } from 'react-native';
 import { Input } from '@rneui/themed';
 import { useRouter } from 'expo-router';
-import LoginLayout from '@/components/ui/Login';
+import LoginLayout from '../Login';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 

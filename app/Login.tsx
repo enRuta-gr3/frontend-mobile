@@ -1,10 +1,9 @@
-
 import React from 'react';
 import { StyleSheet, View, Button, Image, TouchableOpacity, Text, SafeAreaView } from 'react-native';
 import { Input } from '@rneui/themed';
-import { ThemedText } from '../ThemedText';
-import { ThemedView } from '../ThemedView';
-import ParallaxScrollView from '../ParallaxScrollView';
+import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
+import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { Link } from 'expo-router';
 import StyleRuta from '@/hooks/styles';
 
