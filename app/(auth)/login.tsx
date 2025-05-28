@@ -1,11 +1,10 @@
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { Alert } from 'react-native';
-import { Input } from '@rneui/themed';
-import { useRouter } from 'expo-router';
 import LoginLayout from '../Login';
-import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const options = {headerShown: false,}; //ocultar el cabezal en el login
 
@@ -29,7 +28,8 @@ export default function Login() {
 */
 try {
   const res = await axios.post(
-      'https://backend-production-2812f.up.railway.app/api/auth/iniciarSesion', {email: email, contraseña: password },
+      'https://backend-production-2812f.up.railway.app/api/auth/iniciarSesion', 
+      {email: email, contraseña: password },
      {headers: {'Content-Type': 'application/json',},}
     ); 
 
@@ -40,8 +40,9 @@ try {
     }
  
 } catch (error: any) {
+   
   if (error.response) {
-    if (error.response.status === 401) {
+    if (error.response.status === 401 || error.response.status === 403) {
       Alert.alert('Error en el servidor', 'No se pudo iniciar sesión. Por favor, revisa tus credenciales.');
     }
   } else {

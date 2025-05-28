@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { View, ActivityIndicator } from 'react-native';
-import { useRouter } from 'expo-router';
 import { useRequireAuth } from '@/hooks/useRequireAuth';
+import { useRouter } from 'expo-router';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, View } from 'react-native';
 
 
 export default function IndexScreen() {
@@ -11,7 +11,7 @@ export default function IndexScreen() {
   useEffect(() => {
     const checkAuth = async () => {
       setLoading(false);
-    alert(isLogged)
+      alert(isLogged)
       if (isLogged) {
         setTimeout(() => {
         router.replace('/(tabs)/homeUser');

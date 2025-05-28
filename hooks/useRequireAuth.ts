@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react';
-import { router } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useEffect, useState } from 'react';
 
 export function useRequireAuth() {
    const [isLogged, setIsLogged] = useState(false);
@@ -8,6 +7,7 @@ export function useRequireAuth() {
   useEffect(() => {
     const checkAuth = async () => {
       const token = await AsyncStorage.getItem('token');
+      console.log('Token:', token); 
       if (token && token !== 'null' && token !== 'undefined') {
         setIsLogged(true);
       } else {

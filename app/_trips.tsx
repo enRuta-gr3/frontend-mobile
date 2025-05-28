@@ -1,11 +1,10 @@
-import React from 'react';
-import { View, FlatList, StyleSheet } from 'react-native';
 import TripItem from '@/components/ui/Trips';
+import React from 'react';
+import { FlatList, StyleSheet, View } from 'react-native';
 
 //cargar la variable 
 import trips from '../json/viajes.json';
-import { ImageBackground } from 'expo-image';
-import Header from '@/components/ui/Header';
+
 
 interface Trip {
   id: string;
@@ -39,7 +38,7 @@ const TripListScreen = () => {
                 )}
               />
             </View>
-            <View></View>
+           
           </View> 
                  
     );
@@ -49,7 +48,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#f2f2f2',
+    backgroundColor: 'red',
   },
 
    subcontainer: {

@@ -1,11 +1,11 @@
-import React from 'react';
-import { StyleSheet, View, Button, Image, TouchableOpacity, Text, SafeAreaView } from 'react-native';
-import { Input } from '@rneui/themed';
+import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { Link } from 'expo-router';
 import StyleRuta from '@/hooks/styles';
+import { Input } from '@rneui/themed';
+import { Link } from 'expo-router';
+import React from 'react';
+import { Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 interface Props {
   email: string;
