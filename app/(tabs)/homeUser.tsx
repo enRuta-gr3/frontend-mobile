@@ -1,17 +1,14 @@
-import { StyleSheet, ImageBackground, View } from 'react-native';
-import React, { useEffect } from 'react';
-import SearchScreen from '@/components/ui/Search';
 import Header from '@/components/ui/Header';
+import SearchScreen from '@/components/ui/Search';
 import { useRequireAuth } from '@/hooks/useRequireAuth';
-import { router } from 'expo-router';
+import React from 'react';
+import { ImageBackground, StyleSheet, View } from 'react-native';
 
 const imagen = { uri: 'https://en-ruta.vercel.app/bus2.jpg' };
 
 export default function HomeUserScreen() {
   const { isLogged } = useRequireAuth();
-
-
-    return (
+   return (
       <ImageBackground source={imagen} resizeMode="cover" style={styles.imagen}>
         <View style={styles.overlay} />
         <View style={styles.container}>
@@ -23,8 +20,6 @@ export default function HomeUserScreen() {
         </View>
       </ImageBackground>
     );
-  
-
 }
 
 

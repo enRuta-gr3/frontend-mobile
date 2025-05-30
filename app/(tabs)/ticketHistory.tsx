@@ -1,73 +1,46 @@
-import React from "react";
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, SafeAreaView } from "react-native";
-import { useRouter } from "expo-router";
-import { FontAwesome } from '@expo/vector-icons';
-import { getTicketHistory } from '../../controllers/ticketHistory';
-import Header from "@/components/ui/Header";
+import TripResultItem from '@/components/ui/Trips';
+import { useRouter } from 'expo-router';
+import React from 'react';
+import { FlatList, SafeAreaView, StyleSheet } from 'react-native';
 
-const TicketHistoryScreen = () => {
+import trip from '@/json/viajes.json'; // cambiar por el axion
+
+export default function TripResultsScreen() {
   const router = useRouter();
-  const tickets = getTicketHistory();
+
+  const handleSelectTrip = (id_viaje: number) => {
+   // router.push(`/viaje/${id_viaje}`);
+  };
+
   return (
-    <SafeAreaView style={styles.containersafe}>
-        <View style={styles.container}>
-       
-      <View style={styles.header}>       
-        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-          <FontAwesome name="arrow-left" size={22} color="#333" />
-        </TouchableOpacity>
-        <Text style={styles.title}>Historial de Pasajes</Text>
-        <View style={{ width: 40 }} />
-      </View>
-      
+    
+    <SafeAreaView style={styles.container}>
       <FlatList
-        data={tickets}
-        keyExtractor={item => item.id}
+        data={trip.data}
+        keyExtractor={(item) => item.id_viaje.toString()}
         renderItem={({ item }) => (
-          <View style={styles.ticketCard}>
-            <Text style={styles.route}>{item.origen} → {item.destino}</Text>
-            <Text style={styles.info}>Fecha: {item.fecha} - Hora: {item.hora}</Text>
-            <Text style={styles.info}>Precio: {item.precio}</Text>
-            <Text style={[styles.estado, item.estado === "Cancelado" && styles.cancelado]}>{item.estado}</Text>
-          </View>
+          <TripResultItem
+           fecha_partida={item.fecha_partida}
+           fecha_llegada={item.fecha_llegada}
+            hora_partida={item.hora_partida}
+            hora_llegada={item.hora_llegada}
+            localidadOrigen={item.localidadOrigen}
+            localidadDestino={item.localidadDestino}
+            precio_viaje={item.precio_viaje}
+            estado={item.estado}
+            asientosDisponibles={item.asientosDisponibles}
+            onPress={() => handleSelectTrip(item.id_viaje)}
+          />
         )}
-        ListEmptyComponent={<Text>No hay pasajes en el historial.</Text>}
       />
-    </View>
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
-   containersafe: {
+  container: {
     flex: 1,
-    paddingTop: 50, 
-    backgroundColor: '#fff',
+    padding: 10,
+    backgroundColor: '#f4f4f4',
   },
-  container: { flex: 1, backgroundColor: "#fff" },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    //paddingTop: 40,
-   // paddingBottom: 16,
-    paddingHorizontal: 16,
-    backgroundColor: '#fff',
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-    marginBottom: 8,
-  },
-  backButton: {
-    width: 40,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  title: { flex: 1, fontSize: 22, fontWeight: "bold", textAlign: "center", color: '#222' },
-  ticketCard: { backgroundColor: "#f5f5f5", borderRadius: 10, padding: 16, marginHorizontal: 16, marginBottom: 12 },
-  route: { fontSize: 18, fontWeight: "bold" },
-  info: { fontSize: 14, color: "#333" },
-  estado: { fontSize: 14, fontWeight: "bold", color: "green" },
-  cancelado: { color: "red" },
 });
-
-export default TicketHistoryScreen;

@@ -1,82 +1,204 @@
-[
-  {
-    "id": "1",
-    "origen": "Montevideo",
-    "destino": "Punta del Este",
-    "fecha": "20/05/2025",
-    "hora": "08:30",
-    "precio": "450"
-  },
-  {
-    "id": "2",
-    "origen": "Colonia",
-    "destino": "Montevideo",
-    "fecha": "21/05/2025",
-    "hora": "10:15",
-    "precio": "390"
-  },
-  {
-    "id": "3",
-    "origen": "Maldonado",
-    "destino": "Rocha",
-    "fecha": "22/05/2025",
-    "hora": "12:00",
-    "precio": "510"
-  },
-  {
-    "id": "4",
-    "origen": "Paysandú",
-    "destino": "Salto",
-    "fecha": "22/05/2025",
-    "hora": "14:45",
-    "precio": "320"
-  },
-  {
-    "id": "5",
-    "origen": "Rivera",
-    "destino": "Tacuarembó",
-    "fecha": "23/05/2025",
-    "hora": "07:00",
-    "precio": "460"
-  },
-  {
-    "id": "6",
-    "origen": "Canelones",
-    "destino": "Montevideo",
-    "fecha": "23/05/2025",
-    "hora": "09:15",
-    "precio": "220"
-  },
-  {
-    "id": "7",
-    "origen": "Mercedes",
-    "destino": "Dolores",
-    "fecha": "24/05/2025",
-    "hora": "13:20",
-    "precio": "180"
-  },
-  {
-    "id": "8",
-    "origen": "Treinta y Tres",
-    "destino": "Melo",
-    "fecha": "24/05/2025",
-    "hora": "15:30",
-    "precio": "370"
-  },
-  {
-    "id": "9",
-    "origen": "Artigas",
-    "destino": "Salto",
-    "fecha": "25/05/2025",
-    "hora": "06:45",
-    "precio": "590"
-  },
-  {
-    "id": "10",
-    "origen": "Durazno",
-    "destino": "Florida",
-    "fecha": "25/05/2025",
-    "hora": "11:10",
-    "precio": "310"
-  }
-] 
+{
+  "data": [
+    {
+      "id_viaje": 1,
+      "fecha_partida": "10/06/2025",
+      "fecha_llegada": "10/06/2025",
+      "hora_partida": "20:00",
+      "hora_llegada": "22:00",
+      "localidadOrigen": {
+        "id_localidad": 5,
+        "nombreLocalidad": "Colonia del Sacramento",
+        "departamento": "Colonia"
+      },
+      "localidadDestino": {
+        "id_localidad": 4,
+        "nombreLocalidad": "Maldonado",
+        "departamento": "Maldonado"
+      },
+      "precio_viaje": 253,
+      "estado": "CERRADO",
+      "asientosDisponibles": 5
+    },
+    {
+      "id_viaje": 2,
+      "fecha_partida": "04/06/2025",
+      "fecha_llegada": "04/06/2025",
+      "hora_partida": "14:00",
+      "hora_llegada": "16:00",
+      "localidadOrigen": {
+        "id_localidad": 3,
+        "nombreLocalidad": "Salto",
+        "departamento": "Canelones"
+      },
+      "localidadDestino": {
+        "id_localidad": 4,
+        "nombreLocalidad": "Maldonado",
+        "departamento": "Maldonado"
+      },
+      "precio_viaje": 252,
+      "estado": "ABIERTO",
+      "asientosDisponibles": 22
+    },
+    {
+      "id_viaje": 3,
+      "fecha_partida": "05/06/2025",
+      "fecha_llegada": "05/06/2025",
+      "hora_partida": "12:00",
+      "hora_llegada": "14:00",
+      "localidadOrigen": {
+        "id_localidad": 2,
+        "nombreLocalidad": "Las Piedras",
+        "departamento": "Canelones"
+      },
+      "localidadDestino": {
+        "id_localidad": 3,
+        "nombreLocalidad": "Salto",
+        "departamento": "Canelones"
+      },
+      "precio_viaje": 174,
+      "estado": "ABIERTO",
+      "asientosDisponibles": 0
+    },
+    {
+      "id_viaje": 4,
+      "fecha_partida": "03/06/2025",
+      "fecha_llegada": "03/06/2025",
+      "hora_partida": "09:00",
+      "hora_llegada": "11:00",
+      "localidadOrigen": {
+        "id_localidad": 4,
+        "nombreLocalidad": "Maldonado",
+        "departamento": "Maldonado"
+      },
+      "localidadDestino": {
+        "id_localidad": 2,
+        "nombreLocalidad": "Las Piedras",
+        "departamento": "Canelones"
+      },
+      "precio_viaje": 370,
+      "estado": "ABIERTO",
+      "asientosDisponibles": 16
+    },
+    {
+      "id_viaje": 5,
+      "fecha_partida": "03/06/2025",
+      "fecha_llegada": "03/06/2025",
+      "hora_partida": "20:00",
+      "hora_llegada": "22:00",
+      "localidadOrigen": {
+        "id_localidad": 5,
+        "nombreLocalidad": "Colonia del Sacramento",
+        "departamento": "Colonia"
+      },
+      "localidadDestino": {
+        "id_localidad": 4,
+        "nombreLocalidad": "Maldonado",
+        "departamento": "Maldonado"
+      },
+      "precio_viaje": 317,
+      "estado": "ABIERTO",
+      "asientosDisponibles": 29
+    },
+    {
+      "id_viaje": 6,
+      "fecha_partida": "09/06/2025",
+      "fecha_llegada": "09/06/2025",
+      "hora_partida": "15:00",
+      "hora_llegada": "17:00",
+      "localidadOrigen": {
+        "id_localidad": 5,
+        "nombreLocalidad": "Colonia",
+        "departamento": "Colonia"
+      },
+      "localidadDestino": {
+        "id_localidad": 4,
+        "nombreLocalidad": "Maldonado",
+        "departamento": "Maldonado"
+      },
+      "precio_viaje": 257,
+      "estado": "ABIERTO",
+      "asientosDisponibles": 3
+    },
+    {
+      "id_viaje": 7,
+      "fecha_partida": "01/06/2025",
+      "fecha_llegada": "01/06/2025",
+      "hora_partida": "06:00",
+      "hora_llegada": "08:00",
+      "localidadOrigen": {
+        "id_localidad": 4,
+        "nombreLocalidad": "Maldonado",
+        "departamento": "Maldonado"
+      },
+      "localidadDestino": {
+        "id_localidad": 1,
+        "nombreLocalidad": "Montevideo",
+        "departamento": "Montevideo"
+      },
+      "precio_viaje": 155,
+      "estado": "CERRADO",
+      "asientosDisponibles": 26
+    },
+    {
+      "id_viaje": 8,
+      "fecha_partida": "06/06/2025",
+      "fecha_llegada": "06/06/2025",
+      "hora_partida": "10:00",
+      "hora_llegada": "12:00",
+      "localidadOrigen": {
+        "id_localidad": 4,
+        "nombreLocalidad": "Maldonado",
+        "departamento": "Maldonado"
+      },
+      "localidadDestino": {
+        "id_localidad": 5,
+        "nombreLocalidad": "Colonia del Sacramento",
+        "departamento": "Colonia"
+      },
+      "precio_viaje": 254,
+      "estado": "ABIERTO",
+      "asientosDisponibles": 29
+    },
+    {
+      "id_viaje": 9,
+      "fecha_partida": "02/06/2025",
+      "fecha_llegada": "02/06/2025",
+      "hora_partida": "15:00",
+      "hora_llegada": "17:00",
+      "localidadOrigen": {
+        "id_localidad": 4,
+        "nombreLocalidad": "Maldonado",
+        "departamento": "Maldonado"
+      },
+      "localidadDestino": {
+        "id_localidad": 1,
+        "nombreLocalidad": "Montevideo",
+        "departamento": "Montevideo"
+      },
+      "precio_viaje": 379,
+      "estado": "ABIERTO",
+      "asientosDisponibles": 28
+    },
+    {
+      "id_viaje": 10,
+      "fecha_partida": "09/06/2025",
+      "fecha_llegada": "09/06/2025",
+      "hora_partida": "11:00",
+      "hora_llegada": "13:00",
+      "localidadOrigen": {
+        "id_localidad": 2,
+        "nombreLocalidad": "Las Piedras",
+        "departamento": "Canelones"
+      },
+      "localidadDestino": {
+        "id_localidad": 4,
+        "nombreLocalidad": "Maldonado",
+        "departamento": "Maldonado"
+      },
+      "precio_viaje": 248,
+      "estado": "ABIERTO",
+      "asientosDisponibles": 5
+    }
+  ]
+}

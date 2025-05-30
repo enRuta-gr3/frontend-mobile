@@ -30,7 +30,7 @@ try {
   const res = await axios.post(
       'https://backend-production-2812f.up.railway.app/api/auth/iniciarSesion', 
       {email: email, contraseña: password },
-     {headers: {'Content-Type': 'application/json',},}
+      {headers: {'Content-Type': 'application/json',},}
     ); 
 
    const jdata =res.data.access_token;

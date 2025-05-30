@@ -73,14 +73,17 @@ export default function Signup() {
                         apellidos: apellido,
                         fecha_nacimiento:"1980-04-20",
                         descuento: descuento,
-                        email: email,
+                        //email: email,
                         contraseña:password,
                         esEstudiante:esEstudiante,
                         esJubilado:esJubilado
                       },
              {headers: {'Content-Type': 'application/json',},}
-          ); 
-       router.push("/EmailVerification");
+          );          
+          
+       if (res.data && res.data.success === true) {
+          router.push("/EmailVerification");
+       }      
 
     } catch (error: any) {
          console.log('Error:', error.response )
@@ -90,8 +93,7 @@ export default function Signup() {
           else {
             console.error('Error:', error.statusText);
           }
-    }};
-    
+    }};    
 
   const validateEmail = (email: string): boolean => {
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
