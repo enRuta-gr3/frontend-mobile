@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "940295193727",
+    "project_id": "notificacionesenruta",
+    "storage_bucket": "notificacionesenruta.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:940295193727:android:c250cc106c159151a8ab4a",
+        "android_client_info": {
+          "package_name": "com.enruta.enruta"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBPqYGtDrH4i2cYBqSxUBnPu_qfloVPDrE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

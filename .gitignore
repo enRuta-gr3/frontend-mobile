@@ -37,3 +37,17 @@ yarn-error.*
 *.tsbuildinfo
 
 app-example
+
+# Archivos generados en Android
+android/.gradle/
+android/app/build/
+android/build/
+android/.idea/
+android/local.properties
+
+# Archivos binarios y temporales
+android/**/*.iml
+*.keystore
+*.jks
+
+

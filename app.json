@@ -16,7 +16,9 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.enruta.enruta",
+      "googleServices": "./android/app/google-services.json"
     },
     "web": {
       "bundler": "metro",
@@ -37,7 +39,12 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "5fb26306-5aa3-4e2d-89c3-dbe2e00f9e14"
+      }
     }
   }
 }
-
