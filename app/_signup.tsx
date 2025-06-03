@@ -15,8 +15,6 @@ export default function Signup() {
   const [fecha, setFecha] = useState('');
   const [cedula, setCedula] = useState('');
   const [descuento, setDescuento] = useState('Ninguno');
-  
-
   const router = useRouter();
   
 
@@ -29,13 +27,6 @@ export default function Signup() {
       return;
     }
 
-    if (!validateEmail(email)) {
-      Alert.alert(
-        "Campos inválidos",
-        "Por favor ingrese un correo con formato válido para la autenticación"
-      );
-      return;
-    }
  
     if (password !== password2) {
           Alert.alert(
@@ -53,51 +44,71 @@ export default function Signup() {
       return;
     }
 
+    if(!validateDate(fecha)) {
+       Alert.alert(
+            "Campos inválidos",
+            "No puede ser menor de 18 años para registrarse"  
+          );
+      return;
+      } 
+
     try {
 
-        console.log("Registrando usuario:", "", email, password, nombre, apellido, fecha, cedula, descuento);
         let esJubilado = false;
         let esEstudiante = false;
-
+        const formFecha = convertirADateISO(fecha); 
+       
         if (descuento === 'Jubilado') {
           esJubilado = true;
         } else if (descuento === 'Estudiante') {
           esEstudiante = true;
-        }
+        } 
 
+//Mejorar por endoint class
       const res = await axios.post('https://backend-production-2812f.up.railway.app/api/auth/registrarUsuario', 
-                      {
-                        tipo_usuario:"CLIENTE",
-                        ci:cedula,
-                        nombres: nombre,
-                        apellidos: apellido,
-                        fecha_nacimiento:"1980-04-20",
-                        descuento: descuento,
-                        //email: email,
-                        contraseña:password,
-                        esEstudiante:esEstudiante,
-                        esJubilado:esJubilado
-                      },
+            {
+              tipo_usuario:"CLIENTE",
+              ci:cedula,
+              nombres: nombre,
+              apellidos: apellido,
+              fecha_nacimiento: formFecha,
+              descuento: descuento,
+              email: email,
+              contraseña:password,
+              esEstudiante:esEstudiante,
+              esJubilado:esJubilado
+            },
              {headers: {'Content-Type': 'application/json',},}
-          );          
-          
-       if (res.data && res.data.success === true) {
-          router.push("/EmailVerification");
-       }      
+          );   
+          const success = res.data.data.access_token;       
+          console.log(res.data)
+
+       if (res.data.success) { 
+          router.push("/emailVerification");
+       } else{
+          Alert.alert('Error:', res.data.data )
+       }   
 
     } catch (error: any) {
-         console.log('Error:', error.response )
-           if (error.response) {
-              Alert.alert('Error:', error.response.data )
-                } 
-          else {
-            console.error('Error:', error.statusText);
-          }
+           
+      if (!error.response?.success) {
+            Alert.alert('Error:', error.response.data.data);
+      }else{
+             Alert.alert('No pudimos procesar la solicitud', 'Contacte a atención al cliente');
+      }
     }};    
 
   const validateEmail = (email: string): boolean => {
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
     return emailRegex.test(email);
+  };
+  const validateDate = (fecha: string): boolean => {
+      const [dia, mes, año] = fecha.split('/');
+      const currentYear = new Date(Date.now()).getFullYear();
+      if (currentYear - Number(año) >= 18) {
+        return true;
+      }
+      return false;
   };
 
   function validarCedulaUruguaya(ci: string): boolean {
@@ -115,6 +126,12 @@ export default function Signup() {
       const digitoVerificador = ((10 - (suma % 10)) % 10);
       return digitoVerificador === digitos[7];
     }
+    
+  const convertirADateISO = (fecha: string): string => {
+    const [dia, mes, año] = fecha.split('/');
+    return `${año}-${mes.padStart(2, '0')}-${dia.padStart(2, '0')}`;
+  };
+              
 
   const imagen = { uri: 'https://en-ruta.vercel.app/bus2.jpg'}
 
