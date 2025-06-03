@@ -21,11 +21,11 @@ export default function Login() {
       return;
     }
 
-   /* if (!validateEmail(email)) {
+   /*if (!validateEmail(email)) {
       Alert.alert('Campos inválidos', 'Por favor ingrese un correo con formato válido');
       return;
-    } 
-*/
+    } */
+
 try {
   const res = await axios.post(
       'https://backend-production-2812f.up.railway.app/api/auth/iniciarSesion', 
@@ -33,17 +33,21 @@ try {
       {headers: {'Content-Type': 'application/json',},}
     ); 
 
-   const jdata =res.data.access_token;
-   if (jdata) {   
-     await AsyncStorage.setItem('token',jdata);
-     router.push('/(tabs)/homeUser'); 
+
+   
+    if (res.data.success === true) { 
+        const jdata =res.data.data.access_token;
+        if (jdata) {   
+          await AsyncStorage.setItem('token',jdata);
+          router.push('/(tabs)/homeUser'); 
+          }
     }
  
 } catch (error: any) {
    
   if (error.response) {
     if (error.response.status === 401 || error.response.status === 403) {
-      Alert.alert('Error en el servidor', 'No se pudo iniciar sesión. Por favor, revisa tus credenciales.');
+      Alert.alert('Error', 'No se pudo iniciar sesión. Por favor, revisa tus credenciales.');
     }
   } else {
     console.error('Error de red:', error.message);

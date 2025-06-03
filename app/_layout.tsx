@@ -17,7 +17,7 @@ export default function RootLayout() {
   }
 
   return (    
-    
+   
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
@@ -26,9 +26,12 @@ export default function RootLayout() {
         <Stack.Screen name="+not-found" />
         <Stack.Screen name="_signup" options={{ title: 'Registro de Usuario' }}  />
         <Stack.Screen name="_trips" options={{ title: 'Viajes' }}  />
+         <Stack.Screen name="_seat" options={{ title: 'Seleccionar asientos' }}  />
+          <Stack.Screen name="tripSelected" options={{ title: 'Proceso de pago' }}  />
 
       </Stack>
       <StatusBar style="auto" />
     </ThemeProvider>
+ 
   );
 }
