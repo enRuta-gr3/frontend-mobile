@@ -1,8 +1,10 @@
 import Header from '@/components/ui/Header';
-import SearchScreen from '@/components/ui/Search';
 import { useRequireAuth } from '@/hooks/useRequireAuth';
 import React from 'react';
 import { ImageBackground, StyleSheet, View } from 'react-native';
+import MercadoPagoScreen from '../MercadoPago';
+//import SearchScreen from '@/components/ui/Search';
+
 
 const imagen = { uri: 'https://en-ruta.vercel.app/bus2.jpg' };
 
@@ -14,14 +16,14 @@ export default function HomeUserScreen() {
         <View style={styles.container}>
           <Header />
           <View style={styles.subcontainer}>
-            <SearchScreen />
+            <MercadoPagoScreen />
             <View style={styles.line}></View>
           </View>
         </View>
       </ImageBackground>
     );
 }
-
+/*<SearchScreen />*/
 
 const styles = StyleSheet.create({
   container: {
