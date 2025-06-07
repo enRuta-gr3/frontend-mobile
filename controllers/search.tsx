@@ -1,20 +1,32 @@
 import { router } from "expo-router";
 
-// controlador de para busacar pasajes 
+// controlador para buscar pasajes
 export default class searchTravel {
-  
   private origen: { id: number; nombre: string } | null = null;
   private destino: { id: number; nombre: string } | null = null;
   private fecha = '';
+  private fecha_vuelta = '';
   private tipoViaje = '';
   private pasajes = 1;
+  private etapa='';
 
   setFecha = (value: string) => { this.fecha = value };
+  setFechaVuelta = (value: string) => { this.fecha_vuelta = value };
   setPasajes = (value: string) => { this.pasajes = parseInt(value) };
-  setOrigen = (value: { id: number; nombre: string }) => { this.origen = value;};
-  setDestino = (value: { id: number; nombre: string }) => {this.destino = value;};
-  setTipoViaje = (value:  string ) => {this.tipoViaje = value;};
+  setOrigen = (value: { id: number; nombre: string }) => { this.origen = value };
+  setDestino = (value: { id: number; nombre: string }) => { this.destino = value };
+  setTipoViaje = (value: string) => { this.tipoViaje = value };
+  setEtapa = (value: string) => { this.etapa = value };
 
+  viajeIda = () => ({
+    origen: this.origen?.id.toString() ?? '',
+    destino: this.destino?.id.toString() ?? '',
+    nomorigen: this.origen?.nombre ?? '',
+    nomdestino: this.destino?.nombre ?? '',
+    fecha: this.fecha,
+    etapa: this.etapa,
+  });
+  
 
   buscarPasajes = () => {
     if (!this.origen || !this.destino) return;
@@ -22,16 +34,12 @@ export default class searchTravel {
     router.push({
       pathname: '/_trips',
       params: {
-        origen: JSON.stringify(this.origen.id),
-        destino: JSON.stringify(this.destino.id),
-        nomorigen: JSON.stringify(this.origen.nombre),
-        nomdestino: JSON.stringify(this.destino.nombre),
-        fecha: this.fecha,
-        pasajes: this.pasajes.toString(),
+        viajeIda: JSON.stringify(this.viajeIda()),
         tipoViaje: this.tipoViaje,
-      },
+        pasajes: this.pasajes.toString(),
+        etapa: this.etapa,
+        ...(this.tipoViaje === 'ida-vuelta' ? { fechaVuelta: this.fecha_vuelta } : {}),
+      }
     });
-
-    console.log("Buscando pasajes desde",this.tipoViaje);
   };
 }

@@ -11,7 +11,6 @@ export default function IndexScreen() {
   useEffect(() => {
     const checkAuth = async () => {
       setLoading(false);
-      alert(isLogged)
       if (isLogged) {
         setTimeout(() => {
         router.replace('/(tabs)/homeUser');

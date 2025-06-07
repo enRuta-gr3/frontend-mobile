@@ -90,9 +90,11 @@ export default function Signup() {
        }   
 
     } catch (error: any) {
-           
+           console.log(error.response)
       if (!error.response?.success) {
-            Alert.alert('Error:', error.response.data.data);
+            
+          Alert.alert('Error:', error.response.data.data);
+
       }else{
              Alert.alert('No pudimos procesar la solicitud', 'Contacte a atención al cliente');
       }
