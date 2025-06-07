@@ -2,7 +2,8 @@ import Header from '@/components/ui/Header';
 import { useRequireAuth } from '@/hooks/useRequireAuth';
 import React from 'react';
 import { ImageBackground, StyleSheet, View } from 'react-native';
-import MercadoPagoScreen from '../MercadoPago';
+//import MercadoPagoScreen from '../MercadoPago';
+import PayapalScreen from '../Paypal';
 //import SearchScreen from '@/components/ui/Search';
 
 
@@ -16,14 +17,16 @@ export default function HomeUserScreen() {
         <View style={styles.container}>
           <Header />
           <View style={styles.subcontainer}>
-            <MercadoPagoScreen />
+            <PayapalScreen />
             <View style={styles.line}></View>
           </View>
         </View>
       </ImageBackground>
     );
 }
-/*<SearchScreen />*/
+/*<SearchScreen />
+<MercadoPagoScreen />
+*/
 
 const styles = StyleSheet.create({
   container: {
