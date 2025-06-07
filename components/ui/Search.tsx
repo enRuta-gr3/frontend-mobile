@@ -1,21 +1,50 @@
 import StyleRuta from '@/hooks/styles';
-import localidades from '@/json/localidades.json';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
 import React, { useState } from 'react';
-import { Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import searchTravel from '../../controllers/search';
 
+import { listarLocalidades } from '@/controllers/listLocalidades';
+import { Localidad } from '@/interface/type';
+
+ 
+
 export default function SearchScreen() {
+
+
   const buscar = new searchTravel();
   const [tipoViaje, setTipoViaje] = useState<'ida' | 'ida-vuelta'>('ida');
   const [origen, setOrigen] = useState<{ id: number; nombre: string } | null>(null);
   const [destino, setDestino] = useState<{ id: number; nombre: string } | null>(null);
   const [fecha, setFecha] = useState('');
+  const [fecha_vuelta, setFechaVuelta] = useState('');
   const [pasajes, setPasajes] = useState('');
+  const [date, setDate] = useState(new Date());
+  const [show, setShow] = useState(false);
+  const [date2, setDate2] = useState(new Date());
+  const [show2, setShow2] = useState(false);
+  const [etapa, setEtapa] = useState('ida');
 
-  const handleBuscar = () => {
-   
+  const [localidades, setLocalidades] = useState<Localidad[]>([]);
+  const [loadingLocalidades, setLoadingLocalidades] = useState(true);
+  
+  React.useEffect(() => {
+  const fetchLocalidades = async () => {
+    try {
+      const data = await listarLocalidades();
+      setLocalidades(data);
+    } catch (err) {
+      Alert.alert('Error', 'No se pudieron cargar las localidades');
+    } finally {
+      setLoadingLocalidades(false);
+    }
+  };
+
+    fetchLocalidades();
+  }, []);
+
+  const handleBuscar = () => {   
     if (!origen || !destino || !fecha || !pasajes) {
       Alert.alert("Mensaje", "Por favor, completa todos los campos para de buscar el viaje.");
     } else {
@@ -24,10 +53,17 @@ export default function SearchScreen() {
       buscar.setFecha(fecha);
       buscar.setPasajes(pasajes);
       buscar.setTipoViaje(tipoViaje);
-
-      buscar.buscarPasajes();
+      buscar.setEtapa(etapa);
+      
+      if (tipoViaje === 'ida-vuelta' && !fecha_vuelta) {
+        Alert.alert("Mensaje", "Por favor, completa la fecha de regreso para el viaje de ida y vuelta.");
+        return;
+      } else if (tipoViaje === 'ida-vuelta') {
+        buscar.setFechaVuelta(fecha_vuelta);
+      }
+       buscar.buscarPasajes();
     }
-  };
+  };  
 
   const clickTickets = (value: string) => {
     const pasajes = parseInt(value, 10);
@@ -38,9 +74,7 @@ export default function SearchScreen() {
       setPasajes(pasajes.toString());
     }
   }
-
-  const [date, setDate] = useState(new Date());
-  const [show, setShow] = useState(false);
+ 
 
   const handleDateChange = (event: any, selectedDate?: Date) => {
     if (selectedDate) {
@@ -52,100 +86,146 @@ export default function SearchScreen() {
       setShow(false);
     }
   };
+  
+   const handleDateChangeBack = (event: any, selectedDate2?: Date) => {
+    if (selectedDate2) {
+      setDate2(selectedDate2);
+      const day = selectedDate2.getDate().toString().padStart(2, '0');
+      const month = (selectedDate2.getMonth() + 1).toString().padStart(2, '0');
+      const year = selectedDate2.getFullYear();
+      setFechaVuelta(`${day}/${month}/${year}`);
+      setShow2(false);
+    }
+  };
 
+  const nextDay = (date: Date): Date => {
+     const ndate = new Date(date);
+     ndate.setDate(ndate.getDate() + 0)
+     return ndate;
+  }
+  
+
+  
+     
+      
+  
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>
-        Tu viaje <Text style={styles.highlight}>comienza aquí</Text>
-      </Text>
-
-      <View style={styles.radioGroup}>
-        {['ida', 'ida-vuelta'].map((tipo) => (
-          <TouchableOpacity
-            key={tipo}
-            style={styles.radioContainer}
-            onPress={() => setTipoViaje(tipo as 'ida' | 'ida-vuelta')}
-          >
-            <View style={[styles.radioCircle, tipoViaje === tipo && styles.selectedRadio]} />
-            <Text style={styles.radioText}>{tipo === 'ida' ? 'Ida' : 'Ida y vuelta'}</Text>
-          </TouchableOpacity>
-        ))}
+      <><Modal transparent={true} visible={loadingLocalidades} animationType="fade">
+      <View style={styles.loadingOverlay}>
+        <View style={styles.loadingBox}>
+          <ActivityIndicator size="large" color="#fff" />
+          <Text style={styles.loadingText}>Cargando viaje...</Text>
+        </View>
       </View>
+    </Modal><View style={styles.container}>
+        <Text style={styles.title}>
+          Tu viaje <Text style={styles.highlight}>comienza aquí</Text>
+        </Text>
 
-      <Picker
-        selectedValue={origen ? JSON.stringify(origen) : ''}
-        onValueChange={(value) => {
-          if (value) {
-            const selected = JSON.parse(value);
-            setOrigen({ id: selected.id_localidad, nombre: selected.nombreLocalidad });
-          } else {
-            setOrigen(null);
-          }
-        }}
-        style={styles.picker}
-      >
-        <Picker.Item label="¿Desde dónde viajas?" value="" />
-        {localidades.map((loc) => (
-          <Picker.Item
-            key={loc.id_localidad}
-            label={`${loc.nombreLocalidad} (${loc.departamento ?? 'Sin depto'})`}
-            value={JSON.stringify(loc)}
-          />
-        ))}
-      </Picker>
+        <View style={styles.radioGroup}>
+          {['ida', 'ida-vuelta'].map((tipo) => (
+            <TouchableOpacity
+              key={tipo}
+              style={styles.radioContainer}
+              onPress={() => setTipoViaje(tipo as 'ida' | 'ida-vuelta')}
+            >
+              <View style={[styles.radioCircle, tipoViaje === tipo && styles.selectedRadio]} />
+              <Text style={styles.radioText}>{tipo === 'ida' ? 'Ida' : 'Ida y vuelta'}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
 
-      <Picker
-        selectedValue={destino ? JSON.stringify(destino) : ''}
-        onValueChange={(value) => {
-          if (value) {
-            const selected = JSON.parse(value);
-            setDestino({ id: selected.id_localidad, nombre: selected.nombreLocalidad });
-          } else {
-            setDestino(null);
-          }
-        }}
-        style={styles.picker}
-      >
-        <Picker.Item label="¿A dónde viajas?" value="" />
-        {localidades.map((loc) => (
-          <Picker.Item
-            key={loc.id_localidad}
-            label={`${loc.nombreLocalidad} (${loc.departamento ?? 'Sin depto'})`}
-            value={JSON.stringify(loc)}
-          />
-        ))}
-      </Picker>
+        <Picker
+          selectedValue={origen ? JSON.stringify(origen) : ''}
+          onValueChange={(value) => {
+            if (value) {
+              const selected = JSON.parse(value);
+              setOrigen({ id: selected.id_localidad, nombre: selected.nombreLocalidad });
+            } else {
+              setOrigen(null);
+            }
+          } }
+          style={styles.picker}
+        >
+          <Picker.Item label="¿Desde dónde viajas?" value="" />
+          {localidades.map((loc) => (
+            <Picker.Item
+              key={loc.id_localidad}
+              label={`${loc.nombreLocalidad} (${loc.departamento.nombreDepartamento ?? 'Sin depto'})`}
+              value={JSON.stringify(loc)} />
+          ))}
+        </Picker>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Fecha de viaje (dd/mm/aaaa)"
-        value={fecha}
-        onFocus={() => setShow(true)}
-      />
+        <Picker
+          selectedValue={destino ? JSON.stringify(destino) : ''}
+          onValueChange={(value) => {
+            if (value) {
+              const selected = JSON.parse(value);
+              setDestino({ id: selected.id_localidad, nombre: selected.nombreLocalidad });
+            } else {
+              setDestino(null);
+            }
+          } }
+          style={styles.picker}
+        >
+          <Picker.Item label="¿A dónde viajas?" value="" />
+          {localidades.map((loc) => (
+            <Picker.Item
+              key={loc.id_localidad}
+              label={`${loc.nombreLocalidad} (${loc.departamento.nombreDepartamento ?? 'Sin depto'})`}
+              value={JSON.stringify(loc)} />
+          ))}
+        </Picker>
 
-      {show && (
-        <DateTimePicker
-          value={date}
-          mode="date"
-          display="default"
-          onChange={handleDateChange}
-          locale="es-ES"
-          minimumDate={new Date()}
-        />
-      )}
+        <TextInput
+          style={styles.input}
+          placeholder="Fecha de viaje (dd/mm/aaaa)"
+          value={fecha}
+          onFocus={() => setShow(true)} />
 
-      <TextInput
-        style={styles.input}
-        placeholder="Número de pasajes"
-        keyboardType="numeric"
-        value={pasajes}
-        onChangeText={clickTickets}
-      />
+        {show && (
+          <DateTimePicker
+            value={date}
+            mode="date"
+            display="default"
+            onChange={handleDateChange}
+            locale="es-ES"
+            minimumDate={new Date()} />
+        )}
 
-      <TouchableOpacity style={styles.button} onPress={handleBuscar}>
-        <Text style={styles.buttonText}>Buscar pasajes</Text>
-      </TouchableOpacity>
-    </View>
+        {/* Input para la fecha de viaje vuelta*/}
+        {tipoViaje === 'ida-vuelta' && (
+          <View>
+            <TextInput
+              style={styles.input}
+              placeholder="Fecha de regreso (dd/mm/aaaa)"
+              value={fecha_vuelta}
+              onFocus={() => setShow2(true)}
+              showSoftInputOnFocus={false} />
+
+            {show2 && (
+              <DateTimePicker
+                value={date2}
+                mode="date"
+                display="default"
+                onChange={handleDateChangeBack}
+                locale="es-ES"
+                minimumDate={nextDay(date)} />
+            )}
+          </View>
+        )}
+
+        <TextInput
+          style={styles.input}
+          placeholder="Número de pasajes"
+          keyboardType="numeric"
+          value={pasajes}
+          onChangeText={clickTickets} />
+
+        <TouchableOpacity style={styles.button} onPress={handleBuscar}>
+          <Text style={styles.buttonText}>Buscar viajes</Text>
+        </TouchableOpacity>
+      </View></>
   );
 }
 
@@ -210,4 +290,24 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
   },
+
+  
+loadingOverlay: {
+  flex: 1,
+  backgroundColor: 'rgba(0,0,0,0.6)',
+  justifyContent: 'center',
+  alignItems: 'center',
+  zIndex: 999,
+},
+loadingBox: {
+  padding: 20,
+  backgroundColor: '#333',
+  borderRadius: 10,
+  alignItems: 'center',
+},
+loadingText: {
+  marginTop: 10,
+  color: '#fff',
+  fontSize: 16,
+},
 });

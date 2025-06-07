@@ -1,5 +1,7 @@
+import * as SystemUI from 'expo-system-ui';
 import React from "react";
-import { SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 interface Props {
   email: string;
@@ -34,12 +36,12 @@ export default function SignupScreen({
   onSignup,
   error, 
 }: Props) {
-  return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <ScrollView contentContainerStyle={styles.container}>
-        
-        {error ? <Text style={styles.error}>{error}</Text> : null}
+  SystemUI.setBackgroundColorAsync('#ffffff');
 
+  return (
+    <SafeAreaView edges={['bottom']} style={{ flex: 1}}>
+      <ScrollView >
+        {error ? <Text style={styles.error}>{error}</Text> : null}
         <TextInput style={styles.input} placeholder="Nombre" value={nombre} onChangeText={setNombre} />
         <TextInput style={styles.input} placeholder="Apellido" value={apellido} onChangeText={setApellido} />
         <TextInput style={styles.input} placeholder="Fecha de nacimiento (dd/mm/aaaa)" value={fecha} onChangeText={setFecha} />

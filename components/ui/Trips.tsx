@@ -1,25 +1,9 @@
 import { useDurationTrip } from '@/hooks/calculateDuration';
+import { TripItem } from '@/interface/type';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 
-interface Localidad {
-  id_localidad: number;
-  nombreLocalidad: string;
-}
-
-interface TripItem {
-  fecha_partida: string,
-  fecha_llegada: string,      
-  hora_partida: string;
-  hora_llegada: string;
-  localidadOrigen: Localidad;
-  localidadDestino: Localidad;
-  precio_viaje: number;
-  estado: string;
-  asientosDisponibles: number;
-  onPress: () => void;
-}
 
 const TripResultItem: React.FC<TripItem> = ({
   fecha_partida,
@@ -38,21 +22,27 @@ const TripResultItem: React.FC<TripItem> = ({
     <View style={styles.card}>
       <View style={styles.row}>
         <Text style={[styles.empresa, estado === 'ABIERTO' ? styles.estadoAbierto : styles.estadoCerrado]}>{estado}</Text>
-        <Text style={styles.directo}>{fecha_partida}</Text>
+        <Text style={styles.fecha}>{fecha_partida}</Text>
       </View>
 
       <View style={styles.row}>
+       
+        <Text>{localidadOrigen.nombreLocalidad}</Text>
+         <View style={styles.route}>
+           <Text>{localidadDestino.nombreLocalidad}</Text> 
+        </View>
+      </View>
+
+       <View style={styles.row}>
         <Text style={styles.time}>{hora_partida}</Text>
         <View style={styles.route}>
-          <Text>{localidadOrigen.nombreLocalidad}</Text>
-          <Text style={styles.arrow}> → </Text>
-          <Text>{localidadDestino.nombreLocalidad}</Text> 
+          
         </View>
         <Text style={styles.time}>{hora_llegada}</Text>
       </View>
 
       <View style={styles.row}>
-        <Text style={styles.details}>🕒 Duración estimada: {useDurationTrip(fecha_partida,hora_partida, fecha_llegada,hora_llegada)}</Text>
+        <Text style={styles.details}>🕒 Duración estimada: {useDurationTrip(fecha_partida, hora_partida, fecha_llegada,hora_llegada)}</Text>
         <Text style={styles.details}>🪑 {asientosDisponibles} asientos disponibles</Text>
       </View>
 
@@ -90,12 +80,13 @@ const styles = StyleSheet.create({
   estadoCerrado: {
     color: 'red',
   },
-  directo: {
+  fecha: {
     backgroundColor: '#eee',
     paddingHorizontal: 8,
     borderRadius: 8,
-    fontSize: 12,
-    color: '#444',
+    fontSize: 18,
+    
+    color: 'black',
   },
   time: {
     fontSize: 18,

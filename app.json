@@ -16,7 +16,8 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.bfariello.enruta"
     },
     "web": {
       "bundler": "metro",
@@ -37,7 +38,12 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "560e79b7-594e-42c9-b8cd-5e166096f9ab"
+      }
     }
   }
 }
-

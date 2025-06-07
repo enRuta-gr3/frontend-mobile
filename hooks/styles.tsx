@@ -16,6 +16,28 @@ export default class StyleRuta {
     static cancelButton: StyleProp<ViewStyle>;
     static cancelText: StyleProp<TextStyle>;
   static background: string | undefined;
+
+
+
+  
+static loadingOverlay: {
+  flex: 1,
+  backgroundColor: 'rgba(0,0,0,0.6)',
+  justifyContent: 'center',
+  alignItems: 'center',
+  zIndex: 999,
+};
+static loadingBox: {
+  padding: 20,
+  backgroundColor: '#333',
+  borderRadius: 10,
+  alignItems: 'center',
+};
+static loadingText: {
+  marginTop: 10,
+  color: '#fff',
+  fontSize: 16,
+};
   
 
 }

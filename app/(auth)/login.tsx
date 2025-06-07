@@ -32,16 +32,23 @@ try {
       {email: email, contraseña: password },
       {headers: {'Content-Type': 'application/json',},}
     ); 
-
-
-   
+ 
     if (res.data.success === true) { 
+
+        
         const jdata =res.data.data.access_token;
+        const userId =res.data.data.usuario.uuidAuth;
+
+        alert(userId)
         if (jdata) {   
           await AsyncStorage.setItem('token',jdata);
+          await AsyncStorage.setItem('userid', userId); 
           router.push('/(tabs)/homeUser'); 
           }
     }
+
+  
+    
  
 } catch (error: any) {
    
