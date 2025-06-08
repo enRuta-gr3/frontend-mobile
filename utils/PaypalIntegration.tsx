@@ -33,8 +33,8 @@ export const handleIntegrationPayPal = async () => {
           description: 'Compra de pasajes de Punta del Este a Salto',
         }],
         application_context: {
-          user_action: 'PAY_NOW',
-          return_url: 'enruta://en-ruta.vercel.app/success',
+          return_url: 'enruta://success',
+          cancel_url: 'enruta://cancel',
         },
       }),
     });
@@ -43,6 +43,7 @@ export const handleIntegrationPayPal = async () => {
     const orderData = await orderRes.json();
 
     const approvalLink = orderData.links.find((link: any) => link.rel === 'approve')?.href;
+
     return approvalLink;
 
   } catch (error: any) {
@@ -78,7 +79,8 @@ export const captureOrder = async (orderId: string) => {
 
     if (!captureRes.ok) throw new Error('Error al capturar orden');
     const captureData = await captureRes.json();
-
+    console.log('Esto es capture',captureData);
+    console.log('esto es status',captureData.status);
     return captureData;
 
   } catch (error: any) {
