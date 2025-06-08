@@ -39,11 +39,17 @@ try {
         const jdata =res.data.data.access_token;
         const userId =res.data.data.usuario.uuidAuth;
 
-        alert(userId)
+        const nombres =res.data.data.usuario.nombres;
+        const ci =res.data.data.usuario.ci;
+
+     console.log(res.data.data)
+      
         if (jdata) {   
           await AsyncStorage.setItem('token',jdata);
           await AsyncStorage.setItem('userid', userId); 
-          router.push('/(tabs)/homeUser'); 
+          await AsyncStorage.setItem('nombres',nombres);
+          await AsyncStorage.setItem('ci', ci); 
+            router.push('/(tabs)/homeUser'); 
           }
     }
 

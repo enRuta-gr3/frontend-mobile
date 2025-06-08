@@ -22,9 +22,7 @@ const ResumenSeleccion: React.FC = () => {
   const [montoDescuento, setMontoDescuento] = useState(0);
   const [loading, setLoading] = useState(false);
 
-
-console.log(comprasArray )
- /* if (!Array.isArray(comprasArray) || comprasArray.length === 0) {
+  /* if (!Array.isArray(comprasArray) || comprasArray.length === 0) {
     return <Text>No se recibió la información de la compra.</Text>;
   }*/
 

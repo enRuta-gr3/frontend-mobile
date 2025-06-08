@@ -1,7 +1,7 @@
 import { HapticTab } from '@/components/HapticTab';
 import StyleRuta from '@/hooks/styles';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { FontAwesome } from '@expo/vector-icons';
+import { FontAwesome, FontAwesome6 } from '@expo/vector-icons';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { Tabs } from 'expo-router';
 import React from 'react';
@@ -54,12 +54,13 @@ export default function TabLayout() {
       }}
       />
       <Tabs.Screen
-      name="ticketHistory"
+      name="usuario"
       options={{
-        title: 'Historial',
-        tabBarIcon: ({ color, size }) => (<FontAwesome5 name="history" size={size} color={color} /> ),
+        title: 'Mi perfil',
+        tabBarIcon: ({ color, size }) => (<FontAwesome6 name="user-large" size={size} color={color} /> ),
       }}
       />
+      
 
      
     </Tabs>

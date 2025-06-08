@@ -38,6 +38,9 @@ static loadingText: {
   color: '#fff',
   fontSize: 16,
 };
+  static header: StyleProp<ViewStyle>;
+  static logo: any;
+  static container: StyleProp<ViewStyle>;
   
 
 }

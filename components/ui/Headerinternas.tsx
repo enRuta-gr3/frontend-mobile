@@ -1,17 +1,16 @@
 import { FontAwesome } from '@expo/vector-icons';
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
-export default function Header() {
+export default function Headerinternas() {
   return (
-    <><SafeAreaView  edges={[ ]}>
+    <>
         <View style={styles.header}>
           <Image source={require('@/assets/images/logo.jpg')} style={styles.logo} />
           <TouchableOpacity onPress={() => alert('Va a la bandeja de notificaciones. \n Upps algo no funciono ')}>
             <FontAwesome name="bell" size={24} color="#333" />
           </TouchableOpacity>
         </View>
-      </SafeAreaView>
+   
       </>
 
   ); 
@@ -22,17 +21,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 10,
+    paddingHorizontal: 1,
+    paddingVertical: 1,
     borderBottomStartRadius: 1,
-    elevation: 8,
+   
     backgroundColor: "#fff", 
-    paddingTop: 55,
+    paddingTop: 24,
   },
   logo: {
     width: 60,
     height: 60
-   // borderRadius: 20,
   },
   title: {
     flex: 1,
