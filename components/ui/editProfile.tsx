@@ -1,6 +1,5 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as SystemUI from 'expo-system-ui';
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -33,17 +32,7 @@ export default function EditProfileScreen({
 }: Props) {
   SystemUI.setBackgroundColorAsync('#ffffff');
   
-   const [documento, setDocumento] = useState<string | null>(null);
-
-  useEffect(() => {
-    const cargarDoc = async () => {
-      const documento = await AsyncStorage.getItem('ci');
-
-      setDocumento(documento);
-    };
-    cargarDoc();
-  }, []);
-  
+ 
   return (
     <SafeAreaView edges={['bottom']} style={{ flex: 1}}>
       <ScrollView >
@@ -51,7 +40,7 @@ export default function EditProfileScreen({
         {error ? <Text style={styles.error}>{error}</Text> : null}
         <View style={styles.row}>
            <Text style={styles.texto}>Cliente  </Text>    
-           <Text style={styles.txtdoc}> {documento} </Text> 
+           <Text style={styles.txtdoc}> {cedula} </Text> 
      
         </View>   
 

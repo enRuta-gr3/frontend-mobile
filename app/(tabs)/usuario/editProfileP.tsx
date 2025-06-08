@@ -2,10 +2,12 @@
 import StyleRuta from '@/hooks/styles';
 import axios from 'axios';
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Alert, ImageBackground, StyleSheet, View } from "react-native";
  
 import EditProfileScreen from '@/components/ui/editProfile';
+import { obtenerUsuario } from '@/controllers/getClient';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export default function EditProfile() {
@@ -19,6 +21,34 @@ export default function EditProfile() {
   const [descuento, setDescuento] = useState('Ninguno');
   const router = useRouter();
   
+   useEffect(() => {
+
+    const cargarDoc = async () => {
+        const cedula = await AsyncStorage.getItem('ci');
+        setCedula(cedula ?? '');
+      };
+    
+    cargarDoc();
+
+    const getUsuario = async () => {
+      try {
+        const ci= '45092234';   
+        const usuarioObtenido = await obtenerUsuario(ci);
+        setNombre(usuarioObtenido.nombres)
+        setApellido(usuarioObtenido.apellidos)
+        setFecha(formatDateMio(usuarioObtenido.fecha_nacimiento))
+        setEmail(usuarioObtenido.email)
+
+       
+        console.log("Usuario obteneido>" +  JSON.stringify(usuarioObtenido))
+
+
+      } catch (error) {
+        console.error('Error al obtener usuario:', error);
+      }
+    };
+    getUsuario();
+  }, []);
 
   const clickSignup = async () => {
     if (!email || !password || !password2 || !nombre || !apellido || !cedula) {
@@ -58,7 +88,7 @@ export default function EditProfile() {
 
         let esJubilado = false;
         let esEstudiante = false;
-        const formFecha = convertirADateISO(fecha); 
+        const formFecha = formatoDate(fecha); 
        
         if (descuento === 'Jubilado') {
           esJubilado = true;
@@ -99,7 +129,12 @@ export default function EditProfile() {
       }else{
              Alert.alert('No pudimos procesar la solicitud', 'Contacte a atención al cliente');
       }
-    }};    
+    }};   
+
+
+
+
+  
 
   const validateEmail = (email: string): boolean => {
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
@@ -130,10 +165,16 @@ export default function EditProfile() {
       return digitoVerificador === digitos[7];
     }
     
-  const convertirADateISO = (fecha: string): string => {
+  const formatoDate = (fecha: string): string => {
     const [dia, mes, año] = fecha.split('/');
     return `${año}-${mes.padStart(2, '0')}-${dia.padStart(2, '0')}`;
   };
+
+  const formatDateMio = (isoString: string): string =>{
+       const partes = isoString.split('T')[0].split('-');
+       const [anio, mes, dia] = partes;
+      return `${dia}/${mes}/${anio}`; 
+      }
               
 
   const imagen = { uri: 'https://en-ruta.vercel.app/bus2.jpg'}
@@ -155,7 +196,12 @@ export default function EditProfile() {
             fecha={fecha}
             setFecha={setFecha}
             cedula={cedula}
-            onSignup={clickSignup} error={''}  />
+            setCedula={setCedula}
+            onSignup={clickSignup} error={''} 
+            descuento={''} 
+            setDescuento={function (value: string): void {
+              throw new Error('Function not implemented.');
+            } }  />
 
               </View>
       </View>

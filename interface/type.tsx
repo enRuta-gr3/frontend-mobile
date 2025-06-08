@@ -132,3 +132,18 @@ export interface BloqueoResponse {
   errorCode: string | null;
   data: AsientoBloqueadoResponse[];
 }
+
+export interface Usuario{
+       data(data: any): unknown;
+       tipo_usuario: string,
+       uuidAuth: string,
+       ci: string,
+       nombres: string,
+       apellidos: string,
+       email: string,
+       fecha_nacimiento: string,
+       eliminado: boolean,
+       esEstudiante: boolean,
+       esJubilado: boolean,
+       estado_descuento: boolean
+}
