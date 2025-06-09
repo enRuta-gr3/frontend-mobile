@@ -1,12 +1,14 @@
 {
   "expo": {
-    "name": "En Ruta",
+    "name": "enruta",
     "slug": "enruta",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "enruta",
+    "deepLinking": true,
     "userInterfaceStyle": "automatic",
+    "platforms": ["ios", "android", "web"],
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true
@@ -34,7 +36,8 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
-      ]
+      ],
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true
