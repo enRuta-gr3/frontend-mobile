@@ -25,6 +25,7 @@
     "axios": "^1.9.0",
     "enruta": "file:",
     "expo": "~53.0.9",
+    "expo-auth-session": "^3.7.0",
     "expo-blur": "~14.1.4",
     "expo-constants": "~17.1.6",
     "expo-file-system": "~18.1.10",
@@ -38,7 +39,7 @@
     "expo-status-bar": "~2.2.3",
     "expo-symbols": "~0.4.4",
     "expo-system-ui": "~5.0.7",
-    "expo-web-browser": "~14.1.6",
+    "expo-web-browser": "~14.0.2",
     "express": "^5.1.0",
     "react": "19.0.0",
     "react-dom": "19.0.0",
@@ -48,8 +49,7 @@
     "react-native-screens": "~4.10.0",
     "react-native-vector-icons": "^10.2.0",
     "react-native-web": "~0.20.0",
-    "react-native-webview": "13.13.5",
-    "react-router-dom": "^7.6.2"
+    "react-native-webview": "13.13.5"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

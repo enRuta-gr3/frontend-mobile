@@ -76,12 +76,15 @@ export default function PayaPalScreen() {
   }
   const handleBuy = async () => {
     try {
-      const data = await handleIntegrationPayPal();
+      const data = await handleIntegrationPayPal(uuidAuth, viajes);
+      console.log('URL de PayPal generada:', data);
       openBrowserAsync(data);
     } catch (error) {
+      console.error('Error en handleBuy:', error); 
       Alert.alert('Error', 'Hubo un problema al iniciar el pago.');
     }
   };
+
 
   return (
     <ScrollView contentContainerStyle={styles.screen}>

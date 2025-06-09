@@ -1,50 +1,71 @@
-import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useEffect } from 'react';
-import { ActivityIndicator, Alert, Text, View } from 'react-native';
+import { useLocalSearchParams } from 'expo-router'; // este es el correcto
+import { useEffect, useState } from 'react';
+import { ActivityIndicator, Text, View } from 'react-native';
+import { confirmarVentaPaypal } from '../utils/PaypalIntegration';
 
-import { captureOrder } from '../utils/PaypalIntegration';
-
-export default function SuccessScreen() {
-  const params = useLocalSearchParams();
-  const router = useRouter();
+export default function Success() {
+  const { token: orderId, venta: ventaId } = useLocalSearchParams();
+  const [estado, setEstado] = useState<'cargando' | 'ok' | 'error'>('cargando');
+  const [mensaje, setMensaje] = useState('');
 
   useEffect(() => {
-    const confirmPayment = async () => {
+    const procesarPago = async () => {
+      if (!orderId || !ventaId) {
+        setEstado('error');
+        setMensaje('Faltan datos de la orden o de la venta.');
+        return;
+      }
+
       try {
-        console.log('Parámetros recibidos en success:', params);
+        const data = await confirmarVentaPaypal(parseInt(ventaId as string), orderId as string);
 
-        // PayPal puede devolver token o orderId, chequeamos ambos
-        const orderId = params.token || params.orderId;
-        if (!orderId) throw new Error('No se recibió el ID de orden');
-
-        console.log('Intentando capturar orden con ID:', orderId);
-
-        const result = await captureOrder(orderId as string);
-
-        console.log('Resultado captura:', result);
-
-        if (result.status === 'COMPLETED') {
-          Alert.alert('Pago exitoso', 'Gracias por tu compra');
-        } else {
-          Alert.alert('Pago no completado', `Estado: ${result.status}`);
+        if (data.status !== 'COMPLETED') {
+          setEstado('error');
+          setMensaje(`La orden no fue completada: ${data.status}`);
+          return;
         }
 
-        router.replace('./homeuser');  // ruta absoluta para evitar problemas
+        const confirmRes = await fetch('https://backend-production-2812f.up.railway.app/api/venta/confirmarVentaPaypal', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id_venta: parseInt(ventaId as string),
+            id_orden: orderId,
+          }),
+        });
 
+        const confirmData = await confirmRes.json();
+
+        if (!confirmRes.ok || confirmData.success === false) {
+          throw new Error(confirmData.message || 'Error al confirmar venta');
+        }
+
+        setEstado('ok');
+        setMensaje('¡Gracias! Tu compra fue confirmada con éxito.');
       } catch (error: any) {
-        console.error('Error capturando orden:', error);
-        Alert.alert('Error', 'No se pudo procesar el pago');
-        router.replace('./homeuser');
+        console.error(error);
+        setEstado('error');
+        setMensaje(error.message || 'Ocurrió un error al procesar el pago.');
       }
     };
 
-    confirmPayment();
-  }, []);
+    procesarPago();
+  }, [orderId, ventaId]);
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Confirmando pago...</Text>
-      <ActivityIndicator size="large" />
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 }}>
+      {estado === 'cargando' && (
+        <>
+          <ActivityIndicator size="large" />
+          <Text style={{ marginTop: 10 }}>Procesando tu pago, por favor espera...</Text>
+        </>
+      )}
+      {estado === 'ok' && (
+        <Text style={{ color: 'green', fontWeight: 'bold', fontSize: 16 }}>{mensaje}</Text>
+      )}
+      {estado === 'error' && (
+        <Text style={{ color: 'red', fontWeight: 'bold', fontSize: 16 }}>Error: {mensaje}</Text>
+      )}
     </View>
   );
 }
