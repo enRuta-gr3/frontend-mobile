@@ -1,4 +1,4 @@
-import { useLocalSearchParams } from 'expo-router'; // este es el correcto
+import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
 import { confirmarVentaPaypal } from '../utils/PaypalIntegration';
@@ -10,38 +10,21 @@ export default function Success() {
 
   useEffect(() => {
     const procesarPago = async () => {
-      if (!orderId || !ventaId) {
+      const idVenta = Number(ventaId);
+      if (!orderId || !idVenta || isNaN(idVenta)) {
         setEstado('error');
-        setMensaje('Faltan datos de la orden o de la venta.');
+        setMensaje('Faltan o son inválidos los datos de la orden o de la venta.');
         return;
       }
 
       try {
-        const data = await confirmarVentaPaypal(parseInt(ventaId as string), orderId as string);
-
-        if (data.status !== 'COMPLETED') {
-          setEstado('error');
-          setMensaje(`La orden no fue completada: ${data.status}`);
-          return;
-        }
-
-        const confirmRes = await fetch('https://backend-production-2812f.up.railway.app/api/venta/confirmarVentaPaypal', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            id_venta: parseInt(ventaId as string),
-            id_orden: orderId,
-          }),
-        });
-
-        const confirmData = await confirmRes.json();
-
-        if (!confirmRes.ok || confirmData.success === false) {
-          throw new Error(confirmData.message || 'Error al confirmar venta');
+        const confirmData = await confirmarVentaPaypal(idVenta, orderId as string);     
+        if (confirmData.status !== 'COMPLETED' || confirmData.success === false) {
+          throw new Error(confirmData.message || `La orden no fue completada: ${confirmData.status || 'estado desconocido'}`);
         }
 
         setEstado('ok');
-        setMensaje('¡Gracias! Tu compra fue confirmada con éxito.');
+        setMensaje('Gracias por tu compra fue confirmada con éxito.');
       } catch (error: any) {
         console.error(error);
         setEstado('error');

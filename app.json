@@ -19,7 +19,22 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.bfariello.enruta"
+      "package": "com.bfariello.enruta",
+      "intentFilters": [
+        {
+          "action": "android.intent.action.VIEW",
+          "data": [
+            {
+              "scheme": "enruta",
+              "host": "success"
+            }
+          ],
+          "category": [
+            "android.intent.category.DEFAULT",
+            "android.intent.category.BROWSABLE"
+          ]
+        }
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -36,8 +51,7 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
-      ],
-      "expo-web-browser"
+      ]
     ],
     "experiments": {
       "typedRoutes": true
