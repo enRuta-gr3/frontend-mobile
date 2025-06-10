@@ -76,6 +76,7 @@ export default function PayaPalScreen() {
   }
   const handleBuy = async () => {
     try {
+      
       const data = await handleIntegrationPayPal(uuidAuth, viajes);
       console.log('URL de PayPal generada:', data);
       openBrowserAsync(data);

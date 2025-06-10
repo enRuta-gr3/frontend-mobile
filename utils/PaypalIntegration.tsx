@@ -9,7 +9,8 @@ export const handleIntegrationPayPal = async (uuidAuth: string, viajes: ViajeInf
       medio_de_pago: {
         id_medio_de_pago: 3,  
         nombre: 'PayPal'
-      }
+      },
+      urlRedir:'enruta://success'
     },
     pasajes: viajes.map((v) => ({
       uuidAuth: uuidAuth,  
@@ -29,6 +30,7 @@ export const handleIntegrationPayPal = async (uuidAuth: string, viajes: ViajeInf
     },
     body: JSON.stringify(body),
   });
+
 
   if (!res.ok) {
     const text = await res.text();
