@@ -21,6 +21,7 @@ const SeatSelector: React.FC<Props> = ({ viaje, etapa , tipoViaje, pasajes,fecha
   const [asientos, setAsientos] = useState<AsientoData[]>([]);
   const [seleccionados, setSeleccionados] = useState<AsientoData[]>([]);
   const [loading, setLoading] = useState(true);
+  const [mensaje, setMensaje] = useState('Cargando asientos....');
 
   useEffect(() => {
     axios
@@ -51,6 +52,7 @@ const SeatSelector: React.FC<Props> = ({ viaje, etapa , tipoViaje, pasajes,fecha
         Alert.alert('Límite', `Solo puedes seleccionar hasta ${pasajes} asientos.`);
         return;
       }
+      
       setSeleccionados(prev => [...prev, item]);
     }
   };
@@ -76,12 +78,19 @@ const SeatSelector: React.FC<Props> = ({ viaje, etapa , tipoViaje, pasajes,fecha
   };
   
   const handleConfirmar = async () => {
-    
+   
+    if (seleccionados.length < pasajes) {
+        Alert.alert('Límite', `Te faltan ${pasajes - seleccionados.length } asiento/s para seleccionar.`);
+        return;
+      }
+     
+
     let idBloqueo = await AsyncStorage.getItem('userid');
     if (!idBloqueo) {
       Alert.alert('Error', 'No se encontró el usuario para bloquear asientos.');
       return;
     }
+
     
     const asientosParaBloquear: AsientoParaBloquear[] = seleccionados.map(sel => ({
       id_disAsiento: sel.id_disAsiento,

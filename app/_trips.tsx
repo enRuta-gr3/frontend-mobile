@@ -180,13 +180,14 @@ const styles = StyleSheet.create({
   value: { fontWeight: '400', color: '#111' },
   error: { textAlign: 'center', color: 'gray', marginVertical: 16 },
   button: {
-    backgroundColor: '#007aff',
+     backgroundColor: StyleRuta.primary,
     padding: 12,
     borderRadius: 6,
     alignSelf: 'center',
     marginTop: 10,
   },
   buttonText: { color: '#fff', fontWeight: 'bold' },
+
   tipoViaje: {
     fontSize: 14,
     fontWeight: '600',

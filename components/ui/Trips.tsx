@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     color: 'red',
   },
   fecha: {
-    backgroundColor: '#eee',
+    
     paddingHorizontal: 8,
     borderRadius: 8,
     fontSize: 18,

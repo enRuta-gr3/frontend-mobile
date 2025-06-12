@@ -15,7 +15,8 @@ export default function EmailVerificationScreen() {
       />
       <Text style={styles.title}>¡Verificá tu correo!</Text>
       <Text style={styles.message}>
-        Te enviamos un correo electrónico de verificación. Por favor, revisá tu bandeja de entrada (y también la de spam) para confirmar tu dirección de email.
+        Te enviamos un correo electrónico de verificación. 
+        Por favor, revisá tu bandeja de entrada (y también la de spam) para confirmar tu dirección de email.
       </Text>
       <TouchableOpacity style={styles.button} onPress={() => router.replace('/')}> 
         <Text style={styles.buttonText}>Volver al inicio</Text>

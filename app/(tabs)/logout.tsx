@@ -1,24 +1,21 @@
-import React, { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
+import { useEffect } from 'react';
 
 
-export const options = {headerShown: false,}; //ocultar el cabezal en el login
+export const options = { headerShown: false }; // Ocultar encabezado
+
 export default function Logout() {
   const router = useRouter();
 
   useEffect(() => {
-    const checkAuth = async () => {
-      const token = await AsyncStorage.getItem('token');
-      if (token) {
-        await AsyncStorage.removeItem('token');
-        router.replace('/(auth)/login'); 
-      }
-      
+    const logout = async () => {
+      await AsyncStorage.multiRemove(['token', 'userid', 'nombres', 'ci']);
+      router.replace('/(auth)/login');
     };
-        checkAuth();
+
+    logout();
   }, []);
 
-  
   return null;
 }

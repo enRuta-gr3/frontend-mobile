@@ -1,13 +1,15 @@
 import Header from '@/components/ui/Header';
 import SearchScreen from '@/components/ui/Search';
-import { useRequireAuth } from '@/hooks/useRequireAuth';
 import React from 'react';
 import { ImageBackground, StyleSheet, View } from 'react-native';
 
 const imagen = { uri: 'https://en-ruta.vercel.app/bus2.jpg' };
 
 export default function HomeUserScreen() {
-  const { isLogged } = useRequireAuth();
+ 
+   
+    
+
    return (
       <ImageBackground source={imagen} resizeMode="cover" style={styles.imagen}>
         <View style={styles.overlay} />
@@ -51,3 +53,4 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
   }
 });
+

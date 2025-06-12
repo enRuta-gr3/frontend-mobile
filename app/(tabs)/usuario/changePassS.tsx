@@ -3,15 +3,12 @@ import ChangePScreen from '@/components/ui/ChangePass';
 import React from 'react';
 import { ImageBackground, StyleSheet, View } from 'react-native';
 
-
-
 const imagen = { uri: 'https://en-ruta.vercel.app/bus2.jpg' };
 
 export default function ChangePassScreen() {
    return (
-    <>
-   
-        <ImageBackground source={imagen} resizeMode="cover" style={styles.imagen}>
+    <>  
+       <ImageBackground source={imagen} resizeMode="cover" style={styles.imagen}>
           <View style={styles.overlay} />
           <View style={styles.container}>
             <View style={styles.subcontainer}>

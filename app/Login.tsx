@@ -41,6 +41,10 @@ export default function LoginLayout({ email, setEmail, password, setPassword, on
           <ThemedText type="link" style={styles.linkRe}> Regístrate </ThemedText>
           </ThemedText>
       </Link>
+      <Link href='/_reset'>
+        <ThemedText type="link" style={styles.link}>¿Olvidaste tu contraseña? 
+      </ThemedText>
+      </Link>
     </ParallaxScrollView>
     </SafeAreaView>
   );

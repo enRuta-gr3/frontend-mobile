@@ -147,3 +147,11 @@ export interface Usuario{
        esJubilado: boolean,
        estado_descuento: boolean
 }
+
+// cambio contrase;a
+interface Error<T = null> {
+  success: boolean;
+  message: string;
+  errorCode: string;
+  data: T;
+}

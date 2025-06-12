@@ -2,11 +2,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from 'react';
 
 export function useRequireAuth() {
-   const [isLogged, setIsLogged] = useState(false);
+  const [isLogged, setIsLogged] = useState(false);
 
   useEffect(() => {
     const checkAuth = async () => {
       const token = await AsyncStorage.getItem('token');
+      alert(token)
       if (token && token !== 'null' && token !== 'undefined') {
         setIsLogged(true);
       } else {
@@ -18,3 +19,4 @@ export function useRequireAuth() {
 
   return { isLogged };
 }
+

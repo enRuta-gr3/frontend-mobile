@@ -1,25 +1,26 @@
-import UserScreen from '@/components/ui/User';
+ 
+import ResetPassScreen from '@/components/ui/resertPass';
 import React from 'react';
 import { ImageBackground, StyleSheet, View } from 'react-native';
 
+
 const imagen = { uri: 'https://en-ruta.vercel.app/bus2.jpg' };
 
-export default function UScreen() {
-    
-   
+export default function ResetPass() {
    return (
-      <ImageBackground source={imagen} resizeMode="cover" style={styles.imagen}>
-        <View style={styles.overlay} />
-        <View style={styles.container}>         
-          <View style={styles.subcontainer}>
-            <UserScreen />
-            <View style={styles.line}></View>
-          </View>
-        </View>
-      </ImageBackground>
+    <>  
+       <ImageBackground source={imagen} resizeMode="cover" style={styles.imagen}>
+          <View style={styles.overlay} />
+              <View style={styles.container}>
+                <View style={styles.subcontainer}>
+                  <ResetPassScreen />
+                  <View style={styles.line}></View>
+                </View>
+              </View>             
+        </ImageBackground>
+      </>
     );
 }
-
 
 const styles = StyleSheet.create({
   container: {

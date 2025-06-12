@@ -34,11 +34,8 @@ try {
     ); 
  
     if (res.data.success === true) { 
-
-        
         const jdata =res.data.data.access_token;
         const userId =res.data.data.usuario.uuidAuth;
-
         const nombres =res.data.data.usuario.nombres;
         const ci =res.data.data.usuario.ci;
 

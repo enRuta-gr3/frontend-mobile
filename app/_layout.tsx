@@ -29,6 +29,7 @@ export default function RootLayout() {
         <Stack.Screen name="_trips" options={{ title: 'Viajes' }}  />
          <Stack.Screen name="_seat" options={{ title: 'Seleccionar asientos' }}  />
           <Stack.Screen name="tripSelected" options={{ title: 'Resumen de compra' }}  />
+           <Stack.Screen name="_reset" options={{ title: 'Recuperar contraseña' }}  />
        
       </Stack>
       

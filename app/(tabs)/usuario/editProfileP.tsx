@@ -115,7 +115,7 @@ export default function EditProfile() {
          
 
        if (res.data.success) { 
-          router.push("/emailVerification");
+          router.push("/(auth)/EmailVerification");
        } else{
           Alert.alert('Error:', res.data.data )
        }   
