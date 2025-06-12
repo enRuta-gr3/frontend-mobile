@@ -76,13 +76,7 @@ export default function PayaPalScreen() {
   }
   const handleBuy = async () => {
     try {
-      // Datos simulados
-      const uuidAuthSim = "886be979-5882-4123-9c52-1a120607b1fb";
-      const viajesSim = [
-      { id_viaje: 1, cantidad: 2 },
-      { id_viaje: 2, cantidad: 2 }
-    ];
-      const data = await handleIntegrationPayPal(uuidAuthSim, viajesSim);
+      const data = await handleIntegrationPayPal(uuidAuth, viajes);
       console.log('URL de PayPal generada:', data);
       openBrowserAsync(data);
     } catch (error) {

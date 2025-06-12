@@ -1,7 +1,7 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, Button, Text, View } from 'react-native';
-import { capturarOrder } from './apiVentas';
+import capturarOrder from './apiVentas';
 
 export default function SuccessScreen() {
   const { venta: id_venta_, token: token_ } = useLocalSearchParams();
@@ -42,10 +42,10 @@ export default function SuccessScreen() {
   }, [id_venta_, token_]);
 
   const handleCancelRedirect = () => {
-    router.replace('./home'); 
+    router.replace('./homeUser'); 
   };
   const handleSuccessRedirect = () => {
-   router.replace('./TicketPdfScreen'); 
+   router.replace('./PasajePdf'); 
   };
 
   return (
@@ -67,7 +67,7 @@ export default function SuccessScreen() {
           <Text style={{ fontSize: 16, textAlign: 'center', marginBottom: 30 }}>
             {mensajeUI}
           </Text>
-          <Button title="Continuar" onPress={handleSuccessRedirect} color="#007bff" />
+          <Button title="Descargar Pasaje" onPress={handleSuccessRedirect} color="#007bff" />
         </View>
       )}
 
