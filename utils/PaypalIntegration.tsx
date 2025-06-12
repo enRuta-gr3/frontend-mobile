@@ -44,17 +44,3 @@ export const handleIntegrationPayPal = async (uuidAuth: string, viajes: ViajeInf
   return data.data.urlPago;
 };
 
-
-
-export const confirmarVentaPaypal = async (id_venta: number, id_orden: string) => {
-  const res = await fetch('https://backend-production-2812f.up.railway.app/api/venta/confirmarVentaPaypal', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ id_venta, id_orden }),
-  });
-  if (!res.ok) {
-    const errorData = await res.json();
-    throw new Error(errorData.message || 'Error confirmando la venta en backend');
-  }
-  return await res.json();
-};

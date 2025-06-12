@@ -1,14 +1,17 @@
 {
   "expo": {
-    "name": "enruta",
-    "slug": "enruta",
+    "name": "enruta",       
+    "slug": "enrutalatu",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "enruta",
-    "deepLinking": true,
     "userInterfaceStyle": "automatic",
-    "platforms": ["ios", "android", "web"],
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true
@@ -19,14 +22,13 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.bfariello.enruta",
+      "package": "com.enruta.enruta",
       "intentFilters": [
         {
           "action": "android.intent.action.VIEW",
           "data": [
             {
-              "scheme": "enruta",
-              "host": "success"
+              "scheme": "enruta"
             }
           ],
           "category": [
@@ -51,7 +53,8 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
-      ]
+      ],
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true
@@ -59,7 +62,7 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "560e79b7-594e-42c9-b8cd-5e166096f9ab"
+        "projectId": "cf6c02c3-aa64-45b0-a8e5-46db930e3a58"
       }
     }
   }

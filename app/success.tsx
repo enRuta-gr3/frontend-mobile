@@ -1,54 +1,89 @@
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Text, View } from 'react-native';
-import { confirmarVentaPaypal } from '../utils/PaypalIntegration';
+import { ActivityIndicator, Button, Text, View } from 'react-native';
+import { capturarOrder } from './apiVentas';
 
-export default function Success() {
-  const { token: orderId, venta: ventaId } = useLocalSearchParams();
-  const [estado, setEstado] = useState<'cargando' | 'ok' | 'error'>('cargando');
-  const [mensaje, setMensaje] = useState('');
+export default function SuccessScreen() {
+  const { venta: id_venta_, token: token_ } = useLocalSearchParams();
+
+  const [estadoUI, setEstadoUI] = useState<'cargando' | 'exito' | 'error'>('cargando');
+  const [mensajeUI, setMensajeUI] = useState('');
 
   useEffect(() => {
-    const procesarPago = async () => {
-      const idVenta = Number(ventaId);
-      if (!orderId || !idVenta || isNaN(idVenta)) {
-        setEstado('error');
-        setMensaje('Faltan o son inválidos los datos de la orden o de la venta.');
+    const procesarPagoExitoso = async () => {
+      const idVenta = Number(id_venta_);
+      const token = token_ ? token_.toString() : undefined;
+
+      if (!token || !idVenta || isNaN(idVenta)) {
+        setEstadoUI('error');
+        setMensajeUI('Datos de confirmación incompletos o inválidos.');
         return;
       }
 
       try {
-        const confirmData = await confirmarVentaPaypal(idVenta, orderId as string);     
-        if (confirmData.status !== 'COMPLETED' || confirmData.success === false) {
-          throw new Error(confirmData.message || `La orden no fue completada: ${confirmData.status || 'estado desconocido'}`);
+        const confirmData = await capturarOrder(idVenta, token);
+        if (confirmData.status === 'COMPLETED' && confirmData.success === true) {
+          setEstadoUI('exito');
+          
+          setMensajeUI(`¡Gracias por tu compra! Tu pago ha sido confirmado con éxito. ID de Transacción: ${confirmData.transactionId || 'N/A'}`);
+        } else {
+          setEstadoUI('error');
+          setMensajeUI(confirmData.message || 'La confirmación del pago no indicó un estado completado.');
         }
 
-        setEstado('ok');
-        setMensaje('Gracias por tu compra fue confirmada con éxito.');
       } catch (error: any) {
-        console.error(error);
-        setEstado('error');
-        setMensaje(error.message || 'Ocurrió un error al procesar el pago.');
+        console.error('Error al confirmar el pago en el backend:', error);
+        setEstadoUI('error');
+        setMensajeUI(error.message || 'Ocurrió un error al procesar tu pago. Por favor, revisa tu estado de cuenta.');
       }
     };
 
-    procesarPago();
-  }, [orderId, ventaId]);
+    procesarPagoExitoso();
+  }, [id_venta_, token_]);
+
+  const handleCancelRedirect = () => {
+    router.replace('./home'); 
+  };
+  const handleSuccessRedirect = () => {
+   router.replace('./TicketPdfScreen'); 
+  };
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 }}>
-      {estado === 'cargando' && (
-        <>
-          <ActivityIndicator size="large" />
-          <Text style={{ marginTop: 10 }}>Procesando tu pago, por favor espera...</Text>
-        </>
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20, backgroundColor: '#f0f0f0' }}>
+      {estadoUI === 'cargando' && (
+        <View style={{ alignItems: 'center' }}>
+          <ActivityIndicator size="large" color="#007bff" />
+          <Text style={{ marginTop: 20, fontSize: 18, textAlign: 'center' }}>
+            Procesando tu pago, por favor espera un momento...
+          </Text>
+        </View>
       )}
-      {estado === 'ok' && (
-        <Text style={{ color: 'green', fontWeight: 'bold', fontSize: 16 }}>{mensaje}</Text>
+
+      {estadoUI === 'exito' && (
+        <View style={{ alignItems: 'center' }}>
+          <Text style={{ color: 'green', fontWeight: 'bold', fontSize: 24, textAlign: 'center', marginBottom: 20 }}>
+            ¡Pago Confirmado!
+          </Text>
+          <Text style={{ fontSize: 16, textAlign: 'center', marginBottom: 30 }}>
+            {mensajeUI}
+          </Text>
+          <Button title="Continuar" onPress={handleSuccessRedirect} color="#007bff" />
+        </View>
       )}
-      {estado === 'error' && (
-        <Text style={{ color: 'red', fontWeight: 'bold', fontSize: 16 }}>Error: {mensaje}</Text>
+
+      {estadoUI === 'error' && (
+        <View style={{ alignItems: 'center' }}>
+          <Text style={{ color: 'red', fontWeight: 'bold', fontSize: 22, textAlign: 'center', marginBottom: 20 }}>
+            ¡Error en el Pago!
+          </Text>
+          <Text style={{ fontSize: 16, textAlign: 'center', marginBottom: 30 }}>
+            {mensajeUI}
+          </Text>
+          <Button title="Volver a intentar" onPress={handleCancelRedirect} color="#dc3545" />
+        </View>
       )}
     </View>
   );
 }
+
+
