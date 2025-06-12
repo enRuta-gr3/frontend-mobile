@@ -6,7 +6,6 @@ import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { Tabs } from 'expo-router';
 import React from 'react';
 
-
 export default function TabLayout() {
   const colorScheme = useColorScheme();
   return (
@@ -14,8 +13,7 @@ export default function TabLayout() {
        screenOptions={{
        tabBarActiveTintColor: StyleRuta.primary,
        headerShown: false, 
-       tabBarButton: HapticTab,
-      
+       tabBarButton: HapticTab,      
       }}
     > 
       <Tabs.Screen
@@ -40,19 +38,7 @@ export default function TabLayout() {
         tabBarIcon: ({ color, size }) => (<FontAwesome5 name="window-close" size={size} color={color} /> ),
       }}
       />
-      <Tabs.Screen
-      name="cart"
-      options={{
-        href: null,
-        title: 'carrtio',   
-        tabBarBadge: 2,
-        tabBarBadgeStyle:{
-        backgroundColor: "tomato",
-        color:"white"
-        },           
-        tabBarIcon: ({ color, size }) => (<FontAwesome5 name="shopping-cart" size={size} color={color} /> ),
-      }}
-      />
+    
       <Tabs.Screen
       name="usuario"
       options={{
@@ -60,6 +46,7 @@ export default function TabLayout() {
         tabBarIcon: ({ color, size }) => (<FontAwesome6 name="user-large" size={size} color={color} /> ),
       }}
       />
+    
       
 
      

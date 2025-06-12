@@ -17,14 +17,13 @@ interface ViajeVenta {
 const ResumenSeleccion: React.FC = () => {
   const { compras, tipoViaje } = useLocalSearchParams();
   const comprasArray = compras ? JSON.parse(compras as string) : [];
-
   const [montoTotal, setMontoTotal] = useState(0);
   const [montoDescuento, setMontoDescuento] = useState(0);
   const [loading, setLoading] = useState(false);
 
-  /* if (!Array.isArray(comprasArray) || comprasArray.length === 0) {
+   if (!Array.isArray(comprasArray) || comprasArray.length === 0) {
     return <Text>No se recibió la información de la compra.</Text>;
-  }*/
+  }
 
   const datosVenta: ViajeVenta[] = comprasArray.map((compra: Compra) => ({
     uuidAuth: compra.id_usuario,
@@ -34,6 +33,7 @@ const ResumenSeleccion: React.FC = () => {
     },
   }));
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     const calcularVenta = async () => {
       setLoading(true);
@@ -44,7 +44,6 @@ const ResumenSeleccion: React.FC = () => {
           { headers: { 'Content-Type': 'application/json' } }
         );
         if (res.data.success) {
-          alert(res.data.data.montoDescuento)
           setMontoTotal(res.data.data.montoTotal);
           setMontoDescuento(res.data.data.montoDescuento);
         } else {
@@ -61,13 +60,7 @@ const ResumenSeleccion: React.FC = () => {
   }, []);
 
   const clickCancel = () => {
-    router.push({
-      pathname: '/_seat',
-      params: {
-        error: 'falloBloqueo',
-        asientosFallidos: JSON.stringify([1, 2, 3]),
-      },
-    });
+    router.back();  
   };
 
   return (

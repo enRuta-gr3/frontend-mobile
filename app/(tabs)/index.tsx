@@ -5,6 +5,7 @@ import { ActivityIndicator, View } from 'react-native';
 
 
 export default function IndexScreen() {
+  
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const { isLogged } = useRequireAuth();
@@ -23,6 +24,7 @@ export default function IndexScreen() {
     };
     checkAuth();
   }, [isLogged, router]);
+
 
   if (loading) {
     return (

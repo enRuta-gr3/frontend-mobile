@@ -1,5 +1,6 @@
 import Header from '@/components/ui/Header';
 import { useRequireAuth } from '@/hooks/useRequireAuth';
+import SearchScreen from '@/components/ui/Search';
 import React from 'react';
 import { ImageBackground, StyleSheet, View } from 'react-native';
 import { PaymentScreen } from '../PaymentScreen';
@@ -9,7 +10,7 @@ import { PaymentScreen } from '../PaymentScreen';
 const imagen = { uri: 'https://en-ruta.vercel.app/bus2.jpg' };
 
 export default function HomeUserScreen() {
-  const { isLogged } = useRequireAuth();
+
    return (
       <ImageBackground source={imagen} resizeMode="cover" style={styles.imagen}>
         <View style={styles.overlay} />
@@ -55,3 +56,4 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
   }
 });
+

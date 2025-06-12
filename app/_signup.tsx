@@ -36,7 +36,7 @@ export default function Signup() {
           return;
         }
 
-     if (!validarCedulaUruguaya(cedula)) {
+     if (!validarCedula(cedula)) {
         Alert.alert(
             "Campos inválidos",
             "La ci ingresada no es válida. "
@@ -84,11 +84,10 @@ export default function Signup() {
           console.log(res.data)
 
        if (res.data.success) { 
-          router.push("/emailVerification");
+          router.push("/EmailVerification");
        } else{
           Alert.alert('Error:', res.data.data )
        }   
-
     } catch (error: any) {
            console.log(error.response)
       if (!error.response?.success) {
@@ -113,7 +112,7 @@ export default function Signup() {
       return false;
   };
 
-  function validarCedulaUruguaya(ci: string): boolean {
+  function validarCedula(ci: string): boolean {
       const ciLimpia = ci.replace(/\D/g, '');
       if (ciLimpia.length < 7 || ciLimpia.length > 8) return false;
       
@@ -124,7 +123,6 @@ export default function Signup() {
       for (let i = 0; i < 7; i++) {
         suma += digitos[i] * multiplicadores[i];
       }
-
       const digitoVerificador = ((10 - (suma % 10)) % 10);
       return digitoVerificador === digitos[7];
     }
