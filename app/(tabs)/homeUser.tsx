@@ -3,8 +3,6 @@ import { useRequireAuth } from '@/hooks/useRequireAuth';
 import SearchScreen from '@/components/ui/Search';
 import React from 'react';
 import { ImageBackground, StyleSheet, View } from 'react-native';
-import { PaymentScreen } from '../PaymentScreen';
-//import SearchScreen from '@/components/ui/Search';
 
 
 const imagen = { uri: 'https://en-ruta.vercel.app/bus2.jpg' };
@@ -17,14 +15,14 @@ export default function HomeUserScreen() {
         <View style={styles.container}>
           <Header />
           <View style={styles.subcontainer}>
-            <PaymentScreen />
+           <SearchScreen />
             <View style={styles.line}></View>
           </View>
         </View>
       </ImageBackground>
     );
 }
-/*<SearchScreen />
+/*
 <PaypalScreen />
 */
 

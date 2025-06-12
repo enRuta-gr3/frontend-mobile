@@ -138,7 +138,7 @@ const SeatSelector: React.FC<Props> = ({ viaje, etapa , tipoViaje, pasajes,fecha
 
 
               //vuelta
-              }else if (tipoViaje === 'ida-vuelta' && etapa === 'ida'){
+              } else if (tipoViaje === 'ida-vuelta' && etapa === 'ida'){
 
                 
                 const compraIda: Compra = {

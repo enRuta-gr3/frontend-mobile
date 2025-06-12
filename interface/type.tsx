@@ -155,3 +155,15 @@ interface Error<T = null> {
   errorCode: string;
   data: T;
 }
+
+
+//pago
+
+
+export interface ViajeVenta {
+  uuidAuth: string;
+  viaje: {
+    id_viaje: number;
+    cantidad: number;
+  };
+}

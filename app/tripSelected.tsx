@@ -1,18 +1,11 @@
 import StyleRuta from '@/hooks/styles';
-import { Compra } from '@/interface/type';
+import { Compra,  ViajeVenta} from '@/interface/type';
 import { FontAwesome5 } from '@expo/vector-icons';
 import axios from 'axios';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-interface ViajeVenta {
-  uuidAuth: string;
-  viaje: {
-    id_viaje: number;
-    cantidad: number;
-  };
-}
 
 const ResumenSeleccion: React.FC = () => {
   const { compras, tipoViaje } = useLocalSearchParams();
@@ -21,7 +14,7 @@ const ResumenSeleccion: React.FC = () => {
   const [montoDescuento, setMontoDescuento] = useState(0);
   const [loading, setLoading] = useState(false);
 
-   if (!Array.isArray(comprasArray) || comprasArray.length === 0) {
+  if (!Array.isArray(comprasArray) || comprasArray.length === 0) {
     return <Text>No se recibió la información de la compra.</Text>;
   }
 
@@ -62,6 +55,14 @@ const ResumenSeleccion: React.FC = () => {
   const clickCancel = () => {
     router.back();  
   };
+ 
+  const cliclComprar = () => {
+     router.push({
+        pathname: '/PaymentScreen',
+        params: {
+          datosVenta: JSON.stringify(datosVenta)        
+        }});
+  }
 
   return (
     <>
@@ -141,9 +142,8 @@ const ResumenSeleccion: React.FC = () => {
 
             <TouchableOpacity
               style={styles.buyButton}
-              onPress={() => alert('Compra realizada\n¡Gracias por tu compra!')}
-            >
-              <Text style={styles.buyText}>Comprar</Text>
+              onPress={cliclComprar}>
+              <Text style={styles.buyText}>Id a pagar</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.cancelButton} onPress={clickCancel}>

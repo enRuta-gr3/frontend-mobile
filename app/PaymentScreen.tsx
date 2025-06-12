@@ -1,21 +1,33 @@
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import React from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-export const PaymentScreen = () => {
+export default function PaymentScreen() {
+// export const PaymentScreen = () => {
   const router = useRouter();
+  
+   const { datosVenta } = useLocalSearchParams();
 
   const handleConfirm = async () => {
     try {
       console.log('Confirmando selección y navegando a PayPal...');
-      router.push('/Paypal');
+      
+      router.push({
+          pathname: '/Paypal',
+          params: {
+            datosVenta: datosVenta        
+          }});
+
     } catch (error) {
       console.error('Error al confirmar método de pago:', error);
     }
   };
+  
 
   return (
-    <View style={styles.screen}>
+    <ScrollView contentContainerStyle={styles.screen}>
+    <View style={styles.screenA}>
+              
       <View style={styles.container}>
         <Text style={styles.title}>Selecciona método de pago</Text>
         <Text style={styles.subtitle}>Elige cómo pagar tu viaje:</Text>
@@ -29,21 +41,25 @@ export const PaymentScreen = () => {
         </TouchableOpacity>
       </View>
     </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  screen: {
+screenA: {
     flex: 1,
-    backgroundColor: '#f2f2f2', 
-    justifyContent: 'center',
-    alignItems: 'center',
+     alignItems: 'center',
+  },
+   screen: {
+    flexGrow: 1,
+    padding: 16,
+    justifyContent: 'space-between',
   },
   container: {
     backgroundColor: '#fff',
     padding: 20,
     borderRadius: 10,
-    width: '90%',
+    width: '100%',
     elevation: 4, 
     shadowColor: '#000', 
     shadowOffset: { width: 0, height: 2 },
