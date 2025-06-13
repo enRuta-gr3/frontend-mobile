@@ -18,7 +18,7 @@ export default function IndexScreen() {
          }, 0);
       } else {
         setTimeout(() => {
-         router.replace('/login');
+         router.replace('/(tabs)/homeUser');
          }, 0);
       }
     };

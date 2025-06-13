@@ -95,10 +95,8 @@ export default function PayaPalScreen() {
     Alert.alert('Cancelado');
   }
   const handleBuy = async () => {
-    try {   
-    
-      // Si solo se debe enviar un ViajeVenta, selecciona el primero del array
-      const data = await handleIntegrationPayPal(pago);
+    try {
+      const data = await handleIntegrationPayPal(uuidAuth, viajes);
       console.log('URL de PayPal generada:', data);
       openBrowserAsync(data);
 

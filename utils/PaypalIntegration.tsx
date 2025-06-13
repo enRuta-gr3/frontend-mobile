@@ -1,10 +1,5 @@
 import { ViajeVenta } from "@/interface/type";
 
-interface ViajeInfo {
-  id_viaje: number;
-  cantidad: number;
-}
-
 //https://en-ruta.vercel.app/
 
 export const handleIntegrationPayPal = async (pago: ViajeVenta[]) => {
@@ -48,20 +43,3 @@ export const handleIntegrationPayPal = async (pago: ViajeVenta[]) => {
   return data.data.urlPago;
 };
 
-
-
-export const confirmarVentaPaypal = async (id_venta: number, id_orden: string) => {
-  const res = await fetch('https://backend-production-2812f.up.railway.app/api/venta/confirmarVentaPaypal', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ id_venta, id_orden }),
-  });
- 
-  alert("confirmarventa")
-  console.log('Cuerpo del request:', JSON.stringify(res, null, 2));
-  if (!res.ok) {
-    const errorData = await res.json();
-    throw new Error(errorData.message || 'Error confirmando la venta en backend');
-  }
-  return await res.json();
-}; // confirmarVEntaPAypal

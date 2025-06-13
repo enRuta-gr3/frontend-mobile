@@ -4,6 +4,9 @@ import SearchScreen from '@/components/ui/Search';
 import React from 'react';
 import { ImageBackground, StyleSheet, View } from 'react-native';
 
+//import TicketPdfScreen from '../PasajePdf';
+//import SuccessScreen from '../success';
+//import PayaPalScreen from '../Paypal';
 
 const imagen = { uri: 'https://en-ruta.vercel.app/bus2.jpg' };
 
@@ -22,9 +25,6 @@ export default function HomeUserScreen() {
       </ImageBackground>
     );
 }
-/*
-<PaypalScreen />
-*/
 
 const styles = StyleSheet.create({
   container: {
