@@ -3,6 +3,7 @@ import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
+import { Slot } from 'expo-router';
 
 
 import { useColorScheme } from '@/hooks/useColorScheme';
@@ -16,7 +17,7 @@ export default function RootLayout() {
   if (!loaded) {
     return null;
   }
-
+ 
   return (    
    
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
@@ -30,6 +31,9 @@ export default function RootLayout() {
          <Stack.Screen name="_seat" options={{ title: 'Seleccionar asientos' }}  />
           <Stack.Screen name="tripSelected" options={{ title: 'Resumen de compra' }}  />
            <Stack.Screen name="_reset" options={{ title: 'Recuperar contraseña' }}  />
+             <Stack.Screen name="PaymentScreen" options={{ title: 'Seleccionar metodo de pago' }}  />
+       
+         <Stack.Screen name="success" options={{ title: 'Pago realizado' }}  />
        
       </Stack>
       
