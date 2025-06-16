@@ -10,9 +10,6 @@ export async function listarLocalidades(): Promise<Localidad[]> {
         'Content-Type': 'application/json',
       },
     });
-
-
-
     if (res.data.success) {
       return res.data.data;
     } else {

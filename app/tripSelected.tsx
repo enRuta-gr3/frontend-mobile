@@ -1,5 +1,5 @@
 import StyleRuta from '@/hooks/styles';
-import { Compra,  ViajeVenta} from '@/interface/type';
+import { Compra, ViajeVenta } from '@/interface/type';
 import { FontAwesome5 } from '@expo/vector-icons';
 import axios from 'axios';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -111,9 +111,6 @@ const ResumenSeleccion: React.FC = () => {
               <Text>{compra.asientos.map((a: any) => a.numero_asiento).join(', ')}</Text>
             </View>
 
-             
-
-
           <View style={styles.separator} />
 
           </View>
@@ -143,7 +140,7 @@ const ResumenSeleccion: React.FC = () => {
             <TouchableOpacity
               style={styles.buyButton}
               onPress={cliclComprar}>
-              <Text style={styles.buyText}>Id a pagar</Text>
+              <Text style={styles.buyText}>Continuar</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.cancelButton} onPress={clickCancel}>

@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     borderBottomStartRadius: 1,
     elevation: 8,
     backgroundColor: "#fff", 
-    paddingTop: 55,
+    paddingTop: 55, 
   },
   logo: {
     width: 60,

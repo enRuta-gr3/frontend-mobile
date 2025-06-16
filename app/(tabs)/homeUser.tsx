@@ -1,5 +1,4 @@
 import Header from '@/components/ui/Header';
-import { useRequireAuth } from '@/hooks/useRequireAuth';
 import SearchScreen from '@/components/ui/Search';
 import React from 'react';
 import { ImageBackground, StyleSheet, View } from 'react-native';
@@ -22,9 +21,6 @@ export default function HomeUserScreen() {
       </ImageBackground>
     );
 }
-/*
-<PaypalScreen />
-*/
 
 const styles = StyleSheet.create({
   container: {

@@ -7,7 +7,7 @@ export function useRequireAuth() {
   useEffect(() => {
     const checkAuth = async () => {
       const token = await AsyncStorage.getItem('token');
-      alert(token)
+    
       if (token && token !== 'null' && token !== 'undefined') {
         setIsLogged(true);
       } else {

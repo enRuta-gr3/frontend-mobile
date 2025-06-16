@@ -1,14 +1,11 @@
-import { FontAwesome } from '@expo/vector-icons';
-import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Image, StyleSheet, View } from 'react-native';
 
 export default function Headerinternas() {
   return (
     <>
         <View style={styles.header}>
           <Image source={require('@/assets/images/logo.jpg')} style={styles.logo} />
-          <TouchableOpacity onPress={() => alert('Va a la bandeja de notificaciones. \n Upps algo no funciono ')}>
-            <FontAwesome name="bell" size={24} color="#333" />
-          </TouchableOpacity>
+         
         </View>
    
       </>
@@ -27,6 +24,7 @@ const styles = StyleSheet.create({
    
     backgroundColor: "#fff", 
     paddingTop: 24,
+    paddingBottom: 12,
   },
   logo: {
     width: 60,

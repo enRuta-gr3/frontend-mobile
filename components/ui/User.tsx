@@ -55,7 +55,7 @@ export default function UserScreen() {
       <TouchableOpacity style={styles.linkBox} onPress={() => router.push('/(tabs)/usuario/editProfileP')}>
         <MaterialIcons name="person-outline" size={24} color="#f97316" style={styles.icon} />
         <Text style={styles.linkText}>Modificar perfil</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> 
 
       </View></>
   );

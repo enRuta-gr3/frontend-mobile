@@ -1,56 +1,72 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React from 'react';
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function PaymentScreen() {
-// export const PaymentScreen = () => {
   const router = useRouter();
-  
-   const { datosVenta } = useLocalSearchParams();
-
+  const { datosVenta } = useLocalSearchParams();
+   
   const handleConfirm = async () => {
     try {
-      console.log('Confirmando selección y navegando a PayPal...');
-      
-      router.push({
-          pathname: '/Paypal',
-          params: {
-            datosVenta: datosVenta        
-          }});
+     
+      const body = {
+         pago: {
+          medio_de_pago: {
+            id_medio_de_pago: 3,
+            nombre: 'PayPal',
+          },
+          urlRedir: 'enruta://success',
+        },
+        pasajes: datosVenta ? JSON.parse(datosVenta as string).map((item: any) => ({
+          uuidAuth: item.uuidAuth,
+          viaje: {
+            id_viaje: item.viaje.id_viaje,
+            cantidad: item.viaje.cantidad,
+          },
+        })) : [],
+      };
 
+      const res = await fetch('https://backend-production-2812f.up.railway.app/api/pagos/solicitarParametrosPago', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      const data = await res.json();
+    
+   if (data.success) {
+         router.push({ pathname: '/Paypal', 
+            params: { urlPaypal: data.data.urlPago } 
+        });
+      } else {
+        Alert.alert('Error 002', 'No se pudo obtener la URL de PayPal.');
+      }
     } catch (error) {
-      console.error('Error al confirmar método de pago:', error);
+      Alert.alert('Error', 'Ocurrió un error al procesar el pago.');
     }
   };
-  
-
   return (
     <ScrollView contentContainerStyle={styles.screen}>
-    <View style={styles.screenA}>
-              
-      <View style={styles.container}>
-        <Text style={styles.title}>Selecciona método de pago</Text>
-        <Text style={styles.subtitle}>Elige cómo pagar tu viaje:</Text>
-
-        <TouchableOpacity style={styles.methodCard} onPress={handleConfirm}>
-          <Image
-            source={{ uri: 'https://www.paypalobjects.com/webstatic/icon/pp258.png' }}
-            style={styles.logo}
-          />
-          <Text style={styles.methodText}>PayPal</Text>
-        </TouchableOpacity>
+      <View style={styles.screenA}>
+        <View style={styles.container}>
+          <Text style={styles.title}>Selecciona método de pago</Text>
+          <Text style={styles.subtitle}>Elige cómo pagar tu viaje:</Text>
+          <TouchableOpacity style={styles.methodCard} onPress={handleConfirm}>
+            <Image source={{ uri: 'https://www.paypalobjects.com/webstatic/icon/pp258.png' }} style={styles.logo}/>
+            <Text style={styles.methodText}>PayPal</Text>
+          </TouchableOpacity>
+         
+        </View>
       </View>
-    </View>
     </ScrollView>
   );
-};
+}
 
 const styles = StyleSheet.create({
-screenA: {
+  screenA: {
     flex: 1,
-     alignItems: 'center',
+    alignItems: 'center',
   },
-   screen: {
+  screen: {
     flexGrow: 1,
     padding: 16,
     justifyContent: 'space-between',
@@ -60,8 +76,8 @@ screenA: {
     padding: 20,
     borderRadius: 10,
     width: '100%',
-    elevation: 4, 
-    shadowColor: '#000', 
+    elevation: 4,
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,

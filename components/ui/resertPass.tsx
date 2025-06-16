@@ -1,4 +1,4 @@
-import { resetPass } from "@/controllers/resetPass";
+import { resetPass } from "@/components/ui/resertPass";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
@@ -14,7 +14,7 @@ export default function ResetPassScreen() {
 
   function limpiarCampos() {
       setEmail("");
-    }
+    } 
  const clickReset = async () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 

@@ -1,14 +1,13 @@
 {
   "expo": {
-    "name": "enruta",
-    "slug": "enruta",
+    "name": "En Ruta",
+    "slug": "mi-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "enruta",
-    "deepLinking": true,
     "userInterfaceStyle": "automatic",
-    "platforms": ["ios", "android", "web"],
+    "platforms": ["ios", "android"],
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true
@@ -19,22 +18,7 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.bfariello.enruta",
-      "intentFilters": [
-        {
-          "action": "android.intent.action.VIEW",
-          "data": [
-            {
-              "scheme": "enruta",
-              "host": "success"
-            }
-          ],
-          "category": [
-            "android.intent.category.DEFAULT",
-            "android.intent.category.BROWSABLE"
-          ]
-        }
-      ]
+      "package": "com.bfariello.miapp"
     },
     "web": {
       "bundler": "metro",
@@ -46,7 +30,7 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
+          "image": "./assets/images/adaptive-icon.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
@@ -59,7 +43,7 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "560e79b7-594e-42c9-b8cd-5e166096f9ab"
+        "projectId": "dc0b007b-1ac5-454a-8687-3086ae39ea6f"
       }
     }
   }

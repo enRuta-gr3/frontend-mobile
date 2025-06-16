@@ -1,10 +1,10 @@
 
+import LoginLayout from '@/components/ui/Login';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { Alert } from 'react-native';
-import LoginLayout from '../Login';
 
 export const options = {headerShown: false,}; //ocultar el cabezal en el login
 
@@ -26,7 +26,7 @@ export default function Login() {
       return;
     } */
 
-try {
+try { 
   const res = await axios.post(
       'https://backend-production-2812f.up.railway.app/api/auth/iniciarSesion', 
       {email: email, contraseña: password },
@@ -48,14 +48,13 @@ try {
           await AsyncStorage.setItem('ci', ci); 
             router.push('/(tabs)/homeUser'); 
           }
-    }
-
-  
+    } 
     
  
 } catch (error: any) {
    
   if (error.response) {
+    console.log(JSON.stringify(error.response))
     if (error.response.status === 401 || error.response.status === 403) {
       Alert.alert('Error', 'No se pudo iniciar sesión. Por favor, revisa tus credenciales.');
     }

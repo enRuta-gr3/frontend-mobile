@@ -37,10 +37,14 @@ export default function UsuarioLayout() {
         options={{          
           headerShown: true,
           headerTitle: () => (
-             <View style={styles.container}>
-                <Headerinternas/>
-             </View>
-          ),
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Image
+                      source={require('@/assets/images/logo.jpg')}
+                      style={{ width: 30, height: 30, marginRight: 8 }}
+                    />
+                    <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Historial de Tickets</Text>
+                  </View>
+                ),
         }}
       />
 

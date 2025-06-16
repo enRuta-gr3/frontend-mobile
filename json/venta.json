@@ -1,0 +1,155 @@
+{
+  "success": true,
+  "message": "Pasajes creados correctamente",
+  "errorCode": null,
+  "data": [
+    {
+      "id_pasaje": 14,
+      "precio": 900,
+      "viaje": {
+        "id_viaje": 0,
+        "fecha_partida": "20/06/2025",
+        "hora_partida": "10:00",
+        "fecha_llegada": "20/06/2025",
+        "hora_llegada": "12:00",
+        "cantidad": 0,
+        "precio_viaje": 0,
+        "localidadOrigen": {
+          "id_localidad": 0,
+          "nombreLocalidad": "Montevideo",
+          "departamento": {
+            "id_departamento": 10,
+            "nombreDepartamento": "Montevideo"
+          }
+        },
+        "localidadDestino": {
+          "id_localidad": 0,
+          "nombreLocalidad": "Juan Lacaze",
+          "departamento": {
+            "id_departamento": 4,
+            "nombreDepartamento": "Colonia"
+          }
+        },
+        "asientosDisponibles": 0
+      },
+      "asiento": {
+        "id_asiento": 0,
+        "numero_asiento": 46,
+        "id_omnibus": 0
+      },
+      "venta_compra": null,
+      "uuidAuth": null
+    },
+    {
+      "id_pasaje": 15,
+      "precio": 900,
+      "viaje": {
+        "id_viaje": 0,
+        "fecha_partida": "20/06/2025",
+        "hora_partida": "10:00",
+        "fecha_llegada": "20/06/2025",
+        "hora_llegada": "12:00",
+        "cantidad": 0,
+        "precio_viaje": 0,
+        "localidadOrigen": {
+          "id_localidad": 0,
+          "nombreLocalidad": "Montevideo",
+          "departamento": {
+            "id_departamento": 10,
+            "nombreDepartamento": "Montevideo"
+          }
+        },
+        "localidadDestino": {
+          "id_localidad": 0,
+          "nombreLocalidad": "Juan Lacaze",
+          "departamento": {
+            "id_departamento": 4,
+            "nombreDepartamento": "Colonia"
+          }
+        },
+        "asientosDisponibles": 0
+      },
+      "asiento": {
+        "id_asiento": 0,
+        "numero_asiento": 31,
+        "id_omnibus": 0
+      },
+      "venta_compra": null,
+      "uuidAuth": null
+    },
+    {
+      "id_pasaje": 16,
+      "precio": 1200,
+      "viaje": {
+        "id_viaje": 0,
+        "fecha_partida": "21/06/2025",
+        "hora_partida": "20:00",
+        "fecha_llegada": "21/06/2025",
+        "hora_llegada": "01:00",
+        "cantidad": 0,
+        "precio_viaje": 0,
+        "localidadOrigen": {
+          "id_localidad": 0,
+          "nombreLocalidad": "Juan Lacaze",
+          "departamento": {
+            "id_departamento": 4,
+            "nombreDepartamento": "Colonia"
+          }
+        },
+        "localidadDestino": {
+          "id_localidad": 0,
+          "nombreLocalidad": "Montevideo",
+          "departamento": {
+            "id_departamento": 10,
+            "nombreDepartamento": "Montevideo"
+          }
+        },
+        "asientosDisponibles": 0
+      },
+      "asiento": {
+        "id_asiento": 0,
+        "numero_asiento": 24,
+        "id_omnibus": 0
+      },
+      "venta_compra": null,
+      "uuidAuth": null
+    },
+    {
+      "id_pasaje": 17,
+      "precio": 1200,
+      "viaje": {
+        "id_viaje": 0,
+        "fecha_partida": "21/06/2025",
+        "hora_partida": "20:00",
+        "fecha_llegada": "21/06/2025",
+        "hora_llegada": "01:00",
+        "cantidad": 0,
+        "precio_viaje": 0,
+        "localidadOrigen": {
+          "id_localidad": 0,
+          "nombreLocalidad": "Juan Lacaze",
+          "departamento": {
+            "id_departamento": 4,
+            "nombreDepartamento": "Colonia"
+          }
+        },
+        "localidadDestino": {
+          "id_localidad": 0,
+          "nombreLocalidad": "Montevideo",
+          "departamento": {
+            "id_departamento": 10,
+            "nombreDepartamento": "Montevideo"
+          }
+        },
+        "asientosDisponibles": 0
+      },
+      "asiento": {
+        "id_asiento": 0,
+        "numero_asiento": 17,
+        "id_omnibus": 0
+      },
+      "venta_compra": null,
+      "uuidAuth": null
+    }
+  ]
+}

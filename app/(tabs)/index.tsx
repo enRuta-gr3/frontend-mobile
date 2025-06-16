@@ -12,13 +12,14 @@ export default function IndexScreen() {
   useEffect(() => {
     const checkAuth = async () => {
       setLoading(false);
-      if (isLogged) {
+     
+      if (isLogged) { 
         setTimeout(() => {
         router.replace('/(tabs)/homeUser');
          }, 0);
       } else {
-        setTimeout(() => {
-         router.replace('/login');
+         setTimeout(() => {
+         return router.replace('/login');
          }, 0);
       }
     };
