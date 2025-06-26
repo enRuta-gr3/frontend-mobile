@@ -1,73 +1,61 @@
  
 import StyleRuta from '@/hooks/styles';
-import axios from 'axios';
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { Alert, ImageBackground, StyleSheet, View } from "react-native";
+import { Alert, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from "react-native";
  
-import EditProfileScreen from '@/components/ui/editProfile';
+ 
+
+import EditProfileScreen from '@/components/ui/EditProfile';
+import { editProfile } from '@/controllers/editProfileSer';
 import { obtenerUsuario } from '@/controllers/getClient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export default function EditProfile() {
  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [password2, setPassword2] = useState('');
   const [nombre, setNombre] = useState('');
   const [apellido, setApellido] = useState('');
   const [fecha, setFecha] = useState('');
   const [cedula, setCedula] = useState('');
-  const [descuento, setDescuento] = useState('Ninguno');
+  const [userid, setUserid] = useState('');
   const router = useRouter();
-  
+   const [mensajeError, setmensajeError] = useState<string>('');
+  const [mensajeOK, setmensajeOK] = useState<string>('');
+
+
    useEffect(() => {
 
     const cargarDoc = async () => {
-        const cedula = await AsyncStorage.getItem('ci');
-        setCedula(cedula ?? '');
-      };
+      const cedula = await AsyncStorage.getItem('ci');
+      const userid = await AsyncStorage.getItem('userId');
+      setCedula(cedula ?? '');
+      setUserid(userid ?? '');
     
-    cargarDoc();
-
-    const getUsuario = async () => {
       try {
-        const ci= '45092234';   
-        const usuarioObtenido = await obtenerUsuario(ci);
-        setNombre(usuarioObtenido.nombres)
-        setApellido(usuarioObtenido.apellidos)
-        setFecha(formatDateMio(usuarioObtenido.fecha_nacimiento))
-        setEmail(usuarioObtenido.email)
-
-       
-        console.log("Usuario obteneido>" +  JSON.stringify(usuarioObtenido))
-
+      const usuarioObtenido = await obtenerUsuario(cedula ?? '');
+      setUserid(usuarioObtenido.uuidAuth);
+      setNombre(usuarioObtenido.nombres);
+      setApellido(usuarioObtenido.apellidos);
+      setFecha(formatDateMio(usuarioObtenido.fecha_nacimiento));
+      setEmail(usuarioObtenido.email);
+      console.log("Usuario obteneido>" + JSON.stringify(usuarioObtenido));
 
       } catch (error) {
         console.error('Error al obtener usuario:', error);
       }
     };
-    getUsuario();
+   cargarDoc ();
   }, []);
 
   const clickSignup = async () => {
-    if (!email || !password || !password2 || !nombre || !apellido || !cedula) {
+    if (!email || !nombre || !apellido || !cedula) {
       Alert.alert(
         "Campos requeridos",
         "Por favor completá todos los campos requeridos"
       );
       return;
     }
-
- 
-    if (password !== password2) {
-          Alert.alert(
-            "Campos inválidos",
-            "La contraseña ingresada no es igual a la confirmación de contraseña"
-          );
-          return;
-        }
-
      if (!validarCedulaUruguaya(cedula)) {
         Alert.alert(
             "Campos inválidos",
@@ -77,48 +65,30 @@ export default function EditProfile() {
     }
 
     if(!validateDate(fecha)) {
-       Alert.alert(
-            "Campos inválidos",
-            "No puede ser menor de 18 años para registrarse"  
-          );
+       setmensajeError("No puede ser menor de 18 años para registrarse");
+       setTimeout(() => setmensajeError(''), 3000);
       return;
       } 
 
+    if (!validateEmail(email)) {
+       setmensajeError( "Por favor ingrese un correo con formato válido");
+       setTimeout(() => setmensajeError(''), 3000);
+      return;
+    }
+
     try {
+        const res = await editProfile(userid, cedula, nombre, apellido, email, formatoDate(fecha));
+      
+        if (res.success) {
+              setmensajeOK('Se actualizo correctamente el perfil');
+              setTimeout(() => setmensajeOK(''), 3000);
+        }else{
+          console.log(res.message);
+          setmensajeError(res.message || 'No se pudo modificar el perfil');
+          setTimeout(() => setmensajeError(''), 3000);
+        
+        }
 
-        let esJubilado = false;
-        let esEstudiante = false;
-        const formFecha = formatoDate(fecha); 
-       
-        if (descuento === 'Jubilado') {
-          esJubilado = true;
-        } else if (descuento === 'Estudiante') {
-          esEstudiante = true;
-        } 
-
-//Mejorar por endoint class
-      const res = await axios.post('https://backend-production-2812f.up.railway.app/api/auth/registrarUsuario', 
-            {
-              tipo_usuario:"CLIENTE",
-              ci:cedula,
-              nombres: nombre,
-              apellidos: apellido,
-              fecha_nacimiento: formFecha,
-              descuento: descuento,
-              email: email,
-              esEstudiante:esEstudiante,
-              esJubilado:esJubilado
-            },
-             {headers: {'Content-Type': 'application/json',},}
-          );   
-          const success = res.data.data.access_token;       
-         
-
-       if (res.data.success) { 
-          router.push("/(auth)/EmailVerification");
-       } else{
-          Alert.alert('Error:', res.data.data )
-       }   
 
     } catch (error: any) {
            console.log(error.response)
@@ -130,11 +100,6 @@ export default function EditProfile() {
              Alert.alert('No pudimos procesar la solicitud', 'Contacte a atención al cliente');
       }
     }};   
-
-
-
-
-  
 
   const validateEmail = (email: string): boolean => {
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
@@ -184,25 +149,40 @@ export default function EditProfile() {
         <ImageBackground source={imagen}  style={styles.imagen}>
           <View style={styles.overlay} />
           <View style={styles.container}>
-            
-              <View style={styles.subcontainer}>
+           
+                  
+            <View style={styles.subcontainer}>
+              <View style={styles.interno}>
+                {mensajeOK !== '' && (
+                  <View style={styles.okBox}>
+                    <Text style={styles.okText}>{mensajeOK}</Text>
+                  </View>
+                    )}
+          
+                  {mensajeError !== '' && (
+                    <View style={styles.errorBox}>
+                      <Text style={styles.errorText}>{mensajeError}</Text>
+                    </View>
+                  )}
+                  </View>
               <EditProfileScreen
-            email={email}
-            setEmail={setEmail}
-            nombre={nombre}
-            setNombre={setNombre}
-            apellido={apellido}
-            setApellido={setApellido}
-            fecha={fecha}
-            setFecha={setFecha}
-            cedula={cedula}
-            setCedula={setCedula}
-            onSignup={clickSignup} error={''} 
-            descuento={''} 
-            setDescuento={function (value: string): void {
+                email={email}
+                setEmail={setEmail}
+                nombre={nombre}
+                setNombre={setNombre}
+                apellido={apellido}
+                setApellido={setApellido}
+                fecha={fecha}
+                setFecha={setFecha}
+                cedula={cedula}
+                setCedula={setCedula}
+                onSignup={clickSignup} error={''} descuento={''} setDescuento={function (value: string): void {
               throw new Error('Function not implemented.');
-            } }  />
-
+            } }               
+                 />
+        <TouchableOpacity style={styles.button} onPress={() => router.push('/(tabs)/usuario/changePassS')}>
+          <Text style={styles.buttonText}>Cambiar contraseña </Text>
+        </TouchableOpacity>
               </View>
       </View>
     </ImageBackground> 
@@ -212,6 +192,49 @@ export default function EditProfile() {
 
 
 const styles = StyleSheet.create({
+  button: {
+    backgroundColor: "#FFF",
+    borderColor: "#000",
+    borderWidth: 1,
+    padding: 12,
+    borderRadius: 8,
+    marginTop: 16,
+  },
+  buttonText: {
+    color: '#000',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  interno: {
+    marginBottom: 10,   
+  },  
+   btncontainer: {
+    padding: 10,
+    justifyContent: 'center',
+   
+  },
+  okBox: {
+    backgroundColor: '#d4edda',
+    padding: 12,
+    marginTop: 16,
+    borderRadius: 8,
+  },
+  okText: {
+    color: '#155724',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  errorBox: {
+    backgroundColor: '#f8d7da',
+    padding: 12,
+    marginTop: 16,
+    borderRadius: 8,
+  },
+  errorText: {
+    color: '#721c24',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
   container: {
     flex: 1,
      zIndex: 2,
@@ -237,5 +260,6 @@ const styles = StyleSheet.create({
     color: StyleRuta.primary,
     paddingTop: 45,
     borderBottomWidth: 1,
-  }
+  },
+
 }); 

@@ -1,97 +1,97 @@
 import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import StyleRuta from '@/hooks/styles';
 import { Input } from '@rneui/themed';
 import { Link } from 'expo-router';
 import React from 'react';
-import { Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Image, SafeAreaView, StyleSheet, Text,
+  TouchableOpacity, View, useColorScheme
+} from 'react-native';
 
-interface Props {
+type Props = {
   email: string;
-  setEmail: (value: string) => void;
+  setEmail: (email: string) => void;
   password: string;
-  setPassword: (value: string) => void;
+  setPassword: (password: string) => void;
   onLogin: () => void;
-}
+};
 
 export default function LoginLayout({ email, setEmail, password, setPassword, onLogin }: Props) {
+  const scheme = useColorScheme();
+  const isDark = scheme === 'dark';
+  const logoLight = require('@/assets/images/logo.jpg');
+  const logoDark = require('@/assets/images/logo_oscuro.png');
+
+
   return (
-     <SafeAreaView style={styles.container}>
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#FFFFFF', dark: '#1D3D47' }}
-      headerImage={
-        <View style={styles.logoWrapper}>
-          <Image source={require('@/assets/images/logo.jpg')} style={styles.reactLogo} />
-        </View>
-      }>
+    <SafeAreaView style={[styles.container, { backgroundColor: isDark ? '#000' : '#fff' }]}>
+      <ParallaxScrollView
+        headerBackgroundColor={{ light: '#FFF', dark: '#161719' }}
+        headerImage={
+          <View style={styles.logoWrapper}>
+            <Image source={isDark ? logoDark : logoLight} style={styles.reactLogo} />
+          </View>
+        }
+      >
+        <ThemedView style={styles.titleContainer}>
+          <Text style={[styles.titles, { color: isDark ? '#fff' : '#000' }]}>
+            Bienvenido!
+          </Text>
+        </ThemedView>
 
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title" style={styles.titles}>Bienvenido!</ThemedText>
-      </ThemedView>
+        <Input
+          placeholder="Email"
+          leftIcon={{ type: 'font-awesome', name: 'user', color: isDark ? '#fff' : '#000' }}
+          value={email}
+          onChangeText={setEmail}
+          inputStyle={{ color: isDark ? '#fff' : '#000' }}
+        />
+        <Input
+          placeholder="Contraseña"
+          secureTextEntry
+          leftIcon={{ type: 'font-awesome', name: 'key', color: isDark ? '#fff' : '#000' }}
+          value={password}
+          onChangeText={setPassword}
+          inputStyle={{ color: isDark ? '#fff' : '#000' }}
+        />
 
-      <Input placeholder="Email" leftIcon={{ type: 'font-awesome', name: 'user' }} value={email} onChangeText={setEmail} />
-      <Input placeholder="Contraseña" secureTextEntry leftIcon={{ type: 'font-awesome', name: 'key' }} value={password} onChangeText={setPassword} />
-      <TouchableOpacity style={styles.button} onPress={onLogin}>
-        <Text style={styles.buttonText}> Iniciar Sesión</Text>
-      </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={onLogin}>
+          <Text style={styles.buttonText}>Iniciar Sesión</Text>
+        </TouchableOpacity>
 
-      <Link href="/_signup" >
-        <ThemedText type="link" style={styles.link}>¿No tienen una cuenta? 
-          <ThemedText type="link" style={styles.linkRe}> Regístrate </ThemedText>
-          </ThemedText>
-      </Link>
-      <Link href='/_reset'>
-        <ThemedText type="link" style={styles.link}>¿Olvidaste tu contraseña? 
-      </ThemedText>
-      </Link>
-    </ParallaxScrollView>
+        <Link href="/_signup">
+          <Text style={[styles.link, { color: isDark ? '#fff' : '#000' }]}>
+            ¿No tenés una cuenta?
+            <Text style={styles.linkRe}>     Registrate</Text>
+          </Text>
+        </Link>
+        <Link href="/_reset">
+          <Text style={[styles.link, { color: isDark ? '#fff' : '#000' }]}>
+            ¿Olvidaste tu contraseña?
+          </Text>
+        </Link>
+      </ParallaxScrollView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-   container: {
-    flex: 1,
-    paddingTop: 50, 
-    backgroundColor: '#fff',
-  },
-  titleContainer: {
-    flexDirection: 'row',
+  container: { flex: 1, paddingTop: 50 },
+  titleContainer: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  logoWrapper: { flex: 1, justifyContent: 'center', alignItems: 'center', paddingTop: 60 },
+  reactLogo: { height: 200, width: 200, resizeMode: 'contain' },
+  titles: { fontSize: 24, marginBottom: 20, fontWeight: 'bold' },
+  link: { marginTop: 10, fontSize: 15},
+  linkRe: { color: "rgb(245, 74, 0)" },
+  button: {
+    backgroundColor: StyleRuta.primary,
+    padding: 15,
     alignItems: 'center',
-    gap: 12,
+    borderRadius: 5,
+    marginVertical: 20,
   },
-  logoWrapper: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingTop: 60,
+  buttonText: {
+    color: '#fff', fontWeight: 'bold'
   },
-  reactLogo: {
-    height: 200,
-    width: 200,
-    resizeMode: 'contain',
-  },
-  titles: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    color: 'rgb(1, 2, 0)',
-  },
-  link: {
-    alignItems: 'stretch',
-    color: 'rgb(0, 0, 0)',
-  },
-  linkRe:{
-    color: "rgb(245, 74, 0)",
-  },
-   button: {
-      backgroundColor: StyleRuta.primary,
-      padding: 15,
-      alignItems: 'center',
-      borderRadius: 5,
-    },
-    buttonText: {
-      color: '#fff',
-      fontWeight: 'bold',
-    },
-}); 
+});

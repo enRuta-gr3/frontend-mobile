@@ -1,4 +1,3 @@
-import * as SystemUI from 'expo-system-ui';
 import React from "react";
 import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -30,8 +29,6 @@ export default function EditProfileScreen({
   onSignup,
   error, 
 }: Props) {
-  SystemUI.setBackgroundColorAsync('#ffffff');
-  
  
   return (
     <SafeAreaView edges={['bottom']} style={{ flex: 1}}>
@@ -39,18 +36,18 @@ export default function EditProfileScreen({
         <View style={styles.container}>
         {error ? <Text style={styles.error}>{error}</Text> : null}
         <View style={styles.row}>
-           <Text style={styles.texto}>Cliente  </Text>    
+           <Text style={styles.texto}>Cédula: </Text>    
            <Text style={styles.txtdoc}> {cedula} </Text> 
-     
-        </View>   
-
-
-        <TextInput style={styles.input} placeholder="Nombre" value={nombre} onChangeText={setNombre} />
-        <TextInput style={styles.input} placeholder="Apellido" value={apellido} onChangeText={setApellido} />
-        <TextInput style={styles.input} placeholder="Fecha de nacimiento (dd/mm/aaaa)" value={fecha} onChangeText={setFecha} />
-        <TextInput style={styles.input} placeholder="Correo electrónico" value={email} onChangeText={setEmail} keyboardType="email-address" />
-        
+       </View>   
        
+        <Text style={styles.hint}>Nombre</Text>
+        <TextInput style={styles.input} placeholder="Nombre" value={nombre} onChangeText={setNombre} />
+        <Text style={styles.hint}>Apellido</Text>
+        <TextInput style={styles.input} placeholder="Apellido" value={apellido} onChangeText={setApellido} />
+        <Text style={styles.hint}>Fecha de nacimiento</Text>
+        <TextInput style={styles.input} placeholder="Fecha de nacimiento (dd/mm/aaaa)" value={fecha} onChangeText={setFecha} />
+        <Text style={styles.hint}>Correo electrónico</Text>
+        <TextInput style={styles.input} placeholder="Correo electrónico" value={email} onChangeText={setEmail} keyboardType="email-address" />
         <TouchableOpacity style={styles.button} onPress={onSignup}>
           <Text style={styles.buttonText}>Modificar </Text>
         </TouchableOpacity>
@@ -104,7 +101,7 @@ const styles = StyleSheet.create({
   },
   texto:{
     marginBottom: 15,
-
+    fontWeight: "bold",
   }, 
   row: {
     flexDirection: 'row',
@@ -114,6 +111,7 @@ const styles = StyleSheet.create({
   },
   txtdoc:{
        marginBottom: 15,
-       fontSize: 16
+       fontSize: 18,
+       fontWeight: "bold",
   }
 });

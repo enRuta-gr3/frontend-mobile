@@ -1,8 +1,7 @@
-import StyleRuta from '@/hooks/styles';
 import axios from 'axios';
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { Alert, ImageBackground, StyleSheet, View } from "react-native";
+import { Alert, ImageBackground, SafeAreaView, StyleSheet, View } from "react-native";
 import SignupScreen from "../components/ui/Signup";
 
 
@@ -64,6 +63,7 @@ export default function Signup() {
           esEstudiante = true;
         } 
 
+      
 //Mejorar por endoint class
       const res = await axios.post('https://backend-production-2812f.up.railway.app/api/auth/registrarUsuario', 
             {
@@ -136,12 +136,12 @@ export default function Signup() {
   const imagen = { uri: 'https://en-ruta.vercel.app/bus2.jpg'}
 
   return (
-  
-        <ImageBackground source={imagen}  style={styles.imagen}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+     <View style={{ flex: 1 }} >
+        <ImageBackground source={imagen}  style={styles.imagen} resizeMode="cover">
           <View style={styles.overlay} />
           <View style={styles.container}>
-            
-              <View style={styles.subcontainer}>
+            <View style={styles.subcontainer}>
               <SignupScreen
                   email={email}
                   setEmail={setEmail}
@@ -160,40 +160,40 @@ export default function Signup() {
                   descuento={descuento}
                   setDescuento={setDescuento}
                   onSignup={clickSignup} error={''}          />
-
               </View>
       </View>
+      
     </ImageBackground> 
+    </View>
+    </SafeAreaView>
+
     
   ); 
 }
 
-
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-     zIndex: 2,
+    flex: 1,   
   },
-   subcontainer: {
-    flex: 1, 
-    padding: 20, 
-    backgroundColor: '#fff', borderRadius:15,
-    margin:20,
+  subcontainer: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: '#fff',
+    borderRadius: 15,
+    margin: 10,
+    marginTop: 10,
+  
   },
   imagen: {
     flex: 1,
-    justifyContent: 'center',
+    
   },
   overlay: {
-    ...StyleSheet.absoluteFillObject,
+   ...StyleSheet.absoluteFillObject,
     backgroundColor: "rgba(0,0,0,0.4)", // Opacidad del fondo
   },
   content: {
     alignItems: 'center',
   },  
-  line: {
-    color: StyleRuta.primary,
-    paddingTop: 45,
-    borderBottomWidth: 1,
-  }
+
 }); 

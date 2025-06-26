@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { GestureResponderEvent, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-export default function EditProfileScreen() {
+export default function ChangePass() {
   SystemUI.setBackgroundColorAsync('#ffffff');
   
    const [documento, setDocumento] = useState<string>('');
@@ -86,13 +86,15 @@ export default function EditProfileScreen() {
 
         <View style={styles.container}>
         <View style={styles.row}>
-           <Text style={styles.texto}>Cliente  </Text>    
+           <Text style={styles.texto}>Cédula: </Text>    
            <Text style={styles.txtdoc}> {documento} </Text> 
      
         </View>   
-
+        <Text style={styles.hint}>Contraseña actual</Text>
         <TextInput secureTextEntry={true} style={styles.input} placeholder="Contraseña actual" value={passwordback} onChangeText={setPasswordback} />
+        <Text style={styles.hint}>Nueva contraseña</Text>
         <TextInput secureTextEntry={true} style={styles.input} placeholder="Contraseña" value={password} onChangeText={setPassword} />
+        <Text style={styles.hint}>Confirmación de contraseña</Text>
         <TextInput secureTextEntry={true} style={styles.input} placeholder="Confirmación de contraseña" value={password2} onChangeText={setPassword2} />
         
        
@@ -151,7 +153,7 @@ const styles = StyleSheet.create({
   },
   texto:{
     marginBottom: 15,
-
+   fontWeight: "bold",
   }, 
   row: {
     flexDirection: 'row',
@@ -161,7 +163,8 @@ const styles = StyleSheet.create({
   },
   txtdoc:{
        marginBottom: 15,
-       fontSize: 16
+        fontSize: 18,
+       fontWeight: "bold",
   }, 
   btncontainer: {
     padding: 10,

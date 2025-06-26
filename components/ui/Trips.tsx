@@ -1,7 +1,7 @@
 import { useDurationTrip } from '@/hooks/calculateDuration';
 import { TripItem } from '@/interface/type';
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View, useColorScheme } from 'react-native';
 
 
 
@@ -17,18 +17,19 @@ const TripResultItem: React.FC<TripItem> = ({
   asientosDisponibles,
   onPress,
 }) => {
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === 'dark';
   return (
-
+ <SafeAreaView style={{ flex: 1, backgroundColor: isDark ? '#000' : '#fff' }}>
     <View style={styles.card}>
       <View style={styles.row}>
         <Text style={[styles.empresa, estado === 'ABIERTO' ? styles.estadoAbierto : styles.estadoCerrado]}>{estado}</Text>
         <Text style={styles.fecha}>{fecha_partida}</Text>
       </View>
 
-      <View style={styles.row}>
-       
-        <Text>{localidadOrigen.nombreLocalidad}</Text>
-         <View style={styles.route}>
+        <View style={styles.row}>
+          <Text>{localidadOrigen.nombreLocalidad}</Text>
+          <View style={styles.route}>
            <Text>{localidadDestino.nombreLocalidad}</Text> 
         </View>
       </View>
@@ -53,6 +54,7 @@ const TripResultItem: React.FC<TripItem> = ({
         </TouchableOpacity>
       </View>
     </View>
+    </SafeAreaView>
   );
 };
 

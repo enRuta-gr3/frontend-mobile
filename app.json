@@ -2,12 +2,15 @@
   "expo": {
     "name": "En Ruta",
     "slug": "mi-app",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "enruta",
     "userInterfaceStyle": "automatic",
-    "platforms": ["ios", "android"],
+    "platforms": [
+      "ios",
+      "android"
+    ],
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true
@@ -15,8 +18,14 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#FFFFFF"
       },
+      
+      "googleServicesFile": "./google-services.json",
+      "useNextNotificationsApi": true,
+      "permissions": [
+        "NOTIFICATIONS"
+      ],
       "edgeToEdgeEnabled": true,
       "package": "com.bfariello.miapp"
     },
@@ -35,6 +44,9 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
+      ],
+      [
+        "expo-notifications"
       ]
     ],
     "experiments": {
@@ -45,6 +57,7 @@
       "eas": {
         "projectId": "dc0b007b-1ac5-454a-8687-3086ae39ea6f"
       }
-    }
+    },
+    "owner": "bfariello"
   }
 }

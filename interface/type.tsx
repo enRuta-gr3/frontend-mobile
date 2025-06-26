@@ -158,12 +158,39 @@ interface Error<T = null> {
 
 
 //pago
-
-
+ 
 export interface ViajeVenta {
   uuidAuth: string;
   viaje: {
     id_viaje: number;
     cantidad: number;
   };
+}
+
+
+export interface Pasaje {
+  id_pasaje: number;
+  precio: number;
+  viaje: {
+    fecha_partida: string;
+    hora_partida: string;
+    fecha_llegada: string;
+    hora_llegada: string;
+    localidadOrigen: {
+      nombreLocalidad: string;
+      departamento: {
+        nombreDepartamento: string;
+      };
+    };
+    localidadDestino: {
+      nombreLocalidad: string;
+      departamento: {
+        nombreDepartamento: string;
+      };
+    };
+  };
+  asiento: {
+    numero_asiento: number;
+  };
+  ciCliente: string;
 }

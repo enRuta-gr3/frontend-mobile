@@ -1,61 +1,62 @@
-/*import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator, Alert, Image, ScrollView } from 'react-native';
-import * as FileSystem from 'expo-file-system';
+import { Pasaje } from '@/interface/type';
+import * as Print from 'expo-print';
+import { useLocalSearchParams } from 'expo-router';
 import * as Sharing from 'expo-sharing';
-import { useLocalSearchParams, router } from 'expo-router';
-import capturarOrder from '@/controllers/confirmarCompra';
+import React, { useEffect, useState } from 'react';
+import { Alert, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-const logo = require('@/assets/images/logo.jpg');
-
-export default function DescargaPDFScreen() {
-  const { venta: id_venta_, token: token_ } = useLocalSearchParams();
+export default function DescargarPDFPasaje() {
   const [loading, setLoading] = useState(false);
-  const [pasajes, setPasajes] = useState<any[]>([]);
+  const [pasajes, setPasajes] = useState<Pasaje[]>([]);
+  const logoURL = 'https://en-ruta.vercel.app/assets/logo-DvM36rMC.jpg'; // Logo de la empresa
+  const { pasajesConfirmados } = useLocalSearchParams();
 
+  // Solo se ejecuta al montar la pantalla
   useEffect(() => {
-    const fetchPasajes = async () => {
+    if (pasajesConfirmados) {
       try {
-        setLoading(true);
-        const idVenta = Number(id_venta_);
-        const token = token_ ? token_.toString() : undefined;
-        if (!token || !idVenta || isNaN(idVenta)) {
-          Alert.alert('Error', 'Datos de confirmación incompletos o inválidos.');
-          return;
-        }
-        const confirmData = await capturarOrder(idVenta, token);
-        if (confirmData.success && Array.isArray(confirmData.data)) {
-          setPasajes(confirmData.data);
-        } else {
-          Alert.alert('Error', 'No se pudieron obtener los pasajes.');
-        }
-      } catch (e) {
-        Alert.alert('Error', 'No se pudo obtener la información de los pasajes.');
-      } finally {
-        setLoading(false);
+        const parsed = JSON.parse(pasajesConfirmados as string);
+        setPasajes(parsed);
+      } catch (error) {
+        console.error('Error al parsear pasajesConfirmados:', error);
       }
-    };
-    fetchPasajes();
-  }, [id_venta_, token_]);
+    }
+  }, [pasajesConfirmados]);
 
-  const handleDownload = async () => {
+  const generarPDF = async () => {
     try {
       setLoading(true);
-      // Generar HTML simple para el PDF
-      let html = `<html><body style='font-family:sans-serif;'>`;
-      html += `<img src='https://en-ruta.vercel.app/bus2.jpg' style='width:120px;margin-bottom:20px;' />`;
-      html += `<h2>Pasajes</h2>`;
-      pasajes.forEach((p, idx) => {
-        html += `<div style='margin-bottom:20px;padding:10px;border:1px solid #ccc;border-radius:8px;'>`;
-        html += `<b>Origen:</b> ${p.viaje.localidadOrigen.nombreLocalidad} <br/>`;
-        html += `<b>Destino:</b> ${p.viaje.localidadDestino.nombreLocalidad} <br/>`;
-        html += `<b>Fecha:</b> ${p.viaje.fecha_partida} ${p.viaje.hora_partida} <br/>`;
-        html += `<b>Asiento:</b> ${p.asiento.numero_asiento} <br/>`;
-        html += `<b>Precio:</b> $${p.precio} <br/>`;
-        html += `</div>`;
-      });
-      html += `</body></html>`;
-      // Usar printToFileAsync de expo-print
-      const { uri } = await (await import('expo-print')).printToFileAsync({ html });
+
+      const html = `
+        <html>
+          <head>
+            <style>
+              body { font-family: Arial; padding: 20px; }
+              .logo { width: 150px; margin-bottom: 20px; }
+              h1 { color: #000000; }
+              .card { border: 1px solid #ddd; border-radius: 8px; padding: 16px; margin-bottom: 20px; }
+              .info { margin-bottom: 6px; font-size: 14px; }
+            </style>
+          </head>
+          <body>
+            <img src="${logoURL}" class="logo" />
+            <h1>Resumen de tu pasaje</h1>
+            ${pasajes.map(p => `
+              <div class="card">
+                <div class="info"><strong>Pasaje:</strong> ${p.id_pasaje}</div>
+                <div class="info"><strong>Cédula:</strong> ${p.ciCliente}</div>
+                <div class="info"><strong>Origen:</strong> ${p.viaje.localidadOrigen.nombreLocalidad}</div>
+                <div class="info"><strong>Destino:</strong> ${p.viaje.localidadDestino.nombreLocalidad}</div>
+                <div class="info"><strong>Salida:</strong> ${p.viaje.fecha_partida} - ${p.viaje.hora_partida}</div>
+                <div class="info"><strong>Asiento:</strong> ${p.asiento.numero_asiento}</div>
+                <div class="info"><strong>Precio:</strong> $${p.precio}</div>
+              </div>
+            `).join('')}
+          </body>
+        </html>
+      `;
+
+      const { uri } = await Print.printToFileAsync({ html });
       await Sharing.shareAsync(uri);
     } catch (e) {
       Alert.alert('Error', 'No se pudo generar o compartir el PDF.');
@@ -66,18 +67,29 @@ export default function DescargaPDFScreen() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Image source={logo} style={styles.logo} />
-      <Text style={styles.title}>Descarga tus pasajes en PDF</Text>
-      {loading && <ActivityIndicator size="large" color="#007bff" style={{ margin: 20 }} />}
-      {!loading && pasajes.length > 0 && (
-        <>
-          <TouchableOpacity style={styles.button} onPress={handleDownload}>
-            <Text style={styles.buttonText}>Descargar PDF</Text>
-          </TouchableOpacity>
-        </>
-      )}
-      <TouchableOpacity style={styles.secondaryButton} onPress={() => router.replace('/(tabs)/homeUser')}>
-        <Text style={styles.secondaryButtonText}>Volver al inicio</Text>
+      <Image
+        source={{ uri: logoURL }}
+        style={{ width: 120, height: 120, marginBottom: 20 }}
+        resizeMode="contain"
+      />
+      <Text style={styles.title}>Resumen de tu pasaje</Text>
+
+      {pasajes.map((p) => (
+        <View key={p.id_pasaje} style={styles.card}>
+          <Text style={styles.info}>Pasaje: {p.id_pasaje}</Text>
+          <Text style={styles.info}>Cédula: {p.ciCliente}</Text>
+          <Text style={styles.info}>Origen: {p.viaje.localidadOrigen.nombreLocalidad}</Text>
+          <Text style={styles.info}>Destino: {p.viaje.localidadDestino.nombreLocalidad}</Text>
+          <Text style={styles.info}>Salida: {p.viaje.fecha_partida} - {p.viaje.hora_partida}</Text>
+          <Text style={styles.info}>Asiento: {p.asiento.numero_asiento}</Text>
+          <Text style={styles.info}>Precio: ${p.precio}</Text>
+        </View>
+      ))}
+
+      <TouchableOpacity style={styles.button} onPress={generarPDF} disabled={loading}>
+        <Text style={styles.buttonText}>
+          {loading ? 'Generando...' : 'Descargar PDF'}
+        </Text>
       </TouchableOpacity>
     </ScrollView>
   );
@@ -85,54 +97,40 @@ export default function DescargaPDFScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    padding: 20,
     backgroundColor: '#fff',
-    padding: 24,
-  },
-  logo: {
-    width: 120,
-    height: 120,
-    resizeMode: 'contain',
-    marginBottom: 20,
-    marginTop: 30,
+    alignItems: 'center',
   },
   title: {
     fontSize: 22,
     fontWeight: 'bold',
-    marginBottom: 24,
-    color: '#222',
+    marginBottom: 20,
     textAlign: 'center',
+  },
+  card: {
+    backgroundColor: '#f9f9f9',
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 8,
+    padding: 16,
+    marginBottom: 16,
+    width: '100%',
+  },
+  info: {
+    fontSize: 16,
+    marginBottom: 4,
   },
   button: {
     backgroundColor: '#007bff',
-    padding: 16,
-    borderRadius: 10,
+    padding: 14,
+    borderRadius: 8,
     marginTop: 20,
-    marginBottom: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
     minWidth: 180,
-    justifyContent: 'center',
+    alignItems: 'center',
   },
   buttonText: {
     color: '#fff',
     fontWeight: 'bold',
-    fontSize: 18,
-  },
-  secondaryButton: {
-    backgroundColor: '#eee',
-    padding: 12,
-    borderRadius: 8,
-    marginTop: 30,
-    minWidth: 180,
-    alignItems: 'center',
-  },
-  secondaryButtonText: {
-    color: '#007bff',
-    fontWeight: 'bold',
     fontSize: 16,
   },
 });
-*/

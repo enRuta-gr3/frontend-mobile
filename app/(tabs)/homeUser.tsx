@@ -3,7 +3,6 @@ import SearchScreen from '@/components/ui/Search';
 import React from 'react';
 import { ImageBackground, StyleSheet, View } from 'react-native';
 
-
 const imagen = { uri: 'https://en-ruta.vercel.app/bus2.jpg' };
 
 export default function HomeUserScreen() {
@@ -15,7 +14,6 @@ export default function HomeUserScreen() {
           <Header />
           <View style={styles.subcontainer}>
            <SearchScreen />
-            <View style={styles.line}></View>
           </View>
         </View>
       </ImageBackground>

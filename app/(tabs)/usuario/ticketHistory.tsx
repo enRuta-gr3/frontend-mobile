@@ -1,13 +1,18 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, Modal, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, FlatList, ImageBackground, Modal, SafeAreaView, StyleSheet, Text, useColorScheme, View } from 'react-native';
+
+import StyleRuta from '@/hooks/styles';
+import { FontAwesome5 } from '@expo/vector-icons';
 import { getHistoryTicket, TicketHistoryItem } from '../../../controllers/getHistoryTicket';
 
 export default function TicketHistory() {
   const [tickets, setTickets] = useState<TicketHistoryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-
+ const colorScheme = useColorScheme();
+  const isDark = colorScheme === 'dark';
+  
   useEffect(() => {
     const fetchTickets = async () => {
       try {
@@ -24,45 +29,72 @@ export default function TicketHistory() {
           setError('No se pudo obtener el historial.');
         }
       } catch (err) {
-        setError('Error al cargar los tickets.');
+          setError('Error de conexión.');             
       } finally {
         setLoading(false);
       }
     };
     fetchTickets();
   }, []);
+  const imagen = { uri: 'https://en-ruta.vercel.app/bus2.jpg'}
 
   return (
+    <ImageBackground source={imagen}  style={styles.imagen}>
     <SafeAreaView style={styles.container}>
-      <Modal transparent={true} visible={loading} animationType="fade">
-        <View style={styles.loadingOverlay}>
-          <View style={styles.loadingBox}>
-            <ActivityIndicator size="large" color="#fff" />
-            <Text style={styles.loadingText}>Cargando historial...</Text>
-          </View>
-        </View>
-      </Modal>
-      {error ? (
-        <Text>{error}</Text>
-      ) : (
-        <>
-        
-          <FlatList
-            data={tickets}
-            keyExtractor={item => item.id_pasaje.toString()}
-            renderItem={({ item }) => (
-              <View style={styles.ticketCard}>
-                <Text style={styles.ticketTitle}>{item.viaje.localidadOrigen.nombreLocalidad} → {item.viaje.localidadDestino.nombreLocalidad}</Text>
-                <Text>Fecha: {item.viaje.fecha_partida} - {item.viaje.hora_partida}</Text>
-                <Text>Asiento: {item.asiento.numero_asiento}</Text>
-                <Text>Precio: ${item.precio}</Text>
+      
+        <View style={styles.overlay} />
+        <View style={styles.container2}>
+            <Modal transparent={true} visible={loading} animationType="fade">
+              <View style={styles.loadingOverlay}>
+                <View style={styles.loadingBox}>
+                  <ActivityIndicator size="large" color="#fff" />
+                  <Text style={styles.loadingText}>Cargando historial...</Text>
+                </View>
               </View>
-            )}
-            ListEmptyComponent={<Text>No tienes tickets aún.</Text>}
-          />
-        </>
-      )}
+            </Modal>
+            {error ? (
+               <View style={styles.container2}>
+                 <View style={styles.subcontainer}>
+                  <View style={styles.emptyContainer}>
+                      <FontAwesome5 name="ticket-alt" size={48} color={StyleRuta.primary} />
+                      <Text style={styles.emptyTitle}>No tienes pasajes registrados</Text>
+                     
+                    </View>
+                </View>
+                </View>
+            ) : (
+              <>        
+                <FlatList
+                  data={tickets}
+                  keyExtractor={item => item.id_pasaje.toString()}
+                  renderItem={({ item }) => (
+                    <View style={styles.ticketCard}>
+                      <Text style={styles.ticketTitle}>{item.viaje.localidadOrigen.nombreLocalidad} → {item.viaje.localidadDestino.nombreLocalidad}</Text>
+                      <Text>Fecha: {item.viaje.fecha_partida} - {item.viaje.hora_partida}</Text>
+                      <Text>Asiento: {item.asiento.numero_asiento}</Text>
+                      <Text>Precio: ${item.precio}</Text>
+                    </View>
+                  )}
+                  ListEmptyComponent={
+                    !loading ? (
+                        <View style={styles.container2}>
+                            <View style={styles.subcontainer}>
+                              <View style={styles.emptyContainer}>
+                                  <FontAwesome5 name="ticket-alt" size={48} color={StyleRuta.primary} />
+                                  <Text style={styles.emptyTitle}>No tienes pasajes registrados</Text>
+                                  
+                                </View>
+                            </View>
+                            </View>
+                    ) : null
+                  }
+                />
+              </>
+              )}
+        </View>     
+     
     </SafeAreaView>
+    </ImageBackground> 
   );
 }
 
@@ -71,7 +103,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     paddingHorizontal: 20,
-    backgroundColor: '#fff', // igual que editProfile
+    
   },
   title: {
     fontSize: 22,
@@ -116,5 +148,48 @@ const styles = StyleSheet.create({
     color: '#fff',
     marginTop: 10,
     fontSize: 16,
+  },
+
+   container2: {
+    flex: 1,
+     zIndex: 2,
+     marginTop: 20,
+     marginBottom: 20,
+  },
+   subcontainer: {
+    flex: 1, 
+    padding: 20, 
+    backgroundColor: '#fff', borderRadius:15,
+    margin:20,
+  },
+  imagen: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0,0,0,0.4)", // Opacidad del fondo
+  },
+  content: {
+    alignItems: 'center',
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 32,
+  },
+  emptyTitle: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#444',
+    marginTop: 16,
+    textAlign: 'center',
+  },
+  emptySubtitle: {
+    fontSize: 16,
+    color: '#666',
+    marginTop: 8,
+    textAlign: 'center',
   },
 });

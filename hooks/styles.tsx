@@ -38,10 +38,17 @@ static loadingText: {
   color: '#fff',
   fontSize: 16,
 };
-  static header: StyleProp<ViewStyle>;
-  static logo: any;
-  static container: StyleProp<ViewStyle>;
+  static loadingIndicator: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    borderWidth: 5,
+    borderColor: '#fff',
+    borderTopColor: '#00000000', // transparente en formato hexadecimal válido
+  };
   
 
 }
+
+
 

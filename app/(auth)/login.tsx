@@ -39,8 +39,6 @@ try {
         const nombres =res.data.data.usuario.nombres;
         const ci =res.data.data.usuario.ci;
 
-     console.log(res.data.data)
-      
         if (jdata) {   
           await AsyncStorage.setItem('token',jdata);
           await AsyncStorage.setItem('userid', userId); 

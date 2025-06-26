@@ -10,12 +10,10 @@ export default function Logout() {
   useEffect(() => {
     const logout = async () => {
       await AsyncStorage.multiRemove(['token', 'userid', 'nombres', 'ci']);
-
-     
     };
-     router.push('/(auth)/login');
     logout();
+    
   }, []);
-
+  router.push('/(auth)/login');
   return null;
 }

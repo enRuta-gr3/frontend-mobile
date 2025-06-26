@@ -13,8 +13,7 @@ export default function ChangePassScreen() {
           <View style={styles.container}>
             <View style={styles.subcontainer}>
               <ChangePScreen />
-              <View style={styles.line}></View>
-            </View>
+          </View>
           </View>
         </ImageBackground>
       </>
@@ -43,9 +42,5 @@ const styles = StyleSheet.create({
   content: {
     alignItems: 'center',
   },  
-  line: {
-    color: "rgba(192, 9, 9, 0.97)",
-    paddingTop: 45,
-    borderBottomWidth: 1,
-  }
+
 });

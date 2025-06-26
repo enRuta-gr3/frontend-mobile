@@ -1,9 +1,9 @@
 import axios, { AxiosError } from "axios";
     
-export async function editProfile(email: string, vpass: string, cpass: string) {
+export async function editProfile(uuidAuth: string, ci: string, nombres: string, apellidos: string, email: string, fecha_nacimiento: string) {
   try {
-    const response = await axios.post('https://backend-production-2812f.up.railway.app/api/usuarios/cambiarContraseña',
-      {email: email, contraseña: vpass, contraseña_nueva: cpass },
+    const response = await axios.post('https://backend-production-2812f.up.railway.app/api/usuarios/modificarPerfil',
+      {tipo_usuario:"CLIENTE", uuidAuth:uuidAuth, ci:ci, nombres:nombres, apellidos:apellidos, email:email, fecha_nacimiento:fecha_nacimiento},
       {headers: {'Content-Type': 'application/json',},}); 
        return response.data
   } catch (error: any) {

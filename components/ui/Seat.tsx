@@ -4,9 +4,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, FlatList, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, FlatList, Modal, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
+import LeyendaEstadosAsientos from './stsSeat';
 
 interface Props {
   viaje: Viaje;
@@ -17,11 +17,15 @@ interface Props {
   asientosFallidos?: number[]; 
 }
 
-const SeatSelector: React.FC<Props> = ({ viaje, etapa , tipoViaje, pasajes,fechaVuelta, asientosFallidos }) => {
+const SeatSelector: React.FC<Props> = ({ viaje, etapa, tipoViaje, pasajes, fechaVuelta, asientosFallidos }) => {
   const [asientos, setAsientos] = useState<AsientoData[]>([]);
   const [seleccionados, setSeleccionados] = useState<AsientoData[]>([]);
   const [loading, setLoading] = useState(true);
   const [mensaje, setMensaje] = useState('Cargando asientos....');
+  
+
+  const scheme = useColorScheme(); // puede ser 'light' o 'dark'
+   const isDark = scheme === 'dark';
 
   useEffect(() => {
     axios
@@ -61,18 +65,24 @@ const SeatSelector: React.FC<Props> = ({ viaje, etapa , tipoViaje, pasajes,fecha
   const isSeleccionado = seleccionados.some(a => a.id_disAsiento === item.id_disAsiento);
 
   return (
-      <TouchableOpacity
-        disabled={item.estado !== 'LIBRE'}
-        onPress={() => toggleAsiento(item)}
-        style={[
-          styles.asiento,
-          item.estado === 'OCUPADO' && styles.ocupado,
-          item.estado === 'BLOQUEADO' && styles.ocupado,
-          isSeleccionado && styles.seleccionado,
-        ]}
-      >
-        <Text style={styles.text}>{item.asiento.numero_asiento}</Text>
-      </TouchableOpacity>
+    <>
+    <TouchableOpacity
+      disabled={item.estado !== 'LIBRE'}
+      onPress={() => toggleAsiento(item)}
+      style={[
+        styles.asiento,
+        item.estado === 'OCUPADO' && styles.ocupado,
+        item.estado === 'BLOQUEADO' && styles.ocupado,
+        item.estado === 'LIBRE' && styles.libre,
+        isSeleccionado && styles.seleccionado,
+      ]}
+    >
+      <Text style={[
+        styles.text,
+        item.estado === 'LIBRE' && styles.txtlibre,
+        isSeleccionado && styles.txtseleccionado,
+      ]}>{item.asiento.numero_asiento}</Text>
+    </TouchableOpacity></>
     );
 
   };
@@ -139,7 +149,6 @@ const SeatSelector: React.FC<Props> = ({ viaje, etapa , tipoViaje, pasajes,fecha
 
               //vuelta
               } else if (tipoViaje === 'ida-vuelta' && etapa === 'ida'){
-
                 
                 const compraIda: Compra = {
                     viaje: viaje as Viaje,
@@ -237,14 +246,20 @@ const SeatSelector: React.FC<Props> = ({ viaje, etapa , tipoViaje, pasajes,fecha
         numColumns={4}
         keyExtractor={(item) => item.id_disAsiento.toString()}
         renderItem={renderAsiento}
-        contentContainerStyle={styles.grid}
-        ListHeaderComponent={<Text style={styles.header}>Frente del ómnibus</Text>}
+        contentContainerStyle={[styles.grid, { backgroundColor: isDark ? '#000' : '#fff' }]}
+        ListHeaderComponent={<>
+                                <LeyendaEstadosAsientos/>
+                                <Text style={[styles.header]}>
+                                  Frente del ómnibus
+                                </Text>
+                              </>}
         ListFooterComponent={<View style={styles.footer}>
-          <TouchableOpacity style={styles.button} onPress={handleConfirmar}>
-            <Text style={styles.buttonText}>Confirmar Selección</Text>
-          </TouchableOpacity>
-        </View>} />
-    </SafeAreaView>
+                              <TouchableOpacity style={[styles.button]} onPress={handleConfirmar}>
+                                <Text style={[styles.buttonText, { color: '#FFF'  }]}>Confirmar Selección</Text>
+                              </TouchableOpacity>
+                            </View>} />
+                            
+    </SafeAreaView> 
   </>
 
   );
@@ -257,8 +272,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   grid: {
-    paddingHorizontal: 12,
- 
+    paddingHorizontal: 12, 
     alignItems: 'center',
   },
   asiento: {
@@ -268,11 +282,16 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#e0e0e0',
+  
   },
   ocupado: {
     backgroundColor: '#555',
   },
+   libre: {
+    backgroundColor: '#FFF',
+    borderColor: '#000',
+    borderWidth: 1,
+   },
   bloqueado: {
     backgroundColor: '#999',
   },
@@ -283,11 +302,24 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
   },
+  txtlibre: {
+    color: '#000',
+    fontWeight: 'bold',
+  },
+  txtseleccionado: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
   header: {
+    marginTop: 12,
     fontSize: 18,
     marginBottom: 12,
     textAlign: 'center',
-    color: '#333',
+    paddingVertical: 12,
+    paddingHorizontal: 5,
+    borderRadius: 15,
+    color: '#000',
+    backgroundColor: '#c4c4c4',
   },
   footer: {
     marginVertical: 16,
@@ -297,21 +329,22 @@ const styles = StyleSheet.create({
     backgroundColor: '#f97316',
     padding: 12,
     borderRadius: 8,
-    width: 200,
+    width: 270,
     alignItems: 'center',
   },
   buttonText: {
     color: '#fff',
     fontWeight: 'bold',
+    fontSize: 16,
   },
 
   loadingOverlay: {
-  flex: 1,
-  backgroundColor: 'rgba(0,0,0,0.6)',
-  justifyContent: 'center',
-  alignItems: 'center',
-  zIndex: 999,
-},
+      flex: 1,
+      backgroundColor: 'rgba(0,0,0,0.6)',
+      justifyContent: 'center',
+      alignItems: 'center',
+      zIndex: 999,
+    },
 loadingBox: {
   padding: 20,
   backgroundColor: '#333',

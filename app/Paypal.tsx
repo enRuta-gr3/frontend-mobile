@@ -12,6 +12,10 @@ export default function PaypalWebView() {
  // Controlar navegación y mostrar alertas si hay error
   const handleNavigationStateChange = (navState: { url: string }) => {
     console.log('Navegando a:', navState.url);
+    if (navState.url.startsWith('enruta://error')) {
+      Alert.alert('Error', 'Ocurrió un error al procesar el pago. Por favor, inténtalo de nuevo.');
+      router.replace('/cancel');
+    }
     if (navState.url.startsWith('enruta://success')) {
       router.replace('/success');
     }
@@ -19,7 +23,7 @@ export default function PaypalWebView() {
       router.replace('/cancel');
     }
   };
-
+  
   if (!urlPaypal) {
     return (
       <View style={styles.centered}><Text>No se encontró la URL de PayPal.</Text></View>

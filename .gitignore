@@ -37,11 +37,6 @@ yarn-error.*
 *.tsbuildinfo
 
 app-example
-
-#android
-android/
-json/localidades.json
-json/localidades.json
-json/moton.json
-json/localidades.json
-json/localidades.json
+google-services.json
+/ios
+/android
