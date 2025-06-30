@@ -13,7 +13,7 @@ import * as Notifications from 'expo-notifications';
 Notifications.setNotificationHandler({
   handleNotification: async () => {
     const userId = await AsyncStorage.getItem('userid');
-    console.log('User ID:', userId);    
+   
     if (userId) {
       return {
         shouldShowAlert: true,

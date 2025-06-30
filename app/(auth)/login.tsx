@@ -1,5 +1,5 @@
-
 import LoginLayout from '@/components/ui/Login';
+import { SaveTokenPush } from '@/controllers/saveTokenPush';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { useRouter } from 'expo-router';
@@ -44,8 +44,19 @@ try {
           await AsyncStorage.setItem('userid', userId); 
           await AsyncStorage.setItem('nombres',nombres);
           await AsyncStorage.setItem('ci', ci); 
-            router.push('/(tabs)/homeUser'); 
+          
+          try {
+            
+           await SaveTokenPush(0); //guardo el token 
+          } catch (err) {
+            Alert.alert('Aviso', 'No se pudo enviar el token push al backend.');
+            console.error('Error enviando token push:', err);
           }
+
+          router.push('/(tabs)/homeUser'); 
+        }
+
+        
     } 
     
  
@@ -76,4 +87,3 @@ try {
     />
   );
 }
- 

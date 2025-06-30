@@ -43,16 +43,27 @@ export default function TripResultsScreen() {
       try {
         const todos = await listarViajes();
         const cantidadPasajes = parseInt(pasajes as string, 10);
-        const filtrados = todos.filter(
-          (item) =>
-            item.localidadOrigen.id_localidad.toString() === datos.origen &&
-            item.localidadDestino.id_localidad.toString() === datos.destino &&
-            item.fecha_partida >= datos.fecha &&
-            item.asientosDisponibles >= cantidadPasajes
-        );
+       const filtrados = todos
+                  .filter((item) => {
+                    const fechaItem = new Date(item.fecha_partida.split('/').reverse().join('-'));
+                    const fechaFiltro = new Date(datos.fecha.split('/').reverse().join('-'));
 
-        setViajes(filtrados);
-      } catch (err) {
+                    return (
+                      !['CERRADO', 'CANCELADO'].includes(item.estado) &&
+                      item.localidadOrigen.id_localidad.toString() === datos.origen &&
+                      item.localidadDestino.id_localidad.toString() === datos.destino &&
+                      fechaItem >= fechaFiltro &&
+                      item.asientosDisponibles >= cantidadPasajes
+                    );
+                  })
+                  .sort((a, b) => {
+                    const fechaA = new Date(a.fecha_partida.split('/').reverse().join('-'));
+                    const fechaB = new Date(b.fecha_partida.split('/').reverse().join('-'));
+                    return fechaA.getTime() - fechaB.getTime();
+                  });
+
+      setViajes(filtrados);
+      } catch (err) { 
         console.error(err);
         setError('No se pudieron cargar los viajes.');
       } finally {
@@ -90,79 +101,79 @@ export default function TripResultsScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      {datos && (
-        <View style={styles.card}>
-          <View style={styles.row}>
-            <View style={styles.floatLeft}>
-              <Text style={styles.titulos}>Filtro:</Text>
-            </View>
-            <View style={styles.header}>
-               <Text style={styles.tipoViaje}>
-                {etapa}
-              </Text>
-            </View>
-          </View>
-
-          <View style={styles.row}>
-            <Text style={styles.label}>Origen:</Text>
-            <Text style={styles.value}>{datos.nomorigen}</Text>
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.label}>Destino:</Text>
-            <Text style={styles.value}>{datos.nomdestino}</Text>
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.label}>Fecha:</Text>
-            <Text style={styles.value}>{datos.fecha}</Text>
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.label}>Pasajes:</Text>
-            <Text style={styles.value}>{pasajes}</Text>
-          </View>
-          <View style={styles.row}>
-             <Text style={styles.label}>Tipo de Viaje:</Text>
-                <Text style={styles.value}>{tipoViaje === 'ida-vuelta' ? 'Ida y vuelta' : 'Solo ida'} </Text>
-          </View>
-
-         
-        </View>
-      )}
-
-        <Modal transparent={true} visible={loading} animationType="fade">
-          <View style={styles.loadingOverlay}>
-            <View style={styles.loadingBox}>
-              <ActivityIndicator size="large" color="#fff" />
-              <Text style={styles.loadingText}>Buscando tu próximo viaje...</Text>
-            </View>
-          </View>
-        </Modal>
-        <FlatList
-          data={viajes}
-          keyExtractor={(item) => item.id_viaje.toString()}
-          renderItem={({ item }) => (
-            <TripResultItem
-              fecha_partida={item.fecha_partida}
-              fecha_llegada={item.fecha_llegada}
-              hora_partida={item.hora_partida}
-              hora_llegada={item.hora_llegada}
-              localidadOrigen={item.localidadOrigen}
-              localidadDestino={item.localidadDestino}
-              precio_viaje={item.precio_viaje}
-              estado={item.estado}
-              asientosDisponibles={item.asientosDisponibles}
-              onPress={() => seleccionarViaje(item)}
-            />
-          )}
-          ListEmptyComponent={
-            <View>
-              <Text style={styles.error}>No se encontraron viajes para los criterios dados.</Text>
-              <TouchableOpacity style={styles.button} onPress={() => router.back()}>
-                <Text style={styles.buttonText}>Volver a buscar</Text>
-              </TouchableOpacity>
-            </View>
-          }
-        />
       
+                    {datos && (
+                      <View style={styles.card}>
+                        <View style={styles.row}>
+                          <View style={styles.floatLeft}>
+                            <Text style={styles.titulos}>Filtro:</Text>
+                          </View>
+                          <View style={styles.header}>
+                            <Text style={styles.tipoViaje}>
+                              {etapa}
+                            </Text>
+                          </View>
+                        </View>
+
+                        <View style={styles.row}>
+                          <Text style={styles.label}>Origen:</Text>
+                          <Text style={styles.value}>{datos.nomorigen}</Text>
+                        </View>
+                        <View style={styles.row}>
+                          <Text style={styles.label}>Destino:</Text>
+                          <Text style={styles.value}>{datos.nomdestino}</Text>
+                        </View>
+                        <View style={styles.row}>
+                          <Text style={styles.label}>Fecha:</Text>
+                          <Text style={styles.value}>{datos.fecha}</Text>
+                        </View>
+                        <View style={styles.row}>
+                          <Text style={styles.label}>Pasajes:</Text>
+                          <Text style={styles.value}>{pasajes}</Text>
+                        </View>
+                        <View style={styles.row}>
+                          <Text style={styles.label}>Tipo de Viaje:</Text>
+                              <Text style={styles.value}>{tipoViaje === 'ida-vuelta' ? 'Ida y vuelta' : 'Solo ida'} </Text>
+                        </View>
+
+                      
+                      </View>
+                    )}
+
+                      <Modal transparent={true} visible={loading} animationType="fade">
+                        <View style={styles.loadingOverlay}>
+                          <View style={styles.loadingBox}>
+                            <ActivityIndicator size="large" color="#fff" />
+                            <Text style={styles.loadingText}>Buscando tu próximo viaje...</Text>
+                          </View>
+                        </View>
+                      </Modal>
+                      <FlatList
+                        data={viajes}
+                        keyExtractor={(item) => item.id_viaje.toString()}
+                        renderItem={({ item }) => (
+                          <TripResultItem
+                            fecha_partida={item.fecha_partida}
+                            fecha_llegada={item.fecha_llegada}
+                            hora_partida={item.hora_partida}
+                            hora_llegada={item.hora_llegada}
+                            localidadOrigen={item.localidadOrigen}
+                            localidadDestino={item.localidadDestino}
+                            precio_viaje={item.precio_viaje}
+                            estado={item.estado}
+                            asientosDisponibles={item.asientosDisponibles}
+                            onPress={() => seleccionarViaje(item)}
+                          />
+                        )}
+                        ListEmptyComponent={
+                          <View>
+                            <Text style={styles.error}>No se encontraron viajes para los criterios dados.</Text>
+                            <TouchableOpacity style={styles.button} onPress={() => router.back()}>
+                              <Text style={styles.buttonText}>Volver a buscar</Text>
+                            </TouchableOpacity>
+                          </View>
+                        }
+                      />
     </SafeAreaView>
   );
 }

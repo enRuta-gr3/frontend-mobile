@@ -81,48 +81,13 @@ export default function SignupScreen({
 }
 
 const styles = StyleSheet.create({
-  /*container2: { padding: 0,  zIndex: 2,paddingBottom: 5, backgroundColor: "#fff" },
-  title: { fontSize: 24, fontWeight: "bold", marginBottom: 8 },
-  input: { borderWidth: 1, borderColor: "#ccc", padding: 12, marginBottom: 14, borderRadius: 8, backgroundColor: "#f9f9f9" },
-  label: { fontWeight: "bold", marginTop: 12 },
-  error: { color: "red", marginBottom: 10, textAlign: "center" },
-  radioContainer: { flexDirection: "row", alignItems: "center", marginVertical: 4 },
-  radioCircle: { height: 18, width: 18, borderRadius: 9, borderWidth: 2, borderColor: "#555", marginRight: 8, backgroundColor: "#fff" },
-  radioSelected: { backgroundColor: "#ff6600", borderColor: "#ff6600" },
-  radioText: { fontSize: 16 },
-  button: { backgroundColor: "#ff6600", padding: 14, borderRadius: 10, marginTop: 24, alignItems: "center" },
-  buttonText: { color: "white",  fontSize: 18, fontWeight: "bold" }, 
-
-  titles: { 
-    justifyContent: "center",
-    alignItems: "center",
-    color: "rgb(1, 2, 0)",
-    paddingBottom: 50,
-  },
-  link: {
-    alignItems: "stretch",
-    color: "rgb(0, 0, 0)",
-  },
-  linkRe: {
-    color: "rgb(245, 74, 0)",
-  },
  
-  padding20:{
-    paddingTop: 10,
-     paddingBottom: 0,
-  },
-  hint: {
-    fontSize: 12,
-    color: "#666",
-    marginBottom: 8,
-    fontStyle: "italic"
-  },*/
 
 pickerContainer: {
   borderWidth: 1,
   borderColor: '#ccc',
   borderRadius: 8,
-  marginBottom: 20,
+  marginBottom: 20, 
 
 },
 picker: {

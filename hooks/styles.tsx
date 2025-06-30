@@ -1,4 +1,4 @@
-import { StyleProp, TextStyle, ViewStyle } from "react-native";
+import { StyleProp, StyleSheet, TextStyle, ViewStyle } from "react-native";
 
 
 export default class StyleRuta {
@@ -47,6 +47,15 @@ static loadingText: {
     borderTopColor: '#00000000', // transparente en formato hexadecimal válido
   };
   
+static imagen: StyleProp<ViewStyle> = {
+  flex: 1,
+  justifyContent: 'center',
+};
+
+static overlay: StyleProp<ViewStyle> = {
+  ...StyleSheet.absoluteFillObject,
+  backgroundColor: 'rgba(255, 153, 0, 0.2)',
+};
 
 }
 

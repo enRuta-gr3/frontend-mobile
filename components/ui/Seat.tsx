@@ -48,50 +48,52 @@ const SeatSelector: React.FC<Props> = ({ viaje, etapa, tipoViaje, pasajes, fecha
   const toggleAsiento = (item: AsientoData) => {
     if (item.estado !== 'LIBRE') return;
 
-   const yaSeleccionado = seleccionados.find(a => a.id_disAsiento === item.id_disAsiento);
-   if (yaSeleccionado) {
-      setSeleccionados(prev => prev.filter(a => a.id_disAsiento !== item.id_disAsiento));
-    } else {
-      if (seleccionados.length >= pasajes) {
-        Alert.alert('Límite', `Solo puedes seleccionar hasta ${pasajes} asientos.`);
-        return;
+    const yaSeleccionado = seleccionados.find(a => a.id_disAsiento === item.id_disAsiento);
+    if (yaSeleccionado) {
+        setSeleccionados(prev => prev.filter(a => a.id_disAsiento !== item.id_disAsiento));
+      } else {
+        if (seleccionados.length >= pasajes) {
+          Alert.alert('Límite', `Solo puedes seleccionar hasta ${pasajes} asientos.`);
+          return;
+        }
+        
+        setSeleccionados(prev => [...prev, item]);
       }
-      
-      setSeleccionados(prev => [...prev, item]);
-    }
-  };
+    };
 
   const renderAsiento = ({ item }: { item: AsientoData }) => {
   const isSeleccionado = seleccionados.some(a => a.id_disAsiento === item.id_disAsiento);
 
   return (
     <>
-    <TouchableOpacity
-      disabled={item.estado !== 'LIBRE'}
-      onPress={() => toggleAsiento(item)}
-      style={[
-        styles.asiento,
-        item.estado === 'OCUPADO' && styles.ocupado,
-        item.estado === 'BLOQUEADO' && styles.ocupado,
-        item.estado === 'LIBRE' && styles.libre,
-        isSeleccionado && styles.seleccionado,
-      ]}
-    >
-      <Text style={[
-        styles.text,
-        item.estado === 'LIBRE' && styles.txtlibre,
-        isSeleccionado && styles.txtseleccionado,
-      ]}>{item.asiento.numero_asiento}</Text>
-    </TouchableOpacity></>
-    );
+        <TouchableOpacity accessibilityViewIsModal={loading}
+          disabled={item.estado !== 'LIBRE'}
+          onPress={() => toggleAsiento(item)}
+          style={[
+            styles.asiento,
+            item.estado === 'OCUPADO' && styles.ocupado,
+            item.estado === 'BLOQUEADO' && styles.ocupado,
+            item.estado === 'LIBRE' && styles.libre,
+            isSeleccionado && styles.seleccionado,
+          ]}
+        >
+          <Text style={[
+            styles.text,
+            item.estado === 'LIBRE' && styles.txtlibre,
+            isSeleccionado && styles.txtseleccionado,
+          ]}>{item.asiento.numero_asiento}</Text>
+        </TouchableOpacity>
+    
+    </>
+    
+  );
+};
 
-  };
-  
-  const handleConfirmar = async () => {
-   
-    if (seleccionados.length < pasajes) {
-        Alert.alert('Límite', `Te faltan ${pasajes - seleccionados.length } asiento/s para seleccionar.`);
-        return;
+const handleConfirmar = async () => {
+
+  if (seleccionados.length < pasajes) {
+      Alert.alert('Límite', `Te faltan ${pasajes - seleccionados.length } asiento/s para seleccionar.`);
+      return;
       }
      
 
@@ -241,6 +243,7 @@ const SeatSelector: React.FC<Props> = ({ viaje, etapa, tipoViaje, pasajes, fecha
       </View>
     </Modal>
     <SafeAreaView>
+       {!loading && (
       <FlatList
         data={asientos}
         numColumns={4}
@@ -258,6 +261,7 @@ const SeatSelector: React.FC<Props> = ({ viaje, etapa, tipoViaje, pasajes, fecha
                                 <Text style={[styles.buttonText, { color: '#FFF'  }]}>Confirmar Selección</Text>
                               </TouchableOpacity>
                             </View>} />
+       )} 
                             
     </SafeAreaView> 
   </>

@@ -170,7 +170,7 @@ export interface ViajeVenta {
 
 export interface Pasaje {
   id_pasaje: number;
-  precio: number;
+  montoPago: number;
   viaje: {
     fecha_partida: string;
     hora_partida: string;

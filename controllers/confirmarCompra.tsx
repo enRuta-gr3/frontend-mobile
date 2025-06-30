@@ -7,7 +7,7 @@ export default async function capturarOrder(idVenta: number, token: string) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id_venta: idVenta, id_orden: token }),
     });
-    const responseData = await res.json();
+    const responseData = await res.json();   
     return responseData;
   } catch (error) {
     console.error('Error:', error);

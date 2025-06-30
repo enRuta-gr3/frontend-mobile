@@ -23,7 +23,6 @@ export default function LoginLayout({ email, setEmail, password, setPassword, on
   const logoLight = require('@/assets/images/logo.jpg');
   const logoDark = require('@/assets/images/logo_oscuro.png');
 
-
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: isDark ? '#000' : '#fff' }]}>
       <ParallaxScrollView

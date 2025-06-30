@@ -19,7 +19,7 @@ export default function SearchScreen() {
   const [destino, setDestino] = useState<{ id: number; nombre: string } | null>(null);
   const [fecha, setFecha] = useState('');
   const [fecha_vuelta, setFechaVuelta] = useState('');
-  const [pasajes, setPasajes] = useState('');
+  const [pasajes, setPasajes] = useState('1'); 
   const [date, setDate] = useState(new Date());
   const [show, setShow] = useState(false);
   const [date2, setDate2] = useState(new Date());
@@ -103,11 +103,6 @@ export default function SearchScreen() {
      ndate.setDate(ndate.getDate() + 0)
      return ndate;
   }
-  
-
-  
-     
-      
   
   return (
       <><Modal transparent={true} visible={loadingLocalidades} animationType="fade">
@@ -215,12 +210,17 @@ export default function SearchScreen() {
           </View>
         )}
 
-        <TextInput
-          style={styles.input}
-          placeholder="Número de pasajes"
-          keyboardType="numeric"
-          value={pasajes}
-          onChangeText={clickTickets} />
+        
+          <View style={styles.pickerContainer}>
+              <Picker selectedValue={pasajes}  onValueChange={(itemValue) => setPasajes(itemValue)} style={styles.picker2}>
+                <Picker.Item label="1" value="1" />
+                <Picker.Item label="2" value="2" />
+                <Picker.Item label="3" value="3" />
+                <Picker.Item label="4" value="4" />
+                <Picker.Item label="5" value="5" />
+              </Picker>
+            </View>
+
 
         <TouchableOpacity style={styles.button} onPress={handleBuscar}>
           <Text style={styles.buttonText}>Buscar viajes</Text>
@@ -233,6 +233,7 @@ const styles = StyleSheet.create({
   container: {
     padding: 20,
   },
+
   title: {
     fontSize: 24,
     fontWeight: 'bold',
@@ -279,6 +280,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: '#f9f9f9',
   },
+  
   button: {
     backgroundColor: StyleRuta.primary,
     padding: 15,
@@ -286,12 +288,23 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginTop: 20,
   },
+ 
   buttonText: {
     color: '#fff',
     fontWeight: 'bold',
   },
 
   
+pickerContainer: {
+  borderWidth: 1,
+  borderColor: '#ccc',
+  borderRadius: 8,
+  marginBottom: 1, 
+},
+ picker2: { 
+  width: '100%',
+},
+
 loadingOverlay: {
   flex: 1,
   backgroundColor: 'rgba(0,0,0,0.6)',

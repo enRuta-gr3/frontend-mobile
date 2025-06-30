@@ -26,7 +26,7 @@ export default function ResetPassScreen() {
   
   try {
     const res = await resetPass(email);  
-    console.log(JSON.stringify(res))
+ 
     if (res.success){
         limpiarCampos();        
         router.push("/EmailVerification");
