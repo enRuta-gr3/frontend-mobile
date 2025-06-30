@@ -1,6 +1,6 @@
+import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
-import * as SystemUI from 'expo-system-ui';
-import React from "react";
+import React, { useState } from "react";
 import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 
 interface Props {
@@ -36,7 +36,32 @@ export default function SignupScreen({
   onSignup,
   error, 
 }: Props) {
-  SystemUI.setBackgroundColorAsync('#ffffff');
+
+  const [date, setDate] = useState(new Date());
+  const [show, setShow] = useState(false);
+  const handleDateChange = (event: any, selectedDate?: Date) => {
+   limpiarCampos();
+   
+    if (selectedDate) {
+      setDate(selectedDate);
+      const day = selectedDate.getDate().toString().padStart(2, '0');
+      const month = (selectedDate.getMonth() + 1).toString().padStart(2, '0');
+      const year = selectedDate.getFullYear();
+      setFecha(`${day}/${month}/${year}`);
+      setShow(false);
+    }
+  };
+
+  const limpiarCampos = () => {
+      setEmail('');
+      setPassword('');
+      setPassword2('');
+      setNombre('');
+      setApellido('');
+      setFecha('');
+      setCedula('');
+      setDescuento('Ninguno');
+    };
 
   return (
       <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -47,7 +72,22 @@ export default function SignupScreen({
          <Text style={styles.hint}>Apellido</Text>
         <TextInput style={styles.input} placeholder="Apellido" value={apellido} onChangeText={setApellido} />
          <Text style={styles.hint}>Fecha de nacimiento</Text>
-        <TextInput style={styles.input} placeholder="Fecha de nacimiento (dd/mm/aaaa)" value={fecha} onChangeText={setFecha} />
+       
+       <TextInput
+          style={styles.input}
+          placeholder="Fecha de nacimiento (dd/mm/aaaa)"
+          value={fecha}
+          onFocus={() => setShow(true)} />
+
+        {show && (
+          <DateTimePicker
+            value={date}
+            mode="date"
+            display="default"
+            onChange={handleDateChange}
+            locale="es-ES"
+            />
+        )}
         <Text style={styles.hint}>Correo electrónico</Text>
         <TextInput style={styles.input} placeholder="Correo electrónico" value={email} onChangeText={setEmail} keyboardType="email-address" />
          <Text style={styles.hint}>Cédula</Text>

@@ -1,15 +1,15 @@
  
+import { imagen } from '@/cfg';
 import ChangePScreen from '@/components/ui/ChangePass';
+import StyleRuta from '@/hooks/styles';
 import React from 'react';
 import { ImageBackground, StyleSheet, View } from 'react-native';
-
-const imagen = { uri: 'https://en-ruta.vercel.app/bus2.jpg' };
 
 export default function ChangePassScreen() {
    return (
     <>  
-       <ImageBackground source={imagen} resizeMode="cover" style={styles.imagen}>
-          <View style={styles.overlay} />
+       <ImageBackground source={imagen} resizeMode="cover" style={StyleRuta.imagen}>
+          <View style={StyleRuta.overlay} />
           <View style={styles.container}>
             <View style={styles.subcontainer}>
               <ChangePScreen />

@@ -1,15 +1,13 @@
  
-import StyleRuta from '@/hooks/styles';
-import { useRouter } from "expo-router";
-import React, { useEffect, useState } from "react";
-import { Alert, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from "react-native";
- 
- 
-
+import { imagen } from '@/cfg';
 import EditProfileScreen from '@/components/ui/EditProfile';
 import { editProfile } from '@/controllers/editProfileSer';
 import { obtenerUsuario } from '@/controllers/getClient';
+import StyleRuta from '@/hooks/styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useRouter } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { Alert, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 
 export default function EditProfile() {
@@ -141,13 +139,10 @@ export default function EditProfile() {
       return `${dia}/${mes}/${anio}`; 
       }
               
-
-  const imagen = { uri: 'https://en-ruta.vercel.app/bus2.jpg'}
-
   return (
   
-        <ImageBackground source={imagen}  style={styles.imagen}>
-          <View style={styles.overlay} />
+        <ImageBackground source={imagen}  style={StyleRuta.imagen}>
+          <View style={StyleRuta.overlay} />
           <View style={styles.container}>
            
                   

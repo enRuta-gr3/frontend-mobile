@@ -12,9 +12,10 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState(''); 
   const router = useRouter();
+   const [loading, setLoading] = useState(false);
 
   const clickLogin = async () => {
-
+     setLoading(true);
     //ARMAR VALIDACIONE DE CAMPOS
     if (!email || !password) {
       Alert.alert('Campos requeridos', 'Por favor completá todos los campos');
@@ -70,20 +71,26 @@ try {
   } else {
     console.error('Error de red:', error.message);
   }
-}};
+}finally {
+    setLoading(false);
+  }
+
+
+};
 
   const validateEmail = (email: string): boolean => {
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
     return emailRegex.test(email);
   };
 
-  return (
+  return (  
     <LoginLayout
       email={email}
       setEmail={setEmail}
       password={password}
       setPassword={setPassword}
       onLogin={clickLogin}
+      loading={loading} 
     />
   );
 }

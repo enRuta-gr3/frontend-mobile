@@ -1,20 +1,21 @@
  
+import { imagen } from '@/cfg';
 import ResetPassScreen from '@/components/ui/resertPass';
+import Styleruta from '@/hooks/styles';
 import React from 'react';
 import { ImageBackground, StyleSheet, View } from 'react-native';
 
 
-const imagen = { uri: 'https://en-ruta.vercel.app/bus2.jpg' };
 
 export default function ResetPass() {
    return (
     <>  
-       <ImageBackground source={imagen} resizeMode="cover" style={styles.imagen}>
-          <View style={styles.overlay} />
+       <ImageBackground source={imagen} resizeMode="cover" style={Styleruta.imagen}>
+          <View style={Styleruta.overlay} />
               <View style={styles.container}>
                 <View style={styles.subcontainer}>
                   <ResetPassScreen />
-                  <View style={styles.line}></View>
+                
                 </View>
               </View>             
         </ImageBackground>
@@ -32,15 +33,9 @@ const styles = StyleSheet.create({
     padding: 20, 
     backgroundColor: '#fff', borderRadius:15,
     margin:20,
+    marginBottom: 100
   },
-  imagen: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(0,0,0,0.4)", // Opacidad del fondo
-  },
+
   content: {
     alignItems: 'center',
   },  

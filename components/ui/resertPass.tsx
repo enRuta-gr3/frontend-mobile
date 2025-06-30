@@ -83,7 +83,7 @@ export default function ResetPassScreen() {
         <TextInput style={styles.input} placeholder="Correo electrónico" value={email} onChangeText={setEmail} keyboardType="email-address" />
        
         <TouchableOpacity style={styles.button} onPress={clickReset}>
-          <Text style={styles.buttonText}>Enviar Contraseña</Text>
+          <Text style={styles.buttonText}>Recuperar contraseña</Text>
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
@@ -91,7 +91,7 @@ export default function ResetPassScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { padding: 10,  zIndex: 2,paddingBottom: 5, backgroundColor: "#fff" },
+  container: { padding: 10,paddingBottom: 5, backgroundColor: "#fff" },
   title: { fontSize: 24, fontWeight: "bold", marginBottom: 8 },
   input: { borderWidth: 1, borderColor: "#ccc", padding: 12, marginBottom: 14, borderRadius: 8, backgroundColor: "#f9f9f9" },
   label: { fontWeight: "bold", marginTop: 12 },

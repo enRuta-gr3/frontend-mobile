@@ -1,12 +1,14 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React from 'react';
-import { Alert, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, Image, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function PaymentScreen() {
   const router = useRouter();
   const { datosVenta } = useLocalSearchParams();
+  const [loading, setLoading] = React.useState(false);
 
   const handleConfirm = async () => {
+    setLoading(true);
     try {
       const body = {
         pago: {
@@ -39,47 +41,41 @@ export default function PaymentScreen() {
           pathname: '/Paypal',
           params: { urlPaypal: data.data.urlPago },
         });
-
         console.log('Redirigiendo a PayPal con URL:', data.data.urlPago);
       } else {
         Alert.alert('Error 002', 'No se pudo obtener la URL de PayPal.');
       }
-
-
     } catch (error) {
       Alert.alert('Error', 'Ocurrió un error al procesar el pago.');
     }
-  };
-
-  const simularRetornoPaypal = () => {
-    router.push({ 
-      pathname: '/success',   
-      params: {
-        id_venta: '86',
-        token: '7E1196298H470380P',
-        PayerID: 'DF2UHYAHYVHCC',
-      }, 
-    }); 
+    finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.screen}>
-      <View style={styles.screenA}>
-        <View style={styles.container}>
-          <Text style={styles.title}>Selecciona método de pago</Text>
-          <Text style={styles.subtitle}>Elige cómo pagar tu viaje:</Text>
-          <TouchableOpacity style={styles.methodCard} onPress={handleConfirm}>
-            <Image source={{ uri: 'https://www.paypalobjects.com/webstatic/icon/pp258.png' }} style={styles.logo} />
-            <Text style={styles.methodText}>PayPal</Text>
-          </TouchableOpacity>
-
+    <><Modal transparent={true} visible={loading} animationType="fade">
+      <View style={styles.loadingOverlay}>
+        <View style={styles.loadingBox}>
+          <ActivityIndicator size="large" color="#fff" />
+       <Text style={styles.loadingText}>Redirigiendo a Paypal...</Text>
          
-          <TouchableOpacity style={[styles.methodCard, { marginTop: 20, backgroundColor: '#e0e0e0' }]} onPress={simularRetornoPaypal}>
-            <Text style={[styles.methodText, { color: 'green' }]}>Simular retorno PayPal</Text>
-          </TouchableOpacity>
         </View>
       </View>
-    </ScrollView>
+    </Modal>
+    <ScrollView contentContainerStyle={styles.screen}>
+        <View style={styles.screenA}>
+          <View style={styles.container}>
+            <Text style={styles.title}>Selecciona método de pago</Text>
+            <Text style={styles.subtitle}>Elige cómo pagar tu viaje:</Text>
+            <TouchableOpacity style={styles.methodCard} onPress={handleConfirm}>
+              <Image source={{ uri: 'https://www.paypalobjects.com/webstatic/icon/pp258.png' }} style={styles.logo} />
+              <Text style={styles.methodText}>PayPal</Text>
+            </TouchableOpacity>
+
+          </View>
+        </View>
+      </ScrollView></>
   );
 }
 
@@ -117,4 +113,23 @@ const styles = StyleSheet.create({
   },
   logo: { width: 50, height: 50, marginRight: 10 },
   methodText: { fontSize: 16 },
+
+   loadingOverlay: {
+      flex: 1,
+      backgroundColor: 'rgba(0,0,0,0.6)',
+      justifyContent: 'center',
+      alignItems: 'center',
+      zIndex: 999,
+    },
+loadingBox: {
+  padding: 20,
+  backgroundColor: '#333',
+  borderRadius: 10,
+  alignItems: 'center',
+},
+loadingText: {
+  marginTop: 10,
+  color: '#fff',
+  fontSize: 16,
+},
 });

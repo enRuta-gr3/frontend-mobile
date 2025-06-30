@@ -1,9 +1,10 @@
-import axios from 'axios';
+import { imagen } from "@/cfg";
+import { registrarUsuario } from "@/controllers/signup";
+import StyleRuta from "@/hooks/styles";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { Alert, ImageBackground, SafeAreaView, StyleSheet, View } from "react-native";
+import { ActivityIndicator, Alert, ImageBackground, Modal, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import SignupScreen from "../components/ui/Signup";
-
 
 export default function Signup() {
  const [email, setEmail] = useState('');
@@ -15,14 +16,27 @@ export default function Signup() {
   const [cedula, setCedula] = useState('');
   const [descuento, setDescuento] = useState('Ninguno');
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
   
 
   const clickSignup = async () => {
+    
+    
     if (!email || !password || !password2 || !nombre || !apellido || !cedula) {
       Alert.alert(
         "Campos requeridos",
         "Por favor completá todos los campos requeridos"
       );
+       
+      return;
+    }
+
+    if (!validateEmail(email)) {
+      Alert.alert(
+        "Correo inválido",
+        "Por favor ingresá un correo electrónico válido"
+      );
+    
       return;
     }
 
@@ -32,6 +46,7 @@ export default function Signup() {
             "Campos inválidos",
             "La contraseña ingresada no es igual a la confirmación de contraseña"
           );
+           
           return;
         }
 
@@ -40,6 +55,7 @@ export default function Signup() {
             "Campos inválidos",
             "La ci ingresada no es válida. "
           );
+        
       return;
     }
 
@@ -48,11 +64,17 @@ export default function Signup() {
             "Campos inválidos",
             "No puede ser menor de 18 años para registrarse"  
           );
+          
       return;
       } 
 
-    try {
+      if (!validarPassword(password)) {
+            Alert.alert("Error", `La contraseña debe tener mínimo 7 caracteres`);
+            return;
+          }
 
+    try {
+        setLoading(true);
         let esJubilado = false;
         let esEstudiante = false;
         const formFecha = convertirADateISO(fecha); 
@@ -62,54 +84,60 @@ export default function Signup() {
         } else if (descuento === 'Estudiante') {
           esEstudiante = true;
         } 
-
-      
-//Mejorar por endoint class
-      const res = await axios.post('https://backend-production-2812f.up.railway.app/api/auth/registrarUsuario', 
-            {
-              tipo_usuario:"CLIENTE",
-              ci:cedula,
-              nombres: nombre,
-              apellidos: apellido,
-              fecha_nacimiento: formFecha,
-              descuento: descuento,
-              email: email,
-              contraseña:password,
-              esEstudiante:esEstudiante,
-              esJubilado:esJubilado
-            },
-             {headers: {'Content-Type': 'application/json',},}
-          );   
-          const success = res.data.data.access_token;       
-          console.log(res.data)
-
-       if (res.data.success) { 
-          router.push("/EmailVerification");
-       } else{
-          Alert.alert('Error:', res.data.data )
-       }   
-    } catch (error: any) {
-           console.log(error.response)
+        const res = await registrarUsuario(email, cedula, nombre, apellido, formFecha, esEstudiante, descuento, esJubilado, password) 
+        
+         console.log( JSON.stringify(res, null, 2))
+        if (res.success) { 
+              router.push("/EmailVerification");
+          } else{
+             setLoading(false);
+              Alert.alert('Error 005:', res.data )
+          }   
+        setLoading(false);
+    }catch (error: any) {
+        console.log( JSON.stringify(error.response, null, 2))
+        setLoading(false);
       if (!error.response?.success) {
-            
-          Alert.alert('Error:', error.response.data.data);
-
+        
+          Alert.alert('Error 006:', error.response.data.data);
       }else{
-             Alert.alert('No pudimos procesar la solicitud', 'Contacte a atención al cliente');
+           Alert.alert('No pudimos procesar la solicitud', 'Contacte a atención al cliente');
       }
-    }};    
+    }
+  }  
 
   const validateEmail = (email: string): boolean => {
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
     return emailRegex.test(email);
   };
+  
+  const validarPasswordCSeguridad = (password: string): boolean => {
+    const regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,20}$/;
+    return regex.test(password);
+  };
+
+  const validarPassword = (password: string, min = 8, max = 20): boolean => {
+      return password.length >= min && password.length <= max;
+    };
+
   const validateDate = (fecha: string): boolean => {
       const [dia, mes, año] = fecha.split('/');
-      const currentYear = new Date(Date.now()).getFullYear();
-      if (currentYear - Number(año) >= 18) {
-        return true;
+      const birthDate = new Date(Number(año), Number(mes) - 1, Number(dia));
+      if (
+        isNaN(birthDate.getTime()) ||
+        birthDate.getDate() !== Number(dia) ||
+        birthDate.getMonth() !== Number(mes) - 1 ||
+        birthDate.getFullYear() !== Number(año)
+      ) {
+        return false; 
       }
-      return false;
+      const today = new Date();
+      let age = today.getFullYear() - birthDate.getFullYear();
+      const m = today.getMonth() - birthDate.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+      }
+      return age >= 18;
   };
 
   function validarCedula(ci: string): boolean {
@@ -123,8 +151,9 @@ export default function Signup() {
       for (let i = 0; i < 7; i++) {
         suma += digitos[i] * multiplicadores[i];
       }
-      const digitoVerificador = ((10 - (suma % 10)) % 10);
-      return digitoVerificador === digitos[7];
+      let resto = suma % 10;
+      let digitoVerificador = resto === 0 ? 0 : 10 - resto;
+      return digitos[7] === digitoVerificador;
     }
     
   const convertirADateISO = (fecha: string): string => {
@@ -133,15 +162,25 @@ export default function Signup() {
   };
               
 
-  const imagen = { uri: 'https://en-ruta.vercel.app/bus2.jpg'}
-
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+      <Modal transparent={true} visible={loading} animationType="fade">
+          <View style={styles.loadingOverlay}>
+            <View style={styles.loadingBox}>
+              <ActivityIndicator size="large" color="#fff" />
+              <Text style={styles.loadingText}>Guardando tus datos...</Text>
+            </View>
+          </View>
+        </Modal>
+
+
      <View style={{ flex: 1 }} >
-        <ImageBackground source={imagen}  style={styles.imagen} resizeMode="cover">
-          <View style={styles.overlay} />
+        <ImageBackground source={imagen}  style={StyleRuta.imagen} resizeMode="cover">
+          <View style={StyleRuta.overlay} />
           <View style={styles.container}>
             <View style={styles.subcontainer}>
+              
+              
               <SignupScreen
                   email={email}
                   setEmail={setEmail}
@@ -159,7 +198,7 @@ export default function Signup() {
                   setCedula={setCedula}
                   descuento={descuento}
                   setDescuento={setDescuento}
-                  onSignup={clickSignup} error={''}          />
+                  onSignup={clickSignup} error={''} />
               </View>
       </View>
       
@@ -177,23 +216,34 @@ const styles = StyleSheet.create({
   },
   subcontainer: {
     flex: 1,
-    padding: 20,
+    padding: 25,
     backgroundColor: '#fff',
     borderRadius: 15,
     margin: 10,
     marginTop: 10,
-  
-  },
-  imagen: {
-    flex: 1,
-    
-  },
-  overlay: {
-   ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(0,0,0,0.4)", // Opacidad del fondo
+    marginBottom: 60,
   },
   content: {
     alignItems: 'center',
   },  
-
+loadingOverlay: {
+  flex: 1,
+  backgroundColor: 'rgba(0,0,0,0.6)',
+  justifyContent: 'center',
+  alignItems: 'center',
+  zIndex: 999,
+},
+loadingBox: {
+  padding: 20,
+  backgroundColor: '#333',
+  borderRadius: 10,
+  alignItems: 'center',
+},
+loadingText: {
+  marginTop: 10,
+  color: '#fff',
+  fontSize: 16,
+},
 }); 
+
+

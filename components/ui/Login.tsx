@@ -1,3 +1,4 @@
+import { logoDark, logoLight } from '@/cfg';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedView } from '@/components/ThemedView';
 import StyleRuta from '@/hooks/styles';
@@ -5,6 +6,7 @@ import { Input } from '@rneui/themed';
 import { Link } from 'expo-router';
 import React from 'react';
 import {
+  ActivityIndicator,
   Image, SafeAreaView, StyleSheet, Text,
   TouchableOpacity, View, useColorScheme
 } from 'react-native';
@@ -15,13 +17,14 @@ type Props = {
   password: string;
   setPassword: (password: string) => void;
   onLogin: () => void;
+   loading: boolean;
 };
 
 export default function LoginLayout({ email, setEmail, password, setPassword, onLogin }: Props) {
   const scheme = useColorScheme();
   const isDark = scheme === 'dark';
-  const logoLight = require('@/assets/images/logo.jpg');
-  const logoDark = require('@/assets/images/logo_oscuro.png');
+  const [loading, setLoading] = React.useState(false);
+
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: isDark ? '#000' : '#fff' }]}>
@@ -55,8 +58,12 @@ export default function LoginLayout({ email, setEmail, password, setPassword, on
           inputStyle={{ color: isDark ? '#fff' : '#000' }}
         />
 
-        <TouchableOpacity style={styles.button} onPress={onLogin}>
-          <Text style={styles.buttonText}>Iniciar Sesión</Text>
+        <TouchableOpacity style={styles.button} onPress={onLogin} disabled={loading}>
+          {loading ? (
+            <ActivityIndicator color="#fff" /> 
+          ) : (
+            <Text style={styles.buttonText}>Iniciar Sesión</Text>
+          )}
         </TouchableOpacity>
 
         <Link href="/_signup">
@@ -66,7 +73,7 @@ export default function LoginLayout({ email, setEmail, password, setPassword, on
           </Text>
         </Link>
         <Link href="/_reset">
-          <Text style={[styles.link, { color: isDark ? '#fff' : '#000' }]}>
+          <Text style={[styles.link, { color: isDark ? '#fff' : '#000',textDecorationLine: 'underline'  }]}>
             ¿Olvidaste tu contraseña?
           </Text>
         </Link>

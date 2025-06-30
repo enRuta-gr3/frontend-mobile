@@ -1,9 +1,9 @@
+import { imagen } from '@/cfg';
+import StyleRuta from '@/hooks/styles';
+import { FontAwesome5 } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, ImageBackground, Modal, SafeAreaView, StyleSheet, Text, useColorScheme, View } from 'react-native';
-
-import StyleRuta from '@/hooks/styles';
-import { FontAwesome5 } from '@expo/vector-icons';
 import { getHistoryTicket, TicketHistoryItem } from '../../../controllers/getHistoryTicket';
 
 export default function TicketHistory() {
@@ -36,13 +36,11 @@ export default function TicketHistory() {
     };
     fetchTickets();
   }, []);
-  const imagen = { uri: 'https://en-ruta.vercel.app/bus2.jpg'}
 
   return (
-    <ImageBackground source={imagen}  style={styles.imagen}>
-    <SafeAreaView style={styles.container}>
-      
-        <View style={styles.overlay} />
+    <ImageBackground source={imagen}  style={StyleRuta.imagen}>
+    <SafeAreaView style={styles.container}>      
+        <View style={StyleRuta.overlay} />
         <View style={styles.container2}>
             <Modal transparent={true} visible={loading} animationType="fade">
               <View style={styles.loadingOverlay}>

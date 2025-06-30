@@ -22,10 +22,10 @@ const SeatSelector: React.FC<Props> = ({ viaje, etapa, tipoViaje, pasajes, fecha
   const [seleccionados, setSeleccionados] = useState<AsientoData[]>([]);
   const [loading, setLoading] = useState(true);
   const [mensaje, setMensaje] = useState('Cargando asientos....');
-  
+  const [isSaving, setIsSaving] = useState(false);
 
   const scheme = useColorScheme(); // puede ser 'light' o 'dark'
-   const isDark = scheme === 'dark';
+  const isDark = scheme === 'dark';
 
   useEffect(() => {
     axios
@@ -46,228 +46,220 @@ const SeatSelector: React.FC<Props> = ({ viaje, etapa, tipoViaje, pasajes, fecha
   }, []);
 
   const toggleAsiento = (item: AsientoData) => {
-    if (item.estado !== 'LIBRE') return;
+    if (isSaving || item.estado !== 'LIBRE') return;
 
     const yaSeleccionado = seleccionados.find(a => a.id_disAsiento === item.id_disAsiento);
     if (yaSeleccionado) {
-        setSeleccionados(prev => prev.filter(a => a.id_disAsiento !== item.id_disAsiento));
-      } else {
-        if (seleccionados.length >= pasajes) {
-          Alert.alert('Límite', `Solo puedes seleccionar hasta ${pasajes} asientos.`);
-          return;
-        }
-        
-        setSeleccionados(prev => [...prev, item]);
+      setSeleccionados(prev => prev.filter(a => a.id_disAsiento !== item.id_disAsiento));
+    } else {
+      if (seleccionados.length >= pasajes) {
+        Alert.alert('Límite', `Solo puedes seleccionar hasta ${pasajes} asientos.`);
+        return;
       }
-    };
+      setSeleccionados(prev => [...prev, item]);
+    }
+  };
 
   const renderAsiento = ({ item }: { item: AsientoData }) => {
-  const isSeleccionado = seleccionados.some(a => a.id_disAsiento === item.id_disAsiento);
+    const isSeleccionado = seleccionados.some(a => a.id_disAsiento === item.id_disAsiento);
+    return (
+      <TouchableOpacity
+        accessibilityViewIsModal={loading}
+        disabled={item.estado !== 'LIBRE' || isSaving}
+        onPress={() => toggleAsiento(item)}
+        style={[
+          styles.asiento,
+          item.estado === 'OCUPADO' && styles.ocupado,
+          item.estado === 'BLOQUEADO' && styles.ocupado,
+          item.estado === 'LIBRE' && styles.libre,
+          isSeleccionado && styles.seleccionado,
+        ]}
+      >
+        <Text style={[
+          styles.text,
+          item.estado === 'LIBRE' && styles.txtlibre,
+          isSeleccionado && styles.txtseleccionado,
+        ]}>{item.asiento.numero_asiento}</Text>
+      </TouchableOpacity>
+    );
+  };
 
-  return (
-    <>
-        <TouchableOpacity accessibilityViewIsModal={loading}
-          disabled={item.estado !== 'LIBRE'}
-          onPress={() => toggleAsiento(item)}
-          style={[
-            styles.asiento,
-            item.estado === 'OCUPADO' && styles.ocupado,
-            item.estado === 'BLOQUEADO' && styles.ocupado,
-            item.estado === 'LIBRE' && styles.libre,
-            isSeleccionado && styles.seleccionado,
-          ]}
-        >
-          <Text style={[
-            styles.text,
-            item.estado === 'LIBRE' && styles.txtlibre,
-            isSeleccionado && styles.txtseleccionado,
-          ]}>{item.asiento.numero_asiento}</Text>
-        </TouchableOpacity>
-    
-    </>
-    
-  );
-};
-
-const handleConfirmar = async () => {
-
-  if (seleccionados.length < pasajes) {
+  const handleConfirmar = async () => {
+    if (seleccionados.length < pasajes) {
       Alert.alert('Límite', `Te faltan ${pasajes - seleccionados.length } asiento/s para seleccionar.`);
-      return;
-      }
-     
-
-    let idBloqueo = await AsyncStorage.getItem('userid');
-    if (!idBloqueo) {
-      Alert.alert('Error', 'No se encontró el usuario para bloquear asientos.');
       return;
     }
 
-    
-    const asientosParaBloquear: AsientoParaBloquear[] = seleccionados.map(sel => ({
-      id_disAsiento: sel.id_disAsiento,
-      asiento: {
-        id_asiento: sel.asiento.id_asiento,
-        numero: sel.asiento.numero_asiento, 
-        numero_asiento: sel.asiento.numero_asiento,
-        id_omnibus: sel.asiento.id_omnibus,
-        nro_asiento: sel.asiento.numero_asiento,
-        estado: "OCUPADO",
-      },
-      viaje: {
-        id_viaje: viaje.id_viaje,
-      },
-      idBloqueo,
-    }));
-      
-      try {
-        const response = await bloquearAsientos(asientosParaBloquear);
-        
-        if (response.success) {
-          //Si bloquea ok, tengo que consultar si el viaje es ida y vuelta. 
-          // En el caso que este ida y vuelta invocar el controlador con la nueva 
-     
-           if (tipoViaje === 'ida'){
-                const compraida: Compra = {
-                    viaje: viaje as Viaje,
-                    id_usuario: idBloqueo, 
-                    asientos: seleccionados.map(sel => ({
-                        id_asiento: sel.asiento.id_asiento,
-                        numero_asiento: sel.asiento.numero_asiento,
-                        id_omnibus: sel.asiento.id_omnibus,
-                        estado: sel.estado
-                      }))
-                  }; 
-            
-               const compras = [compraida];
-               router.push({
-                  pathname: '/tripSelected',
-                  params: {
-                    compras: JSON.stringify(compras),
-                    tipoViaje: tipoViaje
-                  }
-              });
+    setIsSaving(true);
 
-
-              //vuelta
-              } else if (tipoViaje === 'ida-vuelta' && etapa === 'ida'){
-                
-                const compraIda: Compra = {
-                    viaje: viaje as Viaje,
-                    id_usuario: idBloqueo, 
-                    asientos: seleccionados.map(sel => ({
-                        id_asiento: sel.asiento.id_asiento,
-                        numero_asiento: sel.asiento.numero_asiento,
-                        id_omnibus: sel.asiento.id_omnibus,
-                        estado: sel.estado
-                      }))
-                  }; 
-     
-                await AsyncStorage.setItem('compraIda', JSON.stringify(compraIda));
-                // Guardar el viaje de ida y me pongo armar el viaje de vuelta
-                     
-                if (!viaje.localidadOrigen.id_localidad || !viaje.localidadOrigen.id_localidad) return;
-                    
-                const viajeVueltaParams: ViajeParams = {
-                      origen: viaje.localidadDestino.id_localidad.toString(),
-                      destino: viaje.localidadOrigen.id_localidad.toString(),
-                      fecha: fechaVuelta,
-                      nomorigen: viaje.localidadDestino.nombreLocalidad,
-                      nomdestino: viaje.localidadOrigen.nombreLocalidad,
-                      pasajes: pasajes.toString(),
-                      tipoViaje
-                    };                    
-                                    
-                    router.push({
-                      pathname: '/_trips',
-                      params: {
-                        viajeIda: JSON.stringify(viajeVueltaParams),
-                        tipoViaje,
-                        fechaVuelta,
-                        pasajes: pasajes.toString(),
-                        etapa: 'vuelta',                       
-                      }
-                    });
-
-
-                    
-              }else if (tipoViaje === 'ida-vuelta' && etapa === 'vuelta'){
-
-                  const compraidaStr = await AsyncStorage.getItem('compraIda');
-                  if (!compraidaStr) {
-                    Alert.alert('Error', 'No se encontró la información de la compra de ida.');
-                    return;
-                  }
-                  const compraida = JSON.parse(compraidaStr);
-                  
-                // Guardar el viaje de ida y me pongo armar el viaje de vuelta                       
-                    const compraVuelta: Compra = {
-                          viaje: viaje as Viaje,
-                          id_usuario: idBloqueo, 
-                          asientos: seleccionados.map(sel => ({
-                              id_asiento: sel.asiento.id_asiento,
-                              numero_asiento: sel.asiento.numero_asiento,
-                              id_omnibus: sel.asiento.id_omnibus,
-                              estado: sel.estado
-                            }))
-                        }; 
-
-                    const compras = [compraida, compraVuelta];
-
-                          router.push({
-                            pathname: '/tripSelected',
-                            params: {
-                              compras: JSON.stringify(compras),
-                              tipoViaje: tipoViaje
-                            }
-                        });
-              }
-        
-        } else {
-          Alert.alert('Error', 'No se pudo bloquear los asientos.');
-        }
-      } catch (error) {
-        Alert.alert('Error', 'Ocurrió un problema al bloquear los asientos.');
+    try {
+      let idBloqueo = await AsyncStorage.getItem('userid');
+      if (!idBloqueo) {
+        Alert.alert('Error', 'No se encontró el usuario para bloquear asientos.');
+        setIsSaving(false);
+        return;
       }
-};
+
+      const asientosParaBloquear: AsientoParaBloquear[] = seleccionados.map(sel => ({
+        id_disAsiento: sel.id_disAsiento,
+        asiento: {
+          id_asiento: sel.asiento.id_asiento,
+          numero: sel.asiento.numero_asiento, 
+          numero_asiento: sel.asiento.numero_asiento,
+          id_omnibus: sel.asiento.id_omnibus,
+          nro_asiento: sel.asiento.numero_asiento,
+          estado: "OCUPADO",
+        },
+        viaje: {
+          id_viaje: viaje.id_viaje,
+        },
+        idBloqueo,
+      }));
+
+      const response = await bloquearAsientos(asientosParaBloquear);
+
+      if (response.success) {
+        if (tipoViaje === 'ida') {
+          const compraida: Compra = {
+            viaje: viaje as Viaje,
+            id_usuario: idBloqueo, 
+            asientos: seleccionados.map(sel => ({
+              id_asiento: sel.asiento.id_asiento,
+              numero_asiento: sel.asiento.numero_asiento,
+              id_omnibus: sel.asiento.id_omnibus,
+              estado: sel.estado
+            }))
+          }; 
+
+          const compras = [compraida];
+          router.push({
+            pathname: '/tripSelected',
+            params: {
+              compras: JSON.stringify(compras),
+              tipoViaje: tipoViaje
+            }
+          });
+
+        } else if (tipoViaje === 'ida-vuelta' && etapa === 'ida') {
+          const compraIda: Compra = {
+            viaje: viaje as Viaje,
+            id_usuario: idBloqueo, 
+            asientos: seleccionados.map(sel => ({
+              id_asiento: sel.asiento.id_asiento,
+              numero_asiento: sel.asiento.numero_asiento,
+              id_omnibus: sel.asiento.id_omnibus,
+              estado: sel.estado
+            }))
+          }; 
+
+          await AsyncStorage.setItem('compraIda', JSON.stringify(compraIda));
+
+          const viajeVueltaParams: ViajeParams = {
+            origen: viaje.localidadDestino.id_localidad.toString(),
+            destino: viaje.localidadOrigen.id_localidad.toString(),
+            fecha: fechaVuelta,
+            nomorigen: viaje.localidadDestino.nombreLocalidad,
+            nomdestino: viaje.localidadOrigen.nombreLocalidad,
+            pasajes: pasajes.toString(),
+            tipoViaje
+          };                    
+
+          router.push({
+            pathname: '/_trips',
+            params: {
+              viajeIda: JSON.stringify(viajeVueltaParams),
+              tipoViaje,
+              fechaVuelta,
+              pasajes: pasajes.toString(),
+              etapa: 'vuelta',                       
+            }
+          });
+
+        } else if (tipoViaje === 'ida-vuelta' && etapa === 'vuelta') {
+          const compraidaStr = await AsyncStorage.getItem('compraIda');
+          if (!compraidaStr) {
+            Alert.alert('Error', 'No se encontró la información de la compra de ida.');
+            setIsSaving(false);
+            return;
+          }
+
+          const compraida = JSON.parse(compraidaStr);
+          const compraVuelta: Compra = {
+            viaje: viaje as Viaje,
+            id_usuario: idBloqueo, 
+            asientos: seleccionados.map(sel => ({
+              id_asiento: sel.asiento.id_asiento,
+              numero_asiento: sel.asiento.numero_asiento,
+              id_omnibus: sel.asiento.id_omnibus,
+              estado: sel.estado
+            }))
+          }; 
+
+          const compras = [compraida, compraVuelta];
+          router.push({
+            pathname: '/tripSelected',
+            params: {
+              compras: JSON.stringify(compras),
+              tipoViaje: tipoViaje
+            }
+          });
+        }
+      } else {
+        Alert.alert('Error', 'No se pudo bloquear los asientos.');
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Ocurrió un problema al bloquear los asientos.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   return (
-    
     <>
-      <Modal transparent={true} visible={loading} animationType="fade">
-      <View style={styles.loadingOverlay}>
-        <View style={styles.loadingBox}>
-          <ActivityIndicator size="large" color="#fff" />
-          <Text style={styles.loadingText}>Cargando asientos...</Text>
+      <Modal transparent={true} visible={loading || isSaving} animationType="fade">
+        <View style={styles.loadingOverlay}>
+          <View style={styles.loadingBox}>
+            <ActivityIndicator size="large" color="#fff" />
+            {loading && <Text style={styles.loadingText}>Cargando asientos...</Text>}
+            {isSaving && <Text style={styles.loadingText}>Guardando asientos...</Text>}
+          </View>
         </View>
-      </View>
-    </Modal>
-    <SafeAreaView>
-       {!loading && (
-      <FlatList
-        data={asientos}
-        numColumns={4}
-        keyExtractor={(item) => item.id_disAsiento.toString()}
-        renderItem={renderAsiento}
-        contentContainerStyle={[styles.grid, { backgroundColor: isDark ? '#000' : '#fff' }]}
-        ListHeaderComponent={<>
-                                <LeyendaEstadosAsientos/>
-                                <Text style={[styles.header]}>
-                                  Frente del ómnibus
-                                </Text>
-                              </>}
-        ListFooterComponent={<View style={styles.footer}>
-                              <TouchableOpacity style={[styles.button]} onPress={handleConfirmar}>
-                                <Text style={[styles.buttonText, { color: '#FFF'  }]}>Confirmar Selección</Text>
-                              </TouchableOpacity>
-                            </View>} />
-       )} 
-                            
-    </SafeAreaView> 
-  </>
-
+      </Modal>
+      <SafeAreaView>
+        {!loading && (
+          <FlatList
+            data={asientos}
+            numColumns={4}
+            keyExtractor={(item) => item.id_disAsiento.toString()}
+            renderItem={renderAsiento}
+            contentContainerStyle={[styles.grid, { backgroundColor: isDark ? '#000' : '#fff' }]}
+            ListHeaderComponent={
+              <>
+                <LeyendaEstadosAsientos />
+                <Text style={[styles.header]}>Frente del ómnibus</Text>
+              </>
+            }
+            ListFooterComponent={
+              <View style={styles.footer}>
+                <TouchableOpacity
+                  style={[styles.button, isSaving && { backgroundColor: '#ccc' }]}
+                  onPress={handleConfirmar}
+                  disabled={isSaving}
+                >
+                  <Text style={[styles.buttonText, { color: '#FFF' }]}> 
+                    {isSaving ? 'Guardando...' : 'Confirmar Selección'}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            }
+          />
+        )} 
+      </SafeAreaView> 
+    </>
   );
 };
+
+
 
 const styles = StyleSheet.create({
   loaderContainer: {
@@ -360,8 +352,19 @@ loadingText: {
   color: '#fff',
   fontSize: 16,
 },
+overlay2: {
+  ...StyleSheet.absoluteFillObject,
+  backgroundColor: 'rgba(0,0,0,0.4)',
+  justifyContent: 'center',
+  alignItems: 'center',
+  zIndex: 999,
+},
 
-
+savingText: {
+  marginTop: 10,
+  color: '#fff',
+  fontSize: 16,
+}
 });
 
 export default SeatSelector;
