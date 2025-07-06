@@ -73,6 +73,10 @@ export default function PaymentScreen() {
               <Text style={styles.methodText}>PayPal</Text>
             </TouchableOpacity>
 
+            <TouchableOpacity style={styles.botonCancelar} onPress={() => router.back()}>
+              <Text style={styles.methodText}>BTON CANCELAR</Text>
+            </TouchableOpacity>
+
           </View>
         </View>
       </ScrollView></>
@@ -113,6 +117,16 @@ const styles = StyleSheet.create({
   },
   logo: { width: 50, height: 50, marginRight: 10 },
   methodText: { fontSize: 16 },
+
+  botonCancelar: {
+    marginTop: 20,
+    alignItems: 'center',
+    padding: 12,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 8,
+    backgroundColor: '#f9f9f9',
+  },
 
    loadingOverlay: {
       flex: 1,

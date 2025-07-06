@@ -24,7 +24,9 @@ export default function SuccessScreen() {
     const procesarPagoExitoso = async () => {
       const idVenta = Number(id_venta_);
       const token = token_ ? token_.toString() : undefined;
-console.log('Procesando pago exitoso con ID de venta:', idVenta, 'y token:', token);
+      
+      console.log('Procesando pago exitoso con ID de venta:', idVenta, 'y token:', token);
+      
       if (!token || !idVenta || isNaN(idVenta)) {
         setEstadoUI('error');
         setMensajeUI('Datos de confirmación incompletos o inválidos.');
@@ -50,7 +52,6 @@ console.log('Procesando pago exitoso con ID de venta:', idVenta, 'y token:', tok
               );
         }
       } catch (error: any) {
-        Alert.alert('Error', error?.message || String(error));
         setEstadoUI('error');
         setMensajeUI(error.message || 'Ocurrió un error al procesar tu pago. Por favor, revisa tu estado de cuenta.');
       } finally {

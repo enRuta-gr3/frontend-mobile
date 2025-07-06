@@ -1,6 +1,6 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useRef } from 'react';
-import { ActivityIndicator, Alert, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, Button, StyleSheet, Text, View } from 'react-native';
 import { WebView } from 'react-native-webview';
 
 
@@ -11,10 +11,8 @@ export default function PaypalWebView() {
 
  // Controlar navegación y mostrar alertas si hay error
   const handleNavigationStateChange = (navState: { url: string }) => {
-    console.log('Navegando a:', navState.url);
     if (navState.url.startsWith('enruta://error')) {
-      Alert.alert('Error', 'Ocurrió un error al procesar el pago. Por favor, inténtalo de nuevo.');
-      router.replace('/cancel');
+       router.replace('/cancel');
     }
     if (navState.url.startsWith('enruta://success')) {
       router.replace('/success');
@@ -26,7 +24,10 @@ export default function PaypalWebView() {
   
   if (!urlPaypal) {
     return (
-      <View style={styles.centered}><Text>No se encontró la URL de PayPal.</Text></View>
+      <View style={styles.centered}>
+        <Text> Algo salió mal con PayPal. Vuelva a intentar</Text>
+        <Button title="Volver al inicio" onPress={() => router.push('/homeUser')} />
+      </View>
     );
   }
   return (
@@ -44,7 +45,6 @@ export default function PaypalWebView() {
         )}
         onError={syntheticEvent => {
           const { nativeEvent } = syntheticEvent;
-          console.warn('WebView error: ', nativeEvent);
           Alert.alert('Error', 'No se pudo cargar la página de PayPal.');
         }}
       />
