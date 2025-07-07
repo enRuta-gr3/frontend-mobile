@@ -43,7 +43,7 @@ export default function LoginLayout({ email, setEmail, password, setPassword, on
         </ThemedView>
 
         <Input
-          placeholder="Email"
+          placeholder="Email o Documento"
           leftIcon={{ type: 'font-awesome', name: 'user', color: isDark ? '#fff' : '#000' }}
           value={email}
           onChangeText={setEmail}

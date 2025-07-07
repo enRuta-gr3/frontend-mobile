@@ -1,3 +1,4 @@
+import { router } from "expo-router";
 import React from "react";
 import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -51,6 +52,9 @@ export default function EditProfileScreen({
         <TouchableOpacity style={styles.button} onPress={onSignup}>
           <Text style={styles.buttonText}>Modificar </Text>
         </TouchableOpacity>
+         <TouchableOpacity style={styles.botonCancelar} onPress={() => router.back()}>
+            <Text style={styles.methodText}>Cancelar</Text>
+          </TouchableOpacity>     
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -58,12 +62,24 @@ export default function EditProfileScreen({
 }
 
 const styles = StyleSheet.create({
+    methodText: { fontSize: 16 },
+
+  botonCancelar: {
+    marginTop: 20,
+    alignItems: 'center',
+    padding: 12,
+    borderWidth: 1,
+    borderColor: '#000',
+    borderRadius: 8,
+    backgroundColor: '#f9f9f9',
+  },
  container: {
     flex: 1,                  
     justifyContent: 'center', 
      paddingHorizontal: 20,
     backgroundColor: '#fff', 
-  },  title: { fontSize: 24, fontWeight: "bold", marginBottom: 8 },
+  },  
+  title: { fontSize: 24, fontWeight: "bold", marginBottom: 8 },
   input: { borderWidth: 1, borderColor: "#ccc", padding: 12, marginBottom: 14, borderRadius: 8, backgroundColor: "#f9f9f9" },
   label: { fontWeight: "bold", marginTop: 12 },
 

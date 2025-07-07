@@ -1,5 +1,6 @@
 import { changePass } from '@/controllers/changePassSer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { router } from 'expo-router';
 import * as SystemUI from 'expo-system-ui';
 import React, { useEffect, useState } from "react";
 import { GestureResponderEvent, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
@@ -28,9 +29,24 @@ export default function ChangePass() {
       setPassword('');
       setPassword2('');
     }
+
+
  const clinkEdit = async (event: GestureResponderEvent) => {
-  if (password !== password2) {
-    setmensajeError('Las contraseñas no coinciden');
+  event.preventDefault();
+  if (!password || !password2 || !passwordback) {
+    setmensajeError('Por favor complete todos los campos');
+    setTimeout(() => setmensajeError(''), 5000);
+    return;
+  }
+
+ if (password !== password2) {
+   setmensajeError('Las contraseñas no coinciden');
+   setTimeout(() => setmensajeError(''), 5000);
+    return;
+  } 
+
+  if (password.length < 8 || password.length > 20) {
+    setmensajeError('La contraseña debe tener entre 8 y 20 caracteres');
     setTimeout(() => setmensajeError(''), 5000);
     return;
   }
@@ -101,6 +117,9 @@ export default function ChangePass() {
         <TouchableOpacity style={styles.button} onPress={clinkEdit}>
           <Text style={styles.buttonText}>Modificar contraseña</Text>
         </TouchableOpacity>
+           <TouchableOpacity style={styles.botonCancelar} onPress={() => router.back()}>
+              <Text style={styles.methodText}>Cancelar</Text>
+            </TouchableOpacity>
         </View>
 
         
@@ -110,6 +129,17 @@ export default function ChangePass() {
 }
 
 const styles = StyleSheet.create({
+   methodText: { fontSize: 16 },
+
+  botonCancelar: {
+    marginTop: 20,
+    alignItems: 'center',
+    padding: 12,
+    borderWidth: 1,
+    borderColor: '#000',
+    borderRadius: 8,
+    backgroundColor: '#f9f9f9',
+  },
  container: {
     flex: 1,                  
     justifyContent: 'center', 

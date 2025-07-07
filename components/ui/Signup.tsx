@@ -1,7 +1,8 @@
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
-import React, { useState } from "react";
-import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { router } from 'expo-router';
+import React, { useEffect, useState } from "react";
+import { Keyboard, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
 
 interface Props {
   email: string;
@@ -36,22 +37,6 @@ export default function SignupScreen({
   onSignup,
   error, 
 }: Props) {
-
-  const [date, setDate] = useState(new Date());
-  const [show, setShow] = useState(false);
-  const handleDateChange = (event: any, selectedDate?: Date) => {
-   limpiarCampos();
-   
-    if (selectedDate) {
-      setDate(selectedDate);
-      const day = selectedDate.getDate().toString().padStart(2, '0');
-      const month = (selectedDate.getMonth() + 1).toString().padStart(2, '0');
-      const year = selectedDate.getFullYear();
-      setFecha(`${day}/${month}/${year}`);
-      setShow(false);
-    }
-  };
-
   const limpiarCampos = () => {
       setEmail('');
       setPassword('');
@@ -63,10 +48,33 @@ export default function SignupScreen({
       setDescuento('Ninguno');
     };
 
+    useEffect(() => {
+      limpiarCampos();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+  const [date, setDate] = useState(new Date());
+  const [show, setShow] = useState(false);
+  const handleDateChange = (event: any, selectedDate?: Date) => {
+   if (selectedDate) {
+      setDate(selectedDate);
+      const day = selectedDate.getDate().toString().padStart(2, '0');
+      const month = (selectedDate.getMonth() + 1).toString().padStart(2, '0');
+      const year = selectedDate.getFullYear();
+      setFecha(`${day}/${month}/${year}`);
+      setShow(false);
+    }
+  };
+
   return (
+     <KeyboardAvoidingView   style={styles.containerKey}
+         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 120}
+      >
+       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        <View style={styles.container}>
-       
+        <View style={styles.formContent}>       
          <Text style={styles.hint}>Nombre</Text>
         <TextInput style={styles.input} placeholder="Nombre" value={nombre} onChangeText={setNombre} />
          <Text style={styles.hint}>Apellido</Text>
@@ -113,16 +121,25 @@ export default function SignupScreen({
         <TouchableOpacity style={styles.button} onPress={onSignup}>
           <Text style={styles.buttonText}>Registrarse</Text>
         </TouchableOpacity>
-
+        <TouchableOpacity style={styles.botonCancelar} onPress={() => {
+                                                                      limpiarCampos();
+                                                                      router.back(); 
+                                                                    }}>
+          <Text style={styles.methodText}>Cancelar</Text>
+        </TouchableOpacity>
         </View>
       </ScrollView>
+      </TouchableWithoutFeedback>
+
+      </KeyboardAvoidingView>
    
   );
 }
 
 const styles = StyleSheet.create({
- 
-
+  containerKey: {
+    flex: 1,
+  },
 pickerContainer: {
   borderWidth: 1,
   borderColor: '#ccc',
@@ -134,11 +151,20 @@ picker: {
   height: 50,
   width: '100%',
 },
+formContent: {
+  flexGrow: 1,
+  paddingBottom: 40,
+},
   container: {
     flex: 1,                  
     justifyContent: 'center', 
     backgroundColor: '#fff',
   },
+   scrollContent: {
+      flexGrow: 1,
+      paddingTop: 10,
+    },
+
   subcontainer: {
     flex: 1,
     padding: 20,
@@ -198,8 +224,16 @@ picker: {
        fontSize: 18,
        fontWeight: "bold",
   },
-  scrollContent: {
-    flexGrow: 1,
-    justifyContent: 'center',
+
+   methodText: { fontSize: 16 },
+
+  botonCancelar: {
+    marginTop: 20,
+    alignItems: 'center',
+    padding: 12,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 8,
+    backgroundColor: '#f9f9f9',
   },
 });

@@ -33,9 +33,26 @@ export default function SearchScreen() {
   const fetchLocalidades = async () => {
     try {
       const data = await listarLocalidades();
-      setLocalidades(data);
+
+      const grouped: { [key: string]: Localidad[] } = {};
+      data.forEach((loc: Localidad) => {
+        const depto = loc.departamento.nombreDepartamento ?? 'Sin depto';
+        if (!grouped[depto]) grouped[depto] = [];
+        grouped[depto].push(loc);
+      });
+      Object.values(grouped).forEach((arr) =>
+        arr.sort((a, b) => a.nombreLocalidad.localeCompare(b.nombreLocalidad))
+      );
+      const sortedData = Object.keys(grouped)
+        .sort((a, b) => a.localeCompare(b))
+        .flatMap((depto) => grouped[depto]);
+
+        console.log('Localidades cargadas:', sortedData);
+      setLocalidades(sortedData);
+ 
+
     } catch (err) {
-      Alert.alert('Error', 'No se pudieron cargar las localidades');
+      Alert.alert('Error', 'No se pudieron cargar las localidades', [ {text: "Aceptar"} ]);
     } finally {
       setLoadingLocalidades(false);
     }
@@ -46,7 +63,7 @@ export default function SearchScreen() {
 
   const handleBuscar = () => {   
     if (!origen || !destino || !fecha || !pasajes) {
-      Alert.alert("Mensaje", "Por favor, completa todos los campos para de buscar el viaje.");
+      Alert.alert("Error", "Por favor, completa todos los campos para de buscar el viaje.", [ { text: "Aceptar" } ]);
     } else {
       buscar.setOrigen(origen);
       buscar.setDestino(destino);
@@ -56,19 +73,27 @@ export default function SearchScreen() {
       buscar.setEtapa(etapa);
       
       if (tipoViaje === 'ida-vuelta' && !fecha_vuelta) {
-        Alert.alert("Mensaje", "Por favor, completa la fecha de regreso para el viaje de ida y vuelta.");
+        Alert.alert("Error", "Por favor, completa la fecha de regreso para el viaje de ida y vuelta.", [ { text: "Aceptar" } ]);
         return;
       } else if (tipoViaje === 'ida-vuelta') {
         buscar.setFechaVuelta(fecha_vuelta);
       }
-       buscar.buscarPasajes();
+
+
+      if (origen.id === destino.id) {
+        Alert.alert("Error", "El origen y el destino no pueden ser iguales.", [ { text: "Aceptar" } ]);
+        return;
+      }
+      buscar.buscarPasajes();
     }
   };  
 
   const clickTickets = (value: string) => {
-    const pasajes = parseInt(value, 10);
-    if (isNaN(pasajes) || pasajes < 1 || pasajes > 10) {
-      Alert.alert("Mensaje", 'Por favor, ingrese un número de pasajes entre 1 y 10.');
+    const pasajes = parseInt(value, 5);
+    if (isNaN(pasajes) || pasajes < 1 || pasajes > 5) {
+      Alert.alert(
+                "Error",
+                "Por favor, ingrese un número de pasajes entre 1 y 5.",[ { text: "Aceptar" } ], { cancelable: false });
       setPasajes('');
     } else {
       setPasajes(pasajes.toString());
@@ -112,7 +137,9 @@ export default function SearchScreen() {
           <Text style={styles.loadingText}>Cargando viaje...</Text>
         </View>
       </View>
-    </Modal><View style={styles.container}>
+    </Modal>
+        
+    <View style={styles.container}>
         <Text style={styles.title}>
           Tu viaje <Text style={styles.highlight}>comienza aquí</Text>
         </Text>
@@ -129,29 +156,45 @@ export default function SearchScreen() {
             </TouchableOpacity>
           ))}
         </View>
-
-        <Picker
-          selectedValue={origen ? JSON.stringify(origen) : ''}
-          onValueChange={(value) => {
-            if (value) {
-              const selected = JSON.parse(value);
-              setOrigen({ id: selected.id_localidad, nombre: selected.nombreLocalidad });
-            } else {
-              setOrigen(null);
-            }
-          } }
-          style={styles.picker}
-        >
-          <Picker.Item label="¿Desde dónde viajas?" value="" />
-          {localidades.map((loc) => (
-            <Picker.Item
-              key={loc.id_localidad}
-              label={`${loc.nombreLocalidad} (${loc.departamento.nombreDepartamento ?? 'Sin depto'})`}
-              value={JSON.stringify(loc)} />
-          ))}
-        </Picker>
-
-        <Picker
+       <View style={styles.pickerContainerInput}>
+            <Picker
+              selectedValue={origen ? JSON.stringify(origen) : ''}
+              onValueChange={(value) => {
+                if (value) {
+                  const selected = JSON.parse(value);
+                  setOrigen({ id: selected.id_localidad, nombre: selected.nombreLocalidad });
+                } else {
+                  setOrigen(null);
+                }
+              } }>
+              <Picker.Item label="¿Desde dónde viajas?" value="" />
+              {(() => {
+                let lastDepto = '';
+                return localidades.map((loc, idx) => {
+                  const depto = loc.departamento.nombreDepartamento ?? 'Sin depto';
+                  const showDepto = depto !== lastDepto;
+                  lastDepto = depto;
+                  return [
+                    showDepto && (
+                      <Picker.Item
+                        key={`depto-${depto}-${idx}`}
+                        label={`--- ${depto} ---`}
+                        value={null}
+                        enabled={false}                        
+                      />
+                    ),
+                    <Picker.Item
+                      key={loc.id_localidad}
+                      label={`${loc.nombreLocalidad}`}
+                      value={JSON.stringify(loc)}
+                    />
+                  ];
+                });
+              })()}
+            </Picker>
+        </View>
+          <View style={styles.pickerContainerInput}>
+        <Picker 
           selectedValue={destino ? JSON.stringify(destino) : ''}
           onValueChange={(value) => {
             if (value) {
@@ -161,17 +204,35 @@ export default function SearchScreen() {
               setDestino(null);
             }
           } }
-          style={styles.picker}
         >
-          <Picker.Item label="¿A dónde viajas?" value="" />
-          {localidades.map((loc) => (
-            <Picker.Item
-              key={loc.id_localidad}
-              label={`${loc.nombreLocalidad} (${loc.departamento.nombreDepartamento ?? 'Sin depto'})`}
-              value={JSON.stringify(loc)} />
-          ))}
+          <Picker.Item label="¿Desde dónde viajas?" value="" />
+              {(() => {
+                let lastDepto = '';
+                return localidades.map((loc, idx) => {
+                  const depto = loc.departamento.nombreDepartamento ?? 'Sin depto';
+                  const showDepto = depto !== lastDepto;
+                  lastDepto = depto;
+                  return [
+                    showDepto && (
+                      <Picker.Item
+                        key={`depto-${depto}-${idx}`}
+                        label={`--- ${depto} ---`}
+                        value={null}
+                        enabled={false}                        
+                      />
+                    ),
+                    <Picker.Item
+                      key={loc.id_localidad}
+                      label={`${loc.nombreLocalidad}`}
+                      value={JSON.stringify(loc)}
+                    />
+                  ];
+                });
+              })()}
         </Picker>
+        </View>
 
+        {/* Input para la fecha de viaje */}
         <TextInput
           style={styles.input}
           placeholder="Fecha de viaje (dd/mm/aaaa)"
@@ -270,17 +331,21 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ccc',
     padding: 10,
-    marginVertical: 10,
+    marginBottom: 10,
     borderRadius: 5,
+    height: 50,
   },
   picker: {
     marginVertical: 10,
-    borderWidth: 2,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    backgroundColor: '#f9f9f9',
-  },
-  
+    },
+
+  pickerContainerInput: {
+  borderWidth: 1,
+  borderColor: '#ccc',
+  borderRadius: 8,
+  padding: 0,
+  marginBottom: 10, 
+},  
   button: {
     backgroundColor: StyleRuta.primary,
     padding: 15,
@@ -300,6 +365,7 @@ pickerContainer: {
   borderColor: '#ccc',
   borderRadius: 8,
   marginBottom: 1, 
+  textAlign: 'center',
 },
  picker2: { 
   width: '100%',

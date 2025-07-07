@@ -20,11 +20,21 @@ const TripResultItem: React.FC<TripItem> = ({
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
   return (
- <SafeAreaView style={{ flex: 1, backgroundColor: isDark ? '#000' : '#fff' }}>
-    <View style={styles.card}>
-      <View style={styles.row}>
-        <Text style={[styles.empresa, estado === 'ABIERTO' ? styles.estadoAbierto : styles.estadoCerrado]}>{estado}</Text>
-        <Text style={styles.fecha}>{fecha_partida}</Text>
+ <SafeAreaView style={{ flex: 1 }}>
+    <View style={styles.card}> 
+
+        <View style={[{justifyContent: 'space-between', alignItems: 'flex-end', borderBottomColor: 'green', borderBottomWidth: 1}]}>        
+             <Text style={[styles.empresa, estado === 'ABIERTO' ? styles.estadoAbierto : styles.estadoCerrado]}>{estado}</Text>
+            
+      </View>
+       <View style={[styles.row, {paddingTop: 10}]}>        
+        <Text style={styles.details}>Partida</Text>
+        <Text style={styles.details}>Llegada</Text> 
+      </View>
+
+      <View style={styles.row}>        
+        <Text style={[styles.detailsFecha, {fontWeight: 'bold'}]}>{fecha_partida}</Text>
+        <Text style={[styles.detailsFecha, {fontWeight: 'bold'}]}>{fecha_llegada}</Text>
       </View>
 
         <View style={styles.row}>
@@ -42,11 +52,11 @@ const TripResultItem: React.FC<TripItem> = ({
         <Text style={styles.time}>{hora_llegada}</Text>
       </View>
 
-      <View style={styles.row}>
+      <View style={[styles.row, {paddingBottom: 10, paddingTop: 10}]}>
         <Text style={styles.details}>🕒 Duración estimada: {useDurationTrip(fecha_partida, hora_partida, fecha_llegada,hora_llegada)}</Text>
-        <Text style={styles.details}>🪑 {asientosDisponibles} asientos disponibles</Text>
+        {/* <Text style={styles.details}>🪑 {asientosDisponibles} asientos disponibles</Text> */}
       </View>
-
+     
       <View style={styles.row}>
         <Text style={styles.price}>${precio_viaje}</Text>
         <TouchableOpacity style={styles.button} onPress={onPress}>
@@ -82,9 +92,7 @@ const styles = StyleSheet.create({
   estadoCerrado: {
     color: 'red',
   },
-  fecha: {
-    
-    paddingHorizontal: 8,
+  fecha: {  
     borderRadius: 8,
     fontSize: 18,
     
@@ -103,6 +111,10 @@ const styles = StyleSheet.create({
   },
   details: {
     fontSize: 12,
+    color: '#666',
+  },
+   detailsFecha: {
+    fontSize: 14,
     color: '#666',
   },
   price: {

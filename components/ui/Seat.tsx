@@ -1,12 +1,14 @@
 import { bloquearAsientos } from '@/controllers/controlSeat';
 import { AsientoData, AsientoParaBloquear, Compra, Viaje, ViajeParams } from '@/interface/type';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
 import { router } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { ActivityIndicator, Alert, FlatList, Modal, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import LeyendaEstadosAsientos from './stsSeat';
+
 
 interface Props {
   viaje: Viaje;
@@ -27,23 +29,26 @@ const SeatSelector: React.FC<Props> = ({ viaje, etapa, tipoViaje, pasajes, fecha
   const scheme = useColorScheme(); // puede ser 'light' o 'dark'
   const isDark = scheme === 'dark';
 
-  useEffect(() => {
-    axios
-      .post('https://backend-production-2812f.up.railway.app/api/asientos/listarAsientos', {
-        id_viaje: viaje.id_viaje,
-      })
-      .then((res) => {
-        if (res.data.success) {
-          setAsientos(res.data.data);
-        } else {
-          Alert.alert('Error', 'No se pudo cargar los asientos.');
-        }
-      })
-      .catch(() => {
-        Alert.alert('Error', 'Fallo la conexión con el servidor.');
-      })
-      .finally(() => setLoading(false));
-  }, []);
+  const cargarAsientos = async () => {
+  setLoading(true);
+  setMensaje('Cargando asientos....');
+  try {
+    const res = await axios.post('https://backend-production-2812f.up.railway.app/api/asientos/listarAsientos', {
+      id_viaje: viaje.id_viaje,
+    });
+    if (res.data.success) {
+      setAsientos(res.data.data);
+    } else {
+      Alert.alert('Error', 'No se pudo cargar los asientos.');
+    }
+  } catch (error) {
+    Alert.alert('Error', 'Fallo la conexión con el servidor.');
+  } finally {
+    setLoading(false);
+  }
+};
+
+  
 
   const toggleAsiento = (item: AsientoData) => {
     if (isSaving || item.estado !== 'LIBRE') return;
@@ -59,6 +64,18 @@ const SeatSelector: React.FC<Props> = ({ viaje, etapa, tipoViaje, pasajes, fecha
       setSeleccionados(prev => [...prev, item]);
     }
   };
+
+  //Carga asientos al iniciar para tratar los bloqueados
+  useFocusEffect(
+    useCallback(() => {
+              cargarAsientos(); 
+              setSeleccionados([]);
+              if (asientosFallidos && asientosFallidos.length > 0) {
+                const asientosBloqueados = asientos.filter(a => asientosFallidos.includes(a.id_disAsiento));
+                setSeleccionados(asientosBloqueados);
+              }
+      }, [viaje.id_viaje])
+);
 
   const renderAsiento = ({ item }: { item: AsientoData }) => {
     const isSeleccionado = seleccionados.some(a => a.id_disAsiento === item.id_disAsiento);
@@ -258,7 +275,6 @@ const SeatSelector: React.FC<Props> = ({ viaje, etapa, tipoViaje, pasajes, fecha
     </>
   );
 };
-
 
 
 const styles = StyleSheet.create({
