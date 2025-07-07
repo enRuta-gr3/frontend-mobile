@@ -1,5 +1,6 @@
-import { imagen, logoURL } from '@/cfg';
+import { imagen } from '@/cfg';
 import capturarOrder from '@/controllers/confirmarCompra';
+import StyleRuta from '@/hooks/styles';
 import { Pasaje } from '@/interface/type';
 import * as FileSystem from 'expo-file-system';
 import * as Print from 'expo-print';
@@ -37,11 +38,14 @@ export default function SuccessScreen() {
         const confirmData = await capturarOrder(idVenta, token);
       
         if (confirmData.success === true) {
+
           console.log('Confirmación de pago exitosa', JSON.stringify(confirmData.data, null, 2));
           setPasajesConfirmados(confirmData.data);
           setEstadoUI('exito');
           setMensajeUI(`¡Gracias por tu compra! Tu pago ha sido confirmado con éxito.`); 
           console.log('Pasajes confirmados:', confirmData.data.pasajes);
+
+
         } else {
            setEstadoUI('error');
            setMensajeUI(
@@ -80,8 +84,7 @@ const handleDescargarPDF = async () => {
         </head>
         <body>
           <div style="text-align: center; margin-bottom: 20px;">
-            <img src="${logoURL}" alt="EnRuta Logo" style="width: 150px; height: auto;">
-          <h1>EnRuta - Comprobante de Pasajes</h1>
+                    <h1>EnRuta - Comprobante de Pasajes</h1>
           </div>
           <div>
             <div class="info"><strong>Fecha de compra:</strong> ${new Date().toLocaleDateString()}</div>
@@ -100,15 +103,22 @@ const handleDescargarPDF = async () => {
               <div class="info"><strong>Destino:</strong> ${p.viaje.localidadDestino.nombreLocalidad}</div>
               <div class="info"><strong>Salida:</strong> ${p.viaje.fecha_partida} - ${p.viaje.hora_partida}</div>
               <div class="info"><strong>Asiento:</strong> ${p.asiento.numero_asiento}</div>
-              <div class="info"><strong>Precio:</strong> $${p.montoPago}</div>
+              <div class="info"><strong>Precio:</strong> $${Math.round(p.montoPago)}</div>
             </div>
           `).join('')}
+          <div class="card">
+            <h2>Total Pagado: $${Math.round(pasajesConfirmados.reduce((acc, p) => acc + Number(p.montoPago), 0))}</h2>
         </body>
       </html>
     `;
 
     const { uri } = await Print.printToFileAsync({ html });
-    const localPath = FileSystem.documentDirectory + 'factura.pdf';
+ 
+    //Agrego hora y fecha al nombre del archivopara que sea único
+    const now = new Date();
+    const fechaHora = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}_${String(now.getHours()).padStart(2, '0')}-${String(now.getMinutes()).padStart(2, '0')}-${String(now.getSeconds()).padStart(2, '0')}`;
+    const localPath = FileSystem.documentDirectory + `pasajes_${fechaHora}.pdf`;
+
     await FileSystem.copyAsync({ from: uri, to: localPath });
 
     await Sharing.shareAsync(localPath, {
@@ -116,22 +126,42 @@ const handleDescargarPDF = async () => {
       mimeType: 'application/pdf',
     });
 
-    Alert.alert('¡Listo!', 'Tus pasajes fueron generados con éxito.');
-    return router.push('/(tabs)/homeUser'); 
-    
+
+    //MEnsaje de ok 
+    const timeout = setTimeout(() => {
+      router.push('/(tabs)/homeUser');
+    }, 3000);
+
+    Alert.alert(
+      '¡Listo!',
+      'Tus pasajes fueron generados con éxito.',
+      [
+      {
+        text: 'Aceptar',
+        onPress: () => {
+        clearTimeout(timeout);
+        router.push('/(tabs)/homeUser');
+        },
+      },
+      ],
+      { cancelable: false }
+    );
+    return;
+
+
   } catch (e) {
-    Alert.alert('Error', 'No se pudo generar o compartir el PDF.');
+    Alert.alert('Error', 'No se pudo generar el PDF.');
     console.error(e);
   } finally {
     setLoading(false);
   }
 };
 
+
   return (
      <SafeAreaView edges={['bottom']} style={{ flex: 1 }}>
-      <ImageBackground source={imagen} resizeMode="cover" style={styles.imagen}>
-        
-        <View style={styles.overlay} />
+      <ImageBackground source={imagen} resizeMode="cover" style={StyleRuta.imagen}>
+       <View style={StyleRuta.overlay} />
         <ScrollView contentContainerStyle={styles.scrollContent}>
           <View style={styles.container}>
             <View style={styles.subcontainer}>
@@ -145,7 +175,7 @@ const handleDescargarPDF = async () => {
               )}
 
               {estadoUI === 'exito' && pasajesConfirmados.length > 0 && (
-                <View style={{ width: '100%' }}>
+                <View style={{ width: '100%', paddingHorizontal: 10, paddingVertical: 5 }}>
                   <View style={{ alignItems: 'center', marginBottom: 20 }}>
                     <Text style={{ fontSize: 36, color: 'green' }}>✔</Text>
                     <Text style={{ fontSize: 22, fontWeight: 'bold', marginTop: 10 }}>
@@ -156,41 +186,40 @@ const handleDescargarPDF = async () => {
                     </Text>
                   </View>
 
-                  <View style={[styles.card, { backgroundColor: '#f1f1f1' }]}>
+                  <View>
                     <Text style={styles.cardLabel}>Método de pago: <Text style={{ fontWeight: 'bold' }}>PayPal</Text></Text>
                     <Text style={styles.cardLabel}>Nro. de orden PayPal: <Text style={{ fontWeight: 'bold' }}>{token_}</Text></Text>
                   </View>
 
-                  <Text style={{ fontWeight: 'bold', fontSize: 16, marginTop: 10 }}>
-                    Pasajes Confirmados ({pasajesConfirmados.length}) ✅
+                  <Text style={{ fontWeight: 'bold', fontSize: 16, marginTop: 15, marginBottom: 10 }}>
+                    ✅ Pasajes Confirmados ({pasajesConfirmados.length})        
                   </Text>
 
                   {pasajesConfirmados.map((p, index) => (
                     <View key={p.id_pasaje || index} style={styles.card}>
-                      <Text style={styles.cardTitle}>Pasaje #{p.id_pasaje} <Text style={{ textAlign: 'right', color: '#f60' }}>${p.montoPago}</Text></Text>
+                      <Text style={styles.cardTitle}>Pasaje #{p.id_pasaje} </Text>
                       <Text style={styles.cardItem}><Text style={styles.cardLabel}>Ruta:</Text> {p.viaje.localidadOrigen.nombreLocalidad} → {p.viaje.localidadDestino.nombreLocalidad}</Text>
+                      <Text style={styles.cardItem}><Text style={styles.cardLabel}>Asiento:</Text> <Text style={{ paddingHorizontal: 6, borderRadius: 4 }}>{p.asiento.numero_asiento}</Text></Text>
+
                       <Text style={styles.cardItem}><Text style={styles.cardLabel}>Horarios:</Text> </Text>
                       <Text style={styles.cardItem}>Salida: {p.viaje.fecha_partida} {p.viaje.hora_partida} </Text>
-                        <Text style={styles.cardItem}>Llegada: {p.viaje.fecha_llegada} {p.viaje.hora_llegada}</Text>
-                      <Text style={styles.cardItem}><Text style={styles.cardLabel}>Asiento:</Text> <Text style={{ paddingHorizontal: 6, borderRadius: 4 }}>{p.asiento.numero_asiento}</Text></Text>
+                      <Text style={styles.cardItem}>Llegada: {p.viaje.fecha_llegada} {p.viaje.hora_llegada}</Text>
+                      <Text style={styles.cardItem}><Text style={styles.cardLabel}>Precio:</Text>  <Text style={{ textAlign: 'right', color: '#f60' }}>${Math.round(p.montoPago)}</Text></Text>
+                     
+                     
                     </View>
                   ))}
 
-                  <View style={[styles.card, { backgroundColor: '#f9f9f9' }]}>
+                  <View style={[{ borderTopColor: '#f60', borderTopWidth: 1, paddingTop: 10, marginTop: 20 }]}>
                     <Text style={styles.cardItem}><Text style={styles.cardLabel}>Nro. de venta:</Text> {id_venta_}</Text>
-                    <Text style={[styles.cardItem, { fontSize: 16, fontWeight: 'bold', color: '#f60' }]}>Total Pagado: ${pasajesConfirmados.reduce((acc, p) => acc + p.montoPago, 0)}</Text>
+                    <Text style={[styles.cardItem, { fontSize: 16, fontWeight: 'bold', color: '#f60' }]}>Monto total: $  {Math.round(pasajesConfirmados.reduce((acc, p) => acc + Number(p.montoPago), 0))}</Text>
                   </View>
                     
-                 <View style={{ marginTop: 30}}>
-                      <TouchableOpacity
-                        style={[styles.button, { backgroundColor: '#f60', marginBottom: 12 }]}
-                        onPress={handleDescargarPDF}
-                      >
-                        <Text style={styles.buttonText}>
-                          {loading ? 'Generando...' : ' Descargar comprobante'}
-                        </Text>
+                 <View style={{ marginTop: 25}}>
+                      <TouchableOpacity style={[styles.button, { backgroundColor: '#f60'}]} onPress={handleDescargarPDF}  >
+                          <Text style={styles.buttonText}>  {loading ? 'Generando...' : ' Descargar pasaje/s'} </Text>
                       </TouchableOpacity>
-                      <TouchableOpacity style={[styles.button, { backgroundColor: '#ccc' }]} onPress={handleCancelRedirect}>
+                      <TouchableOpacity style={[styles.botonCancelar]} onPress={handleCancelRedirect}>
                         <Text style={[styles.buttonText, { color: '#000' }]}> Volver al inicio</Text>
                       </TouchableOpacity>
                     </View>
@@ -202,16 +231,8 @@ const handleDescargarPDF = async () => {
                   <Text style={{ color: 'red', fontWeight: 'bold', fontSize: 22, textAlign: 'center', marginBottom: 20 }}>
                     ¡Error en el Pago!
                   </Text>
-                   <TouchableOpacity
-                        style={[styles.button, { backgroundColor: '#f60', marginBottom: 12 }]}
-                        onPress={handleDescargarPDF}
-                      >
-                        <Text style={styles.buttonText}>
-                          {loading ? 'Generando...' : ' Descargar comprobante'}
-                        </Text>
-                      </TouchableOpacity>
                   <Text style={{ fontSize: 16, textAlign: 'center', marginBottom: 30 }}>{mensajeUI}</Text>
-                   <TouchableOpacity style={[styles.button, { backgroundColor: '#ccc' }]}onPress={handleCancelRedirect}                     >
+                   <TouchableOpacity style={[styles.botonCancelar]} onPress={handleCancelRedirect}>
                         <Text style={[styles.buttonText, { color: '#000' }]}> Volver al inicio</Text>
                       </TouchableOpacity>
                 </View>
@@ -225,6 +246,17 @@ const handleDescargarPDF = async () => {
 }
 
 const styles = StyleSheet.create({
+   botonCancelar: {
+    marginTop: 20,
+    alignItems: 'center',
+    padding: 12,
+    borderWidth: 1,
+    borderColor: '#000',
+    borderRadius: 8,
+    backgroundColor: '#f9f9f9',
+    width: '100%',
+  },
+
   button: {
     padding: 8,
     borderRadius: 8,

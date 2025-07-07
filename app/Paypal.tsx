@@ -9,16 +9,11 @@ export default function PaypalWebView() {
   const { urlPaypal } = useLocalSearchParams();
   const webviewRef = useRef(null);
 
- // Controlar navegación y mostrar alertas si hay error
-  const handleNavigationStateChange = (navState: { url: string }) => {
-    if (navState.url.startsWith('enruta://error')) {
-       router.replace('/cancel');
-    }
+  console.log('URL de PayPal:', urlPaypal);
+
+    const handleNavigationStateChange = (navState: { url: string }) => {
     if (navState.url.startsWith('enruta://success')) {
       router.replace('/success');
-    }
-    if (navState.url.startsWith('enruta://cancel')) {
-      router.replace('/cancel');
     }
   };
   
@@ -45,7 +40,7 @@ export default function PaypalWebView() {
         )}
         onError={syntheticEvent => {
           const { nativeEvent } = syntheticEvent;
-          Alert.alert('Error', 'No se pudo cargar la página de PayPal.');
+          Alert.alert('Error', 'No se pudo cargar la página de PayPal. REintente más tarde.');
         }}
       />
     </View>

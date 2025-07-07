@@ -1,7 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, StyleSheet, Text, View } from 'react-native';
 
 export const options = { headerShown: false };
 
@@ -12,12 +13,28 @@ export default function Logout() {
   useEffect(() => {
     const logout = async () => {
       try {
-        await AsyncStorage.multiRemove(['token', 'userid', 'nombres', 'ci']);
+     
+        const uuidAuth = await AsyncStorage.getItem('userid');
+        const accessToken = await AsyncStorage.getItem('token');
+
+        if (uuidAuth || accessToken) {
+          const url = `https://backend-production-2812f.up.railway.app/api/usuarios/cerrarSesion` +
+                      `?uuidAuth=${encodeURIComponent(uuidAuth ?? '')}` +
+                      `&token=${encodeURIComponent(accessToken ?? '')}`;
+          const response = await axios.post(url); 
+          if (response.data.success) {
+              await AsyncStorage.multiRemove(['token', 'userid', 'nombres', 'ci']);
+              router.replace('/(auth)/login');
+          } else {
+           Alert.alert('Error al cerrar sesión:', response.data.message);
+          }
+
+        }
       } catch (error) {
-        console.error('Error al cerrar sesión:', error);
-      } finally {
+         Alert.alert('Error al cerrar sesión:', (error as Error)?.message || String(error));
+     } finally {
         setLoading(false);
-        router.replace('/(auth)/login');
+      
       }
     };
 

@@ -24,18 +24,33 @@ export default function TicketHistory() {
         }
         const res = await getHistoryTicket(userId);
         if (res.success) {
-          setTickets(res.data);
-        } else {
+          const ordenados = [...res.data].sort((a, b) => {
+             const fechaA = parseFechaHora(a.viaje.fecha_partida, a.viaje.hora_partida);
+             const fechaB = parseFechaHora(b.viaje.fecha_partida, b.viaje.hora_partida);
+             return fechaB.getTime() - fechaA.getTime();
+          });
+          setTickets(ordenados);
+        } else { 
           setError('No se pudo obtener el historial.');
         }
       } catch (err) {
-          setError('Error de conexión.');             
+          setError('Error de conexión.');              
       } finally {
         setLoading(false);
       }
     };
     fetchTickets();
   }, []);
+
+  const parseFechaHora = (fecha: string, hora: string) => {
+      const [dia, mes, anio] = fecha.split('/');
+      return new Date(`${anio}-${mes}-${dia}T${hora}`);
+    };
+
+    const esPasajeFuturo = (fecha: string, hora: string) => {
+      const fechaPasaje = parseFechaHora(fecha, hora);
+      return fechaPasaje > new Date();
+    };
 
   return (
     <ImageBackground source={imagen}  style={StyleRuta.imagen}>
@@ -66,11 +81,15 @@ export default function TicketHistory() {
                   data={tickets}
                   keyExtractor={item => item.id_pasaje.toString()}
                   renderItem={({ item }) => (
-                    <View style={styles.ticketCard}>
+                   <View style={[
+                        styles.ticketCard,
+                        esPasajeFuturo(item.viaje.fecha_partida, item.viaje.hora_partida) ? styles.futuro : styles.pasado
+                      ]}>
                       <Text style={styles.ticketTitle}>{item.viaje.localidadOrigen.nombreLocalidad} → {item.viaje.localidadDestino.nombreLocalidad}</Text>
-                      <Text>Fecha: {item.viaje.fecha_partida} - {item.viaje.hora_partida}</Text>
-                      <Text>Asiento: {item.asiento.numero_asiento}</Text>
-                      <Text>Precio: ${item.precio}</Text>
+                      <Text><FontAwesome5 name="ticket-alt" size={14} color="#333" style={styles.icon} /> Pasaje: #{item.id_pasaje.toString()}</Text>
+                      <Text><FontAwesome5 name="calendar-alt" size={14} color="#333" style={styles.icon} /> Fecha: {item.viaje.fecha_partida} - {item.viaje.hora_partida} </Text>
+                      <Text><FontAwesome5 name="chair" size={14} color="#333" style={styles.icon} /> Asiento: {item.asiento.numero_asiento}</Text>
+                      <Text><FontAwesome5 name="dollar-sign" size={14} color="#333" style={styles.icon} /> Precio: ${item.precio}</Text>
                     </View>
                   )}
                   ListEmptyComponent={
@@ -97,6 +116,15 @@ export default function TicketHistory() {
 }
 
 const styles = StyleSheet.create({
+  iconRow: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  marginBottom: 4,
+},
+
+icon: {
+  marginRight: 100,
+},
   container: {
     flex: 1,
     justifyContent: 'center',
@@ -160,14 +188,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff', borderRadius:15,
     margin:20,
   },
-  imagen: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(0,0,0,0.4)", // Opacidad del fondo
-  },
+ 
   content: {
     alignItems: 'center',
   },
@@ -190,4 +211,12 @@ const styles = StyleSheet.create({
     marginTop: 8,
     textAlign: 'center',
   },
+  futuro: {
+     borderRightWidth: 26,
+     borderRightColor: 'green',
+    },
+    pasado: {
+  borderRightWidth: 26,
+  borderRightColor: '#810920',
+},
 });

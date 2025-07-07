@@ -1,6 +1,8 @@
+import { imagen } from '@/cfg';
+import StyleRuta from '@/hooks/styles';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React from 'react';
-import { ActivityIndicator, Alert, Image, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, Image, ImageBackground, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function PaymentScreen() {
   const router = useRouter();
@@ -53,33 +55,74 @@ export default function PaymentScreen() {
     }
   };
 
+  const simularRetornoPaypal = () => {
+    router.push({ 
+      pathname: '/success',   
+      params: {
+        id_venta: '138',
+        token: '70U30435CR109062G',
+        PayerID: 'DF2UHYAHYVHCC',
+      }, 
+    }); 
+  };
+
   return (
-    <><Modal transparent={true} visible={loading} animationType="fade">
+    <><><Modal transparent={true} visible={loading} animationType="fade">
       <View style={styles.loadingOverlay}>
         <View style={styles.loadingBox}>
           <ActivityIndicator size="large" color="#fff" />
-       <Text style={styles.loadingText}>Redirigiendo a Paypal...</Text>
-         
+          <Text style={styles.loadingText}>Redirigiendo a Paypal...</Text>
+
         </View>
       </View>
-    </Modal>
-    <ScrollView contentContainerStyle={styles.screen}>
-        <View style={styles.screenA}>
-          <View style={styles.container}>
-            <Text style={styles.title}>Selecciona método de pago</Text>
-            <Text style={styles.subtitle}>Elige cómo pagar tu viaje:</Text>
-            <TouchableOpacity style={styles.methodCard} onPress={handleConfirm}>
-              <Image source={{ uri: 'https://www.paypalobjects.com/webstatic/icon/pp258.png' }} style={styles.logo} />
-              <Text style={styles.methodText}>PayPal</Text>
-            </TouchableOpacity>
+    </Modal></><ScrollView contentContainerStyle={styles.screen}>
+        <ImageBackground source={imagen} resizeMode="cover" style={StyleRuta.imagen}>
+          <View style={StyleRuta.overlay} />
+          <View style={styles.screenA}>
+            <View style={styles.container}>
+              <Text style={styles.title}>Selecciona método de pago</Text>
+              <Text style={styles.subtitle}>Elige cómo pagar tu viaje:</Text>
+              <TouchableOpacity style={styles.methodCard} onPress={handleConfirm}>
+                  <View
+                  style={{
+                    width: 24,
+                    height: 24,
+                    borderRadius: 12,
+                    borderWidth: 2,
+                    borderColor: StyleRuta.primary,
+                    marginRight: 12,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: loading ? StyleRuta.primary : '#fff',
+                  }}
+                  >
+                  {loading && (
+                    <View
+                    style={{
+                      width: 12,
+                      height: 12,
+                      borderRadius: 6,
+                      backgroundColor: '#fff',
+                    }}
+                    />
+                  )}
+                  </View>
+                <Image source={{ uri: 'https://www.paypalobjects.com/webstatic/icon/pp258.png' }} style={styles.logo} />
+                <Text style={styles.methodText}>PayPal</Text>
+              </TouchableOpacity>
 
-            <TouchableOpacity style={styles.botonCancelar} onPress={() => router.back()}>
-              <Text style={styles.methodText}>BTON CANCELAR</Text>
-            </TouchableOpacity>
-
+              <TouchableOpacity style={styles.botonCancelar} onPress={() => router.back()}>
+                <Text style={styles.methodText}>Cancelar</Text>
+              </TouchableOpacity>
+                <TouchableOpacity style={[styles.methodCard, { marginTop: 20, backgroundColor: '#e0e0e0' }]} onPress={simularRetornoPaypal}>
+                <Text style={[styles.methodText, { color: 'green' }]}>Simular retorno PayPal</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
+
+        </ImageBackground>
       </ScrollView></>
+    
   );
 }
 
@@ -87,10 +130,10 @@ const styles = StyleSheet.create({
   screenA: {
     flex: 1,
     alignItems: 'center',
+    padding: 16,
   },
   screen: {
-    flexGrow: 1,
-    padding: 16,
+    flexGrow: 1,  
     justifyContent: 'space-between',
   },
   container: {
@@ -110,20 +153,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 12,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    backgroundColor: '#f9f9f9',
+    
+   
   },
   logo: { width: 50, height: 50, marginRight: 10 },
   methodText: { fontSize: 16 },
-
   botonCancelar: {
     marginTop: 20,
     alignItems: 'center',
     padding: 12,
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: '#000',
     borderRadius: 8,
     backgroundColor: '#f9f9f9',
   },

@@ -4,8 +4,8 @@ import StyleRuta from '@/hooks/styles';
 import type { Viaje, ViajeParams } from '@/interface/type';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, Modal, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-
+import { ActivityIndicator, FlatList, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function TripResultsScreen() {
   const router = useRouter();
@@ -28,7 +28,6 @@ export default function TripResultsScreen() {
 
   useEffect(() => {
     if (!datos) return;
-
     const fetchViajes = async () => {
       setLoading(true);
       try {
@@ -91,85 +90,93 @@ export default function TripResultsScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-  {datos && (
-      <View style={styles.card}>
-        <View style={styles.row}>
-          <View style={styles.floatLeft}>
-            <Text style={styles.titulos}>Filtro:</Text>
+     <SafeAreaView edges={['bottom']} style={{ flex: 1 }}>
+ 
+    <View style={styles.container}>
+      {datos && (
+        <View style={styles.card}>
+          <View style={styles.row}>
+            <View style={styles.floatLeft}>
+              <Text style={styles.titulos}>Filtro:</Text>
+            </View>
+            <View style={styles.header}>
+              <Text style={styles.tipoViaje}>
+                {etapa}
+              </Text>
+            </View>
           </View>
-          <View style={styles.header}>
-            <Text style={styles.tipoViaje}>
-              {etapa}
-            </Text>
-          </View>
-        </View>
 
-        <View style={styles.row}>
-          <Text style={styles.label}>Origen:</Text>
-          <Text style={styles.value}>{datos.nomorigen}</Text>
-        </View>
-        <View style={styles.row}>
-          <Text style={styles.label}>Destino:</Text>
-          <Text style={styles.value}>{datos.nomdestino}</Text>
-        </View>
-        <View style={styles.row}>
-          <Text style={styles.label}>Fecha:</Text>
-          <Text style={styles.value}>{datos.fecha}</Text>
-        </View>
-        <View style={styles.row}>
-          <Text style={styles.label}>Pasajes:</Text>
-          <Text style={styles.value}>{pasajes}</Text>
-        </View>
-        <View style={styles.row}>
-          <Text style={styles.label}>Tipo de Viaje:</Text>
-              <Text style={styles.value}>{tipoViaje === 'ida-vuelta' ? 'Ida y vuelta' : 'Solo ida'} </Text>
-        </View>
-
-      
-      </View>
-    )}
-
-      <Modal transparent={true} visible={loading} animationType="fade">
-        <View style={styles.loadingOverlay}>
-          <View style={styles.loadingBox}>
-            <ActivityIndicator size="large" color="#fff" />
-            <Text style={styles.loadingText}>Buscando tu próximo viaje...</Text>
+          <View style={styles.row}>
+            <Text style={styles.label}>Origen:</Text>
+            <Text style={styles.value}>{datos.nomorigen}</Text>
           </View>
-        </View>
-      </Modal>
-      <FlatList
-        data={viajes}
-        keyExtractor={(item) => item.id_viaje.toString()}
-        renderItem={({ item }) => (
-          <TripResultItem
-            fecha_partida={item.fecha_partida}
-            fecha_llegada={item.fecha_llegada}
-            hora_partida={item.hora_partida}
-            hora_llegada={item.hora_llegada}
-            localidadOrigen={item.localidadOrigen}
-            localidadDestino={item.localidadDestino}
-            precio_viaje={item.precio_viaje}
-            estado={item.estado}
-            asientosDisponibles={item.asientosDisponibles}
-            onPress={() => seleccionarViaje(item)}
-          />
-        )}
-        ListEmptyComponent={
-          <View>
-            <Text style={styles.error}>No se encontraron viajes para los criterios dados.</Text>
-            <TouchableOpacity style={styles.button} onPress={() => router.back()}>
-              <Text style={styles.buttonText}>Volver a buscar</Text>
-            </TouchableOpacity>
+          <View style={styles.row}>
+            <Text style={styles.label}>Destino:</Text>
+            <Text style={styles.value}>{datos.nomdestino}</Text>
           </View>
-        }
-      />
-    </SafeAreaView>
+          <View style={styles.row}>
+            <Text style={styles.label}>Fecha:</Text>
+            <Text style={styles.value}>{datos.fecha}</Text>
+          </View>
+          <View style={styles.row}>
+            <Text style={styles.label}>Pasajes:</Text>
+            <Text style={styles.value}>{pasajes}</Text>
+          </View>
+          <View style={styles.row}>
+            <Text style={styles.label}>Tipo de Viaje:</Text>
+                <Text style={styles.value}>{tipoViaje === 'ida-vuelta' ? 'Ida y vuelta' : 'Solo ida'} </Text>
+          </View>
+
+        
+        </View>
+      )}
+
+        <Modal transparent={true} visible={loading} animationType="fade">
+          <View style={styles.loadingOverlay}>
+            <View style={styles.loadingBox}>
+              <ActivityIndicator size="large" color="#fff" />
+              <Text style={styles.loadingText}>Buscando tu próximo viaje...</Text>
+            </View>
+          </View>
+        </Modal>
+        
+        <FlatList
+          data={viajes}
+          keyExtractor={(item) => item.id_viaje.toString()}
+          renderItem={({ item }) => (
+            <TripResultItem
+              fecha_partida={item.fecha_partida}
+              fecha_llegada={item.fecha_llegada}
+              hora_partida={item.hora_partida}
+              hora_llegada={item.hora_llegada}
+              localidadOrigen={item.localidadOrigen}
+              localidadDestino={item.localidadDestino}
+              precio_viaje={item.precio_viaje}
+              estado={item.estado}
+              asientosDisponibles={item.asientosDisponibles}
+              onPress={() => seleccionarViaje(item)}
+            />
+          )}
+          ListEmptyComponent={
+            !loading ? (
+              <View style={styles.card}>
+                <Text style={styles.error}>No se encontraron viajes para los filtros seleccionados. Vuelva a buscar.</Text>
+                <TouchableOpacity style={styles.button} onPress={() => router.back()}>
+                  <Text style={styles.buttonText}>Volver a buscar</Text>
+                </TouchableOpacity>
+              </View>
+            ) : null
+          }
+        />
+        </View>
+       
+      </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16, marginBottom: 40},
+ 
+  container: { padding: 16, marginBottom: 40 },
   card: {
     backgroundColor: '#fff',
     padding: 16,
@@ -188,7 +195,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   buttonText: { color: '#fff', fontWeight: 'bold' },
-
   tipoViaje: {
     fontSize: 14,
     fontWeight: '600',
@@ -229,16 +235,14 @@ const styles = StyleSheet.create({
     marginTop: 32,
     alignItems: 'center',
     justifyContent: 'center',
+  },  
+  loadingOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 999,
   },
-
-  
-loadingOverlay: {
-  flex: 1,
-  backgroundColor: 'rgba(0,0,0,0.6)',
-  justifyContent: 'center',
-  alignItems: 'center',
-  zIndex: 999,
-},
 loadingBox: {
   padding: 20,
   backgroundColor: '#333',

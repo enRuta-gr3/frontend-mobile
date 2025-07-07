@@ -107,7 +107,7 @@ const ResumenSeleccion: React.FC = () => {
             </View>
 
             <View style={styles.row}>
-              <Text style={styles.label}>Asientos:</Text>
+              <Text style={styles.label}>Asiento/s:</Text>
               <Text>{compra.asientos.map((a: any) => a.numero_asiento).join(', ')}</Text>
             </View>
 
@@ -128,13 +128,13 @@ const ResumenSeleccion: React.FC = () => {
             {montoDescuento > 0 && (
               <View style={styles.totalRow}>
                 <Text style={styles.totalLabel}>Descuento:</Text>
-                <Text style={styles.totalPriceDescuento}>- ${montoDescuento}</Text>
+                <Text style={styles.totalPriceDescuento}>- ${Math.round(montoDescuento)}</Text>
               </View>
             )}
 
             <View style={styles.totalRow}>
               <Text style={styles.totalLabel}>Total a Pagar:</Text>
-              <Text style={styles.totalPriceTotal}>${montoTotal - montoDescuento}</Text>
+              <Text style={styles.totalPriceTotal}>${Math.round(montoTotal - montoDescuento)}</Text>
             </View>
 
             <TouchableOpacity
@@ -157,7 +157,8 @@ export default ResumenSeleccion;
 
 const styles = StyleSheet.create({
   padding50:{
-     marginTop: 50,
+     marginTop: 15,
+     marginBottom: 15,
   },
   subtitulo: {
       fontSize: 16,
@@ -223,6 +224,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: 'center',
     marginBottom: 8,
+    marginTop: 12,
   },
   buyText: {
     color: '#fff',

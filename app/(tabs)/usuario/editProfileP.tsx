@@ -7,7 +7,7 @@ import StyleRuta from '@/hooks/styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { Alert, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, ImageBackground, StyleSheet, Text, View } from "react-native";
 
 
 export default function EditProfile() {
@@ -99,6 +99,8 @@ export default function EditProfile() {
       }
     }};   
 
+
+
   const validateEmail = (email: string): boolean => {
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
     return emailRegex.test(email);
@@ -144,9 +146,7 @@ export default function EditProfile() {
         <ImageBackground source={imagen}  style={StyleRuta.imagen}>
           <View style={StyleRuta.overlay} />
           <View style={styles.container}>
-           
-                  
-            <View style={styles.subcontainer}>
+             <View style={styles.subcontainer}>
               <View style={styles.interno}>
                 {mensajeOK !== '' && (
                   <View style={styles.okBox}>
@@ -175,9 +175,8 @@ export default function EditProfile() {
               throw new Error('Function not implemented.');
             } }               
                  />
-        <TouchableOpacity style={styles.button} onPress={() => router.push('/(tabs)/usuario/changePassS')}>
-          <Text style={styles.buttonText}>Cambiar contraseña </Text>
-        </TouchableOpacity>
+            
+       
               </View>
       </View>
     </ImageBackground> 
@@ -187,13 +186,14 @@ export default function EditProfile() {
 
 
 const styles = StyleSheet.create({
+ 
   button: {
     backgroundColor: "#FFF",
     borderColor: "#000",
     borderWidth: 1,
-    padding: 12,
+    padding: 0,
     borderRadius: 8,
-    marginTop: 16,
+   // marginTop: 16,
   },
   buttonText: {
     color: '#000',
@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   interno: {
-    marginBottom: 10,   
+    marginBottom: 5,   
   },  
    btncontainer: {
     padding: 10,
@@ -240,14 +240,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff', borderRadius:15,
     margin:20,
   },
-  imagen: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(0,0,0,0.4)", // Opacidad del fondo
-  },
+  
   content: {
     alignItems: 'center',
   },  

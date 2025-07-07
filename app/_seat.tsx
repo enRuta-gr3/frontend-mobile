@@ -12,10 +12,10 @@ export default function SeatselectorScreen() {
     const logoDark = require('@/assets/images/logo_oscuro.png');
   
  return (
-    
-    <SafeAreaView style={{ flex: 1, backgroundColor: isDark ? '#000' : '#fff' }}>
-      
-      <SeatSelector  
+
+    <SafeAreaView style={{ flex: 1, alignContent: 'center', backgroundColor: isDark ? '#000' : '#fff' }}>
+
+      <SeatSelector
       viaje={viajes}
       etapa={etapa as string} 
       tipoViaje={tipoViaje as string}

@@ -19,59 +19,18 @@ export default function Signup() {
   const [loading, setLoading] = useState(false);
   
 
-  const clickSignup = async () => {
-    
+  const clickSignup = async () => {   
     
     if (!email || !password || !password2 || !nombre || !apellido || !cedula) {
-      Alert.alert(
-        "Campos requeridos",
-        "Por favor completá todos los campos requeridos"
-      );
-       
+      Alert.alert("Campos requeridos", "Por favor completá todos los campos requeridos");
       return;
     }
 
-    if (!validateEmail(email)) {
-      Alert.alert(
-        "Correo inválido",
-        "Por favor ingresá un correo electrónico válido"
-      );
-    
-      return;
-    }
-
- 
-    if (password !== password2) {
-          Alert.alert(
-            "Campos inválidos",
-            "La contraseña ingresada no es igual a la confirmación de contraseña"
-          );
-           
-          return;
-        }
-
-     if (!validarCedula(cedula)) {
-        Alert.alert(
-            "Campos inválidos",
-            "La ci ingresada no es válida. "
-          );
-        
-      return;
-    }
-
-    if(!validateDate(fecha)) {
-       Alert.alert(
-            "Campos inválidos",
-            "No puede ser menor de 18 años para registrarse"  
-          );
-          
-      return;
-      } 
-
-      if (!validarPassword(password)) {
-            Alert.alert("Error", `La contraseña debe tener mínimo 7 caracteres`);
-            return;
-          }
+     if (!validateDate(fecha)) {  Alert.alert( "Campos inválidos","No puede ser menor de 18 años para registrarse"  );  return; } 
+     if (!validateEmail(email)) { Alert.alert( "Correo inválido", "Por favor ingresá un correo electrónico válido" );  return; }
+     if (!validarCedula(cedula)) { Alert.alert( "Campos inválidos", "La ci ingresada no es válida. " );  return; }
+     if (password !== password2) {Alert.alert("Campos inválidos", "La contraseña ingresada no es igual a la confirmación de contraseña"); return; }
+     if (!validarLargoPass(password)) { Alert.alert("Error", `La contraseña debe tener mínimo 7 caracteres`); return; }
 
     try {
         setLoading(true);
@@ -85,13 +44,11 @@ export default function Signup() {
           esEstudiante = true;
         } 
         const res = await registrarUsuario(email, cedula, nombre, apellido, formFecha, esEstudiante, descuento, esJubilado, password) 
-        
-         console.log( JSON.stringify(res, null, 2))
         if (res.success) { 
-              router.push("/EmailVerification");
+             router.push("/EmailVerification");
           } else{
              setLoading(false);
-              Alert.alert('Error 005:', res.data )
+             Alert.alert('Error 005:', res.data )
           }   
         setLoading(false);
     }catch (error: any) {
@@ -109,14 +66,9 @@ export default function Signup() {
   const validateEmail = (email: string): boolean => {
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
     return emailRegex.test(email);
-  };
-  
-  const validarPasswordCSeguridad = (password: string): boolean => {
-    const regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,20}$/;
-    return regex.test(password);
-  };
+  };  
 
-  const validarPassword = (password: string, min = 8, max = 20): boolean => {
+  const validarLargoPass = (password: string, min = 8, max = 20): boolean => {
       return password.length >= min && password.length <= max;
     };
 
