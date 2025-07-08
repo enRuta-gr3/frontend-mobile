@@ -24,7 +24,7 @@
       "googleServicesFile": "./google-services.json",
       "useNextNotificationsApi": true,
       "permissions": [
-        "NOTIFICATIONS"
+                       "NOTIFICATIONS",  "READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE"
       ],
       "edgeToEdgeEnabled": true,
       "package": "com.bfariello.miapp"

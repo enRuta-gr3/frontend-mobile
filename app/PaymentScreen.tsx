@@ -59,8 +59,8 @@ export default function PaymentScreen() {
     router.push({ 
       pathname: '/success',   
       params: {
-        id_venta: '138',
-        token: '70U30435CR109062G',
+        id_venta: '161',
+        token: '9RD20306N5299543V',
         PayerID: 'DF2UHYAHYVHCC',
       }, 
     }); 
@@ -111,10 +111,12 @@ export default function PaymentScreen() {
                 <Text style={styles.methodText}>PayPal</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.botonCancelar} onPress={() => router.back()}>
+             {/* <TouchableOpacity style={styles.botonCancelar} onPress={() => router.back()}>
                 <Text style={styles.methodText}>Cancelar</Text>
-              </TouchableOpacity>
-                <TouchableOpacity style={[styles.methodCard, { marginTop: 20, backgroundColor: '#e0e0e0' }]} onPress={simularRetornoPaypal}>
+              </TouchableOpacity> */}
+
+              
+           <TouchableOpacity style={[styles.methodCard, { marginTop: 20, backgroundColor: '#e0e0e0' }]} onPress={simularRetornoPaypal}>
                 <Text style={[styles.methodText, { color: 'green' }]}>Simular retorno PayPal</Text>
               </TouchableOpacity>
             </View>

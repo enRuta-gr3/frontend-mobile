@@ -46,8 +46,6 @@ export default function SearchScreen() {
       const sortedData = Object.keys(grouped)
         .sort((a, b) => a.localeCompare(b))
         .flatMap((depto) => grouped[depto]);
-
-        console.log('Localidades cargadas:', sortedData);
       setLocalidades(sortedData);
  
 
@@ -232,7 +230,7 @@ export default function SearchScreen() {
         </Picker>
         </View>
 
-        {/* Input para la fecha de viaje */}
+        {/*fecha de viaje ida */}
         <TextInput
           style={styles.input}
           placeholder="Fecha de viaje (dd/mm/aaaa)"
@@ -249,7 +247,7 @@ export default function SearchScreen() {
             minimumDate={new Date()} />
         )}
 
-        {/* Input para la fecha de viaje vuelta*/}
+        {/* fecha de viaje vuelta*/}
         {tipoViaje === 'ida-vuelta' && (
           <View>
             <TextInput

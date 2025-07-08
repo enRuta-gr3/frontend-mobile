@@ -1,5 +1,6 @@
 import { imagen } from '@/cfg';
 import capturarOrder from '@/controllers/confirmarCompra';
+import { saveToDownloads } from '@/controllers/savePDF';
 import StyleRuta from '@/hooks/styles';
 import { Pasaje } from '@/interface/type';
 import * as FileSystem from 'expo-file-system';
@@ -7,7 +8,7 @@ import * as Print from 'expo-print';
 import { router, useLocalSearchParams } from 'expo-router';
 import * as Sharing from 'expo-sharing';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, ImageBackground, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 
@@ -44,8 +45,6 @@ export default function SuccessScreen() {
           setEstadoUI('exito');
           setMensajeUI(`¡Gracias por tu compra! Tu pago ha sido confirmado con éxito.`); 
           console.log('Pasajes confirmados:', confirmData.data.pasajes);
-
-
         } else {
            setEstadoUI('error');
            setMensajeUI(
@@ -69,6 +68,8 @@ export default function SuccessScreen() {
   const handleCancelRedirect = () => {
      return router.push('/(tabs)/homeUser'); 
   }; 
+
+//descarga PDF
 const handleDescargarPDF = async () => {
   try {
     setLoading(true);
@@ -120,11 +121,13 @@ const handleDescargarPDF = async () => {
     const localPath = FileSystem.documentDirectory + `pasajes_${fechaHora}.pdf`;
 
     await FileSystem.copyAsync({ from: uri, to: localPath });
+    console.log('PDF guardado en:', localPath);
 
-    await Sharing.shareAsync(localPath, {
-      UTI: 'com.adobe.pdf',
-      mimeType: 'application/pdf',
-    });
+    if (Platform.OS === 'android') {
+      await saveToDownloads(localPath, `pasajes_${fechaHora}.pdf`);
+    } else {
+      await compartirPDF(localPath);
+     }    
 
 
     //MEnsaje de ok 
@@ -137,6 +140,14 @@ const handleDescargarPDF = async () => {
       'Tus pasajes fueron generados con éxito.',
       [
       {
+        text: 'Compartir',
+        onPress: async () => {
+        clearTimeout(timeout);
+        await compartirPDF(localPath);
+        router.push('/(tabs)/homeUser');
+        },
+      },
+      {
         text: 'Aceptar',
         onPress: () => {
         clearTimeout(timeout);
@@ -148,14 +159,30 @@ const handleDescargarPDF = async () => {
     );
     return;
 
-
+  
   } catch (e) {
-    Alert.alert('Error', 'No se pudo generar el PDF.');
+    let errorMessage = 'No se pudo generar el PDF.';
+    if (e instanceof Error) {
+      errorMessage += ' ' + e.message;
+    } else if (typeof e === 'object' && e !== null && 'message' in e) {
+      errorMessage += ' ' + String((e as any).message);
+    } else {
+      errorMessage += ' ' + JSON.stringify(e);
+    }
+    Alert.alert('Error', errorMessage);
     console.error(e);
   } finally {
     setLoading(false);
   }
 };
+
+// Compartir PDF generado
+    const compartirPDF = async (filePath: string) => {
+      await Sharing.shareAsync(filePath, {
+      UTI: 'com.adobe.pdf',
+      mimeType: 'application/pdf',
+      });
+    };
 
 
   return (
