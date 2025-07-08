@@ -1,8 +1,10 @@
+import { imagen } from '@/cfg';
+import StyleRuta from '@/hooks/styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, ImageBackground, StyleSheet, Text, View } from 'react-native';
 
 export const options = { headerShown: false };
 
@@ -34,18 +36,23 @@ export default function Logout() {
          Alert.alert('Error al cerrar sesión:', (error as Error)?.message || String(error));
      } finally {
         setLoading(false);
-      
-      }
+     }
     };
 
     logout();
   }, []);
 
   return (
-    <View style={styles.container}>
-      <ActivityIndicator size="large" color="#f97316" />
-      <Text style={styles.text}>Cerrando sesión...</Text>
-    </View>
+   <ImageBackground source={imagen} resizeMode="cover" style={StyleRuta.imagen}>
+            <View style={StyleRuta.overlay} />
+
+            <View style={styles.container}>
+              <View style={styles.card}>
+                <ActivityIndicator size="large" color="#f97316" />
+                <Text style={styles.text}>Cerrando sesión...</Text>
+              </View>
+            </View>
+          </ImageBackground>
   );
 }
 
@@ -54,11 +61,22 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fff',
+  },
+  card: {
+    backgroundColor: 'rgb(255, 255, 255)', 
+    padding: 24,
+    borderRadius: 16,
+    alignItems: 'center',
+    elevation: 5, 
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4, 
   },
   text: {
     marginTop: 12,
-    fontSize: 18,
-    color: '#444',
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#333',
   },
 });

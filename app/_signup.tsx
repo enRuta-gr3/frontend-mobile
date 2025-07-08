@@ -22,15 +22,21 @@ export default function Signup() {
   const clickSignup = async () => {   
     
     if (!email || !password || !password2 || !nombre || !apellido || !cedula) {
-      Alert.alert("Campos requeridos", "Por favor completá todos los campos requeridos");
+      Alert.alert("Campos requeridos", "Por favor completá todos los campos requeridos",  [{text: 'Aceptar',onPress: () => {}, style: 'default',},
+  ]);
       return;
     }
 
-     if (!validateDate(fecha)) {  Alert.alert( "Campos inválidos","No puede ser menor de 18 años para registrarse"  );  return; } 
-     if (!validateEmail(email)) { Alert.alert( "Correo inválido", "Por favor ingresá un correo electrónico válido" );  return; }
-     if (!validarCedula(cedula)) { Alert.alert( "Campos inválidos", "La ci ingresada no es válida. " );  return; }
-     if (password !== password2) {Alert.alert("Campos inválidos", "La contraseña ingresada no es igual a la confirmación de contraseña"); return; }
-     if (!validarLargoPass(password)) { Alert.alert("Error", `La contraseña debe tener mínimo 7 caracteres`); return; }
+     if (!validateDate(fecha)) {  Alert.alert( "Campos inválidos","No puede ser menor de 18 años para registrarse",  [{text: 'Aceptar',onPress: () => {}, style: 'default',},
+  ]);  return; } 
+     if (!validateEmail(email)) { Alert.alert( "Correo inválido", "Por favor ingresá un correo electrónico válido",  [{text: 'Aceptar',onPress: () => {}, style: 'default',},
+  ]);  return; }
+     if (!validarCedula(cedula)) { Alert.alert( "Campos inválidos", "La ci ingresada no es válida. ",  [{text: 'Aceptar',onPress: () => {}, style: 'default',},
+  ]);  return; }
+     if (password !== password2) {Alert.alert("Campos inválidos", "La contraseña ingresada no es igual a la confirmación de contraseña",  [{text: 'Aceptar',onPress: () => {}, style: 'default',},
+  ]); return; }
+     if (!validarLargoPass(password)) { Alert.alert("Error", `La contraseña debe tener mínimo 7 caracteres`,  [{text: 'Aceptar',onPress: () => {}, style: 'default',},
+  ]); return; }
 
     try {
         setLoading(true);
@@ -54,8 +60,7 @@ export default function Signup() {
     }catch (error: any) {
         console.log( JSON.stringify(error.response, null, 2))
         setLoading(false);
-      if (!error.response?.success) {
-        
+      if (!error.response?.success) {        
           Alert.alert('Error 006:', error.response.data.data);
       }else{
            Alert.alert('No pudimos procesar la solicitud', 'Contacte a atención al cliente');

@@ -23,12 +23,21 @@ export async function registrarUsuario(email: string, cedula: string, nombre: st
 
          return res.data; 
     } catch (error: any) {
-        console.log(JSON.stringify(error.response, null, 2));
       if (!error.response?.success) {
-          Alert.alert('Error:', error.response.data.data);
-      }else{
-             Alert.alert('No pudimos procesar la solicitud', 'Contacte a atención al cliente');
-      }
+        Alert.alert(
+          'Aviso!',
+          error.response.data.data,
+          [
+            {
+              text: 'Aceptar',
+              onPress: () => console.log('Alerta cerrada'),
+              style: 'default',
+            },
+          ]
+        );
+      } else {
+        Alert.alert('No pudimos procesar la solicitud', 'Contacte a atención al cliente');
+      }     
     }
   };   
          

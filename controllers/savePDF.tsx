@@ -49,7 +49,6 @@ export const saveToDownloads = async (pdfUri: string, filename: string) => {
       Alert.alert('Solo Android', 'Este método es válido solo para Android');
       return;
     }
-
     const permissions = await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
 
     if (!permissions.granted) {
@@ -70,8 +69,7 @@ export const saveToDownloads = async (pdfUri: string, filename: string) => {
     await FileSystem.writeAsStringAsync(fileUri, base64, {
       encoding: FileSystem.EncodingType.Base64,
     });
-
-    Alert.alert('Éxito', `Archivo guardado en: Descargas`);
+    Alert.alert('Éxito', `Archivo guardado en: ` + fileUri);
   } catch (error: any) {
     console.error('Error al guardar PDF:', error);
     Alert.alert('Error', 'No se pudo guardar el PDF: ' + (error.message || JSON.stringify(error)));

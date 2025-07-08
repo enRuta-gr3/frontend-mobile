@@ -16,17 +16,16 @@ export default function Login() {
 
   const clickLogin = async () => {
      setLoading(true);
-    //ARMAR VALIDACIONE DE CAMPOS
     if (!email || !password) {
-      Alert.alert('Campos requeridos', 'Por favor completá todos los campos');
+      Alert.alert('Campos requeridos', 'Por favor completá todos los campos', [
+                {
+                  text: 'Aceptar',
+                  onPress: () => { },
+                  style: 'default',
+                },
+              ]);
       return;
     }
-
-   /*if (!validateEmail(email)) {
-      Alert.alert('Campos inválidos', 'Por favor ingrese un correo con formato válido');
-      return;
-    } */
-
 try { 
   const res = await axios.post(
       'https://backend-production-2812f.up.railway.app/api/auth/iniciarSesion', 
@@ -50,23 +49,31 @@ try {
             
            await SaveTokenPush(0); //guardo el token 
           } catch (err) {
-            Alert.alert('Aviso', 'No se pudo enviar el token push al backend.');
+            Alert.alert('Aviso', 'Hay problemas, por favor intenta más tarde.');
             console.error('Error enviando token push:', err);
           }
-
           router.push('/(tabs)/homeUser'); 
-        }
-
-        
+        }        
     } 
     
  
 } catch (error: any) {
-   
-  if (error.response) {
-    console.log(JSON.stringify(error.response))
-    if (error.response.status === 401 || error.response.status === 403) {
-      Alert.alert('Error', 'No se pudo iniciar sesión. Por favor, revisa tus credenciales.');
+   if (error.response) {
+     if (error.response.status === 401 || error.response.status === 403) {
+       Alert.alert(
+         'Atención!',
+         'No se pudo iniciar sesión. \nPor favor, revisa tus credenciales.',
+         [
+           {
+                  text: 'Aceptar',
+                  onPress: () => {
+                    setEmail('');
+                    setPassword('');
+                  },
+                  style: 'default',
+                },
+              ]
+            );
     }
   } else {
     console.error('Error de red:', error.message);
@@ -74,16 +81,9 @@ try {
 }finally {
     setLoading(false);
   }
-
-
 };
 
-  const validateEmail = (email: string): boolean => {
-    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-    return emailRegex.test(email);
-  };
-
-  return (  
+    return (  
     <LoginLayout
       email={email}
       setEmail={setEmail}

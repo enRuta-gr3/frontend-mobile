@@ -1,50 +1,61 @@
-# Welcome to your Expo app 👋
+# 🚌 En Ruta - App de Venta de Pasajes
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+**En Ruta** es una aplicación móvil desarrollada con **React Native** y **Expo** para la compra de boletos de ómnibus interdepartamentales en Uruguay. Permite a los usuarios registrarse, iniciar sesión, seleccionar viajes, elegir asientos, pagar con PayPal, recibir notificaciones y descargar pasajes en PDF.
 
-## Get started
+---
 
-1. Install dependencies
+## 📱 Tecnologías Utilizadas
 
-   ```bash
-   npm install
-   ```
+### Frontend
+- React Native (Expo SDK)
+- TypeScript
+- Expo Router
+- @rneui/themed (UI)
+- AsyncStorage
+- expo-print / expo-sharing (PDF)
+- expo-notifications (push)
+- expo-file-system / StorageAccessFramework (archivos)
 
-2. Start the app
+### Backend
+- Java Spring Boot
+- REST APIs para viajes, usuarios, compras y asientos
+- Autenticación por token
+- Integración con PayPal (sandbox + redirección móvil)
 
-   ```bash
-   npx expo start
-   ```
+### Base de Datos
+- MySQL o PostgreSQL
+- Relaciones: usuarios, viajes, pasajes, asientos
 
-In the output, you'll find options to open the app in a
+---
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## 🔑 Funcionalidades
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+### 👤 Usuarios
+- Registro de usuario (cliente)
+- Inicio de sesión
+- Recuperación de contraseña
 
-## Get a fresh project
+### 🚍 Viajes y pasajes
+- Búsqueda de viajes por origen, destino y fecha
+- Compra de pasajes (ida y vuelta)
+- Selección de asiento (con disponibilidad en tiempo real)
+- Descuentos por tipo: Jubilado, Estudiante, Ninguno
 
-When you're ready, run:
+### 💳 Pagos
+- Integración con **PayPal**
+- Redirección y retorno a la app mediante **deep linking**
 
-```bash
-npm run reset-project
-```
+### 📄 PDF
+- Generación automática de comprobante de pasaje en PDF
+- Descarga o compartición del PDF al finalizar la compra
+- Opción para guardar en carpeta **Downloads** (Android)
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### 🔔 Notificaciones push
+- Notificación tras compra exitosa
+- Registro del token de dispositivo
+- Asociadas a usuarios autenticados
 
-## Learn more
+---
 
-To learn more about developing your project with Expo, look at the following resources:
+## 📁 Estructura de carpetas
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.

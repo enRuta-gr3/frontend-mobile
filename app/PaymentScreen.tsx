@@ -111,14 +111,14 @@ export default function PaymentScreen() {
                 <Text style={styles.methodText}>PayPal</Text>
               </TouchableOpacity>
 
-             {/* <TouchableOpacity style={styles.botonCancelar} onPress={() => router.back()}>
+             <TouchableOpacity style={styles.botonCancelar} onPress={() => router.back()}>
                 <Text style={styles.methodText}>Cancelar</Text>
-              </TouchableOpacity> */}
+              </TouchableOpacity> 
 
-              
-           <TouchableOpacity style={[styles.methodCard, { marginTop: 20, backgroundColor: '#e0e0e0' }]} onPress={simularRetornoPaypal}>
+
+          {/*  <TouchableOpacity style={[styles.methodCard, { marginTop: 20, backgroundColor: '#e0e0e0' }]} onPress={simularRetornoPaypal}>
                 <Text style={[styles.methodText, { color: 'green' }]}>Simular retorno PayPal</Text>
-              </TouchableOpacity>
+              </TouchableOpacity>*/}
             </View>
           </View>
 

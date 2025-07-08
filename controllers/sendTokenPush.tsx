@@ -5,7 +5,6 @@ export async function sendTokenPush(uuidAuth: string, pushToken: string) {
     const response = await axios.post('https://backend-production-2812f.up.railway.app/api/usuarios/guardarPushToken',
       {uuidAuth: uuidAuth, pushToken: pushToken},
       {headers: {'Content-Type': 'application/json',},}); 
-      console.log("Response from sendTokenPush:", response.data);
        return response.data;
       
   } catch (error: any) {

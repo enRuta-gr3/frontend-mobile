@@ -69,68 +69,65 @@ export default function SignupScreen({
   return (
      <KeyboardAvoidingView   style={styles.containerKey}
          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 120}
-      >
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 120}>
        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <ScrollView contentContainerStyle={styles.scrollContent}>
+                <View style={styles.formContent}>       
+                <Text style={styles.hint}>Nombre</Text>
+                <TextInput style={styles.input} placeholder="Nombre" value={nombre} onChangeText={setNombre} />
+                <Text style={styles.hint}>Apellido</Text>
+                <TextInput style={styles.input} placeholder="Apellido" value={apellido} onChangeText={setApellido} />
+                <Text style={styles.hint}>Fecha de nacimiento</Text>
+              
+              <TextInput
+                  style={styles.input}
+                  placeholder="Fecha de nacimiento (dd/mm/aaaa)"
+                  value={fecha}
+                  onFocus={() => setShow(true)} />
 
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        <View style={styles.formContent}>       
-         <Text style={styles.hint}>Nombre</Text>
-        <TextInput style={styles.input} placeholder="Nombre" value={nombre} onChangeText={setNombre} />
-         <Text style={styles.hint}>Apellido</Text>
-        <TextInput style={styles.input} placeholder="Apellido" value={apellido} onChangeText={setApellido} />
-         <Text style={styles.hint}>Fecha de nacimiento</Text>
-       
-       <TextInput
-          style={styles.input}
-          placeholder="Fecha de nacimiento (dd/mm/aaaa)"
-          value={fecha}
-          onFocus={() => setShow(true)} />
+                {show && (
+                  <DateTimePicker
+                    value={date}
+                    mode="date"
+                    display="default"
+                    onChange={handleDateChange}
+                    locale="es-ES"
+                    />
+                )}
+                <Text style={styles.hint}>Correo electrónico</Text>
+                <TextInput style={styles.input} placeholder="Correo electrónico" value={email} onChangeText={setEmail} keyboardType="email-address" />
+                <Text style={styles.hint}>Cédula</Text>
+                <TextInput style={styles.input} placeholder="Cédula" value={cedula} onChangeText={setCedula} keyboardType="numeric" />
+                <Text style={styles.hint}>Contraseña</Text>
+                <TextInput style={styles.input} placeholder="Contraseña" value={password} onChangeText={setPassword} secureTextEntry />
+                <Text style={styles.hint}>Confirmación de contraseña</Text>
+                <TextInput style={styles.input} placeholder="Confirmar contraseña" value={password2} onChangeText={setPassword2} secureTextEntry />
 
-        {show && (
-          <DateTimePicker
-            value={date}
-            mode="date"
-            display="default"
-            onChange={handleDateChange}
-            locale="es-ES"
-            />
-        )}
-        <Text style={styles.hint}>Correo electrónico</Text>
-        <TextInput style={styles.input} placeholder="Correo electrónico" value={email} onChangeText={setEmail} keyboardType="email-address" />
-         <Text style={styles.hint}>Cédula</Text>
-        <TextInput style={styles.input} placeholder="Cédula" value={cedula} onChangeText={setCedula} keyboardType="numeric" />
-         <Text style={styles.hint}>Contraseña</Text>
-        <TextInput style={styles.input} placeholder="Contraseña" value={password} onChangeText={setPassword} secureTextEntry />
-         <Text style={styles.hint}>Confirmación de contraseña</Text>
-        <TextInput style={styles.input} placeholder="Confirmar contraseña" value={password2} onChangeText={setPassword2} secureTextEntry />
+              <Text style={styles.hint}>Tipo de descuento:</Text>
+                    <View style={styles.pickerContainer}>
+                      <Picker
+                        selectedValue={descuento}
+                        onValueChange={(itemValue) => setDescuento(itemValue)}
+                        style={styles.picker}
+                      >
+                        <Picker.Item label="Ninguno" value="Ninguno" />
+                        <Picker.Item label="Jubilado" value="Jubilado" />
+                        <Picker.Item label="Estudiante" value="Estudiante" />
+                      </Picker>
+                    </View>
 
-       <Text style={styles.hint}>Tipo de descuento:</Text>
-            <View style={styles.pickerContainer}>
-              <Picker
-                selectedValue={descuento}
-                onValueChange={(itemValue) => setDescuento(itemValue)}
-                style={styles.picker}
-              >
-                <Picker.Item label="Ninguno" value="Ninguno" />
-                <Picker.Item label="Jubilado" value="Jubilado" />
-                <Picker.Item label="Estudiante" value="Estudiante" />
-              </Picker>
-            </View>
-
-        <TouchableOpacity style={styles.button} onPress={onSignup}>
-          <Text style={styles.buttonText}>Registrarse</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.botonCancelar} onPress={() => {
-                                                                      limpiarCampos();
-                                                                      router.back(); 
-                                                                    }}>
-          <Text style={styles.methodText}>Cancelar</Text>
-        </TouchableOpacity>
-        </View>
-      </ScrollView>
-      </TouchableWithoutFeedback>
-
+                <TouchableOpacity style={styles.button} onPress={onSignup}>
+                  <Text style={styles.buttonText}>Registrarse</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.botonCancelar} onPress={() => {
+                                                                              limpiarCampos();
+                                                                              router.back(); 
+                                                                            }}>
+                  <Text style={styles.methodText}>Cancelar</Text>
+                </TouchableOpacity>
+                </View>
+              </ScrollView>
+              </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
    
   );
@@ -205,7 +202,7 @@ formContent: {
   },
   hint: {
     fontSize: 12,
-    color: "#666",
+    color: "#000",
     marginBottom: 8,
     fontStyle: "italic"
   },
@@ -232,7 +229,7 @@ formContent: {
     alignItems: 'center',
     padding: 12,
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: '#000',
     borderRadius: 8,
     backgroundColor: '#f9f9f9',
   },

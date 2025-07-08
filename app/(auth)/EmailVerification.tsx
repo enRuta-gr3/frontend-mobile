@@ -14,10 +14,11 @@ export default function EmailVerificationScreen() {
         resizeMode="contain"
       />
       <Text style={styles.title}>¡Verificá tu correo!</Text>
-      <Text style={styles.message}>
-        Te enviamos un correo electrónico de verificación. 
-        Por favor, revisá tu bandeja de entrada (y también la de spam) para confirmar tu dirección de email.
-      </Text>
+      <Text style={styles.message}>Te enviamos un correo electrónico </Text>  
+      <Text style={styles.message}>para verificar tu identidad. </Text>  
+      <Text style={styles.message}>Por favor, revisá tu bandeja de entrada </Text>  
+      <Text style={styles.message2}>(y también la de spam) para confirmar tu dirección de email.</Text>
+
       <TouchableOpacity style={styles.button} onPress={() => router.replace('/')}> 
         <Text style={styles.buttonText}>Volver al inicio</Text>
       </TouchableOpacity>
@@ -47,7 +48,12 @@ const styles = StyleSheet.create({
   message: {
     fontSize: 16,
     textAlign: 'center',
-    marginBottom: 30,
+    color: '#333',
+  },
+   message2: {
+    fontSize: 16,
+    textAlign: 'center',
+    marginBottom: 20,
     color: '#333',
   },
   button: {

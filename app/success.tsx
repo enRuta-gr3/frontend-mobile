@@ -20,15 +20,12 @@ export default function SuccessScreen() {
   const [estadoUI, setEstadoUI] = useState<'cargando' | 'exito' | 'error'>('cargando');
   const [mensajeUI, setMensajeUI] = useState('');
   const [pasajesConfirmados, setPasajesConfirmados] = useState<Pasaje[]>([]);
-
+  const [url, setUrl] = useState<string | null>(null);
  
   useEffect(() => {
     const procesarPagoExitoso = async () => {
       const idVenta = Number(id_venta_);
-      const token = token_ ? token_.toString() : undefined;
-      
-      console.log('Procesando pago exitoso con ID de venta:', idVenta, 'y token:', token);
-      
+      const token = token_ ? token_.toString() : undefined;   
       if (!token || !idVenta || isNaN(idVenta)) {
         setEstadoUI('error');
         setMensajeUI('Datos de confirmación incompletos o inválidos.');
@@ -114,7 +111,7 @@ const handleDescargarPDF = async () => {
     `;
 
     const { uri } = await Print.printToFileAsync({ html });
- 
+
     //Agrego hora y fecha al nombre del archivopara que sea único
     const now = new Date();
     const fechaHora = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}_${String(now.getHours()).padStart(2, '0')}-${String(now.getMinutes()).padStart(2, '0')}-${String(now.getSeconds()).padStart(2, '0')}`;

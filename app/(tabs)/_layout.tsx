@@ -8,7 +8,7 @@ import React from 'react';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-  return (
+  return ( 
     <Tabs
        screenOptions={{
        tabBarActiveTintColor: StyleRuta.primary,

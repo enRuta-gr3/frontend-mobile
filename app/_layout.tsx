@@ -60,8 +60,8 @@ export default function RootLayout() {
             headerShown: true,
             statusBarStyle: isDark ? 'light' : 'dark',
             statusBarTranslucent: false,
-            statusBarBackgroundColor: "red",
-            navigationBarColor: "000",
+            statusBarBackgroundColor: "#fff",
+            navigationBarColor: "#fff",
           }}
         >
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
@@ -77,7 +77,10 @@ export default function RootLayout() {
           <Stack.Screen name="DescargarPDF" options={{ title: 'Descargar pasajes en PDF' }} />
           <Stack.Screen name="+not-found" />
         </Stack>
+
+       
       </ThemeProvider>
     </NotificationProvider>
   );
 }
+ 
