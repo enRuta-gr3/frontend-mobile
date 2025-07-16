@@ -43,7 +43,6 @@ export default function PaymentScreen() {
           pathname: '/Paypal',
           params: { urlPaypal: data.data.urlPago },
         });
-        console.log('Redirigiendo a PayPal con URL:', data.data.urlPago);
       } else {
         Alert.alert('Error 002', 'No se pudo obtener la URL de PayPal.');
       }
@@ -53,17 +52,6 @@ export default function PaymentScreen() {
     finally {
       setLoading(false);
     }
-  };
-
-  const simularRetornoPaypal = () => {
-    router.push({ 
-      pathname: '/success',   
-      params: {
-        id_venta: '161',
-        token: '9RD20306N5299543V',
-        PayerID: 'DF2UHYAHYVHCC',
-      }, 
-    }); 
   };
 
   return (
@@ -114,11 +102,7 @@ export default function PaymentScreen() {
              <TouchableOpacity style={styles.botonCancelar} onPress={() => router.back()}>
                 <Text style={styles.methodText}>Cancelar</Text>
               </TouchableOpacity> 
-
-
-          {/*  <TouchableOpacity style={[styles.methodCard, { marginTop: 20, backgroundColor: '#e0e0e0' }]} onPress={simularRetornoPaypal}>
-                <Text style={[styles.methodText, { color: 'green' }]}>Simular retorno PayPal</Text>
-              </TouchableOpacity>*/}
+             
             </View>
           </View>
 

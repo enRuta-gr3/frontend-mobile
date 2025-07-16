@@ -44,7 +44,7 @@ static loadingText: {
     borderRadius: 25,
     borderWidth: 5,
     borderColor: '#fff',
-    borderTopColor: '#00000000', // transparente en formato hexadecimal válido
+    borderTopColor: '#00000000', // transparente 
   };
   
 static imagen: StyleProp<ViewStyle> = {

@@ -23,7 +23,7 @@ const NotificationContext = createContext<NotificationContextType | undefined>(u
 export const useNotification = (): NotificationContextType => {
   const context = useContext(NotificationContext);
   if (context === undefined) {
-    throw new Error("useNotification must be used within a NotificationProvider");
+    throw new Error("Error en las notificaciones");
   }
   return context;
 };
@@ -46,7 +46,7 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({ chil
     const initializeNotifications = async () => {
       try {
         if (!Device.isDevice) {
-          throw new Error("Las notificaciones push requieren un dispositivo físico.");
+          throw new Error("Error 002: Notificaciones");
         }
 
         const token = await registerForPushNotificationsAsync();

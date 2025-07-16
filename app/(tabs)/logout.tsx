@@ -4,13 +4,16 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, ImageBackground, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, ImageBackground, StyleSheet, Text, useColorScheme, View } from 'react-native';
 
 export const options = { headerShown: false };
+
 
 export default function Logout() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
+   const scheme = useColorScheme(); 
+   const isDark = scheme === 'dark';
 
   useEffect(() => {
     const logout = async () => {
@@ -45,11 +48,10 @@ export default function Logout() {
   return (
    <ImageBackground source={imagen} resizeMode="cover" style={StyleRuta.imagen}>
             <View style={StyleRuta.overlay} />
-
             <View style={styles.container}>
-              <View style={styles.card}>
-                <ActivityIndicator size="large" color="#f97316" />
-                <Text style={styles.text}>Cerrando sesión...</Text>
+              <View style={[styles.card, {backgroundColor: isDark ? 'rgb(30, 30, 30)' : 'rgb(255, 255, 255)'}]}>
+                <ActivityIndicator size="large" color={isDark ? '#fff' : '#333'} />
+                <Text style={[styles.text, { color: isDark ? '#fff' : '#333' }]}>Cerrando sesión...</Text>
               </View>
             </View>
           </ImageBackground>
@@ -63,20 +65,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   card: {
-    backgroundColor: 'rgb(255, 255, 255)', 
-    padding: 24,
+        padding: 24,
     borderRadius: 16,
     alignItems: 'center',
-    elevation: 5, 
+    elevation: 5,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
-    shadowRadius: 4, 
+    shadowRadius: 4,
   },
   text: {
     marginTop: 12,
     fontSize: 16,
     fontWeight: '500',
-    color: '#333',
   },
 });

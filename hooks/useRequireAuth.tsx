@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 
 export function useRequireAuth() {
   const [isLogged, setIsLogged] = useState(false);
-
   useEffect(() => {
     const checkAuth = async () => {
       const token = await AsyncStorage.getItem('token');

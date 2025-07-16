@@ -47,7 +47,7 @@ export default function UsuarioLayout() {
                 source={isDark ? logoDark : logoLight}
                 style={{ width: 30, height: 30, marginRight: 8 }}
               />
-              <Text style={{ fontSize: 18, fontWeight: 'bold', color: isDark ? '#fff' : '#000' }}>Historial de Pasajes</Text>
+              <Text style={{ fontSize: 18, fontWeight: 'bold', color: isDark ? '#fff' : '#000' }}>Mis Pasajes</Text>
             </View>
                 ),
         }}
@@ -63,7 +63,7 @@ export default function UsuarioLayout() {
                       source={isDark ? logoDark : logoLight}
                       style={{ width: 30, height: 30, marginRight: 8 }}
                     />
-                    <Text style={{ fontSize: 18, fontWeight: 'bold', color: isDark ? '#fff' : '#000' }}>Modificar Perfil</Text>
+                    <Text style={{ fontSize: 18, fontWeight: 'bold', color: isDark ? '#fff' : '#000' }}>Mis datos</Text>
                   </View>
                 ),
               }}

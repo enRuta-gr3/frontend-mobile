@@ -4,7 +4,7 @@ import StyleRuta from '@/hooks/styles';
 import type { Viaje, ViajeParams } from '@/interface/type';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, FlatList, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function TripResultsScreen() {
@@ -90,12 +90,12 @@ export default function TripResultsScreen() {
   }
 
   return (
-     <SafeAreaView edges={['bottom']} style={{ flex: 1 }}>
- 
-    <View style={styles.container}>
-      {datos && (
-        <View style={styles.card}>
-          <View style={styles.row}>
+    <SafeAreaView edges={['bottom']} style={{ flex: 1 }}>
+       <ScrollView contentContainerStyle={styles.scrollContent}>
+      <View style={styles.container}>
+        {datos && (
+          <View style={styles.card}>
+            <View style={styles.row}>
             <View style={styles.floatLeft}>
               <Text style={styles.titulos}>Filtro:</Text>
             </View>
@@ -169,13 +169,17 @@ export default function TripResultsScreen() {
           }
         />
         </View>
-       
+       </ScrollView>
       </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
- 
+   scrollContent: {
+      flexGrow: 1,
+      paddingTop: 10,
+    },
+
   container: { padding: 16, marginBottom: 40 },
   card: {
     backgroundColor: '#fff',

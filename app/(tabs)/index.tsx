@@ -4,14 +4,14 @@ import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
  
 export default function IndexScreen() {
-    const router = useRouter();
+  const router = useRouter();
   const [loading, setLoading] = useState(true);
   const { isLogged } = useRequireAuth();
   useEffect(() => {
+
     const checkAuth = async () => {
       setLoading(false);
-     
-      if (isLogged) { 
+       if (isLogged) { 
         setTimeout(() => {
         router.replace('/(tabs)/homeUser');
          }, 0);

@@ -1,19 +1,27 @@
-import { Link, Stack } from 'expo-router';
-import { StyleSheet } from 'react-native';
+import { Link } from 'expo-router';
+import { ImageBackground, StyleSheet, View } from 'react-native';
 
+import { imagen } from '@/cfg';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import StyleRuta from '@/hooks/styles';
 
 export default function NotFoundScreen() {
   return (
     <>
-      <Stack.Screen options={{ title: 'Oops!' }} />
-      <ThemedView style={styles.container}>
-        <ThemedText type="title">No se encontró la pantalla solicitada.</ThemedText>
-        <Link href="/" style={styles.link}>
-          <ThemedText type="link">Ir al inicio.</ThemedText>
-        </Link>
-      </ThemedView>
+    <ImageBackground source={imagen} resizeMode="cover" style={StyleRuta.imagen}>
+            <View style={StyleRuta.overlay} />
+            <View style={styles.container}>
+               <ThemedView style={styles.container}>
+                <ThemedText type="title">No se encontró la pantalla solicitada.</ThemedText>
+                <Link href="/" style={styles.link}>
+                  <ThemedText type="link">Ir al inicio.</ThemedText>
+                </Link>
+              </ThemedView>
+            </View>
+          </ImageBackground>
+    
+     
     </>
   );
 }

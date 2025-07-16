@@ -173,7 +173,6 @@ formContent: {
   title: { fontSize: 24, fontWeight: "bold", marginBottom: 8 },
   input: { borderWidth: 1, borderColor: "#ccc", padding: 12, marginBottom: 14, borderRadius: 8, backgroundColor: "#f9f9f9" },
   label: { fontWeight: "bold", marginTop: 12 },
-
   error: { color: "red", marginBottom: 10, textAlign: "center" },
   radioContainer: { flexDirection: "row", alignItems: "center", marginVertical: 4 },
   radioCircle: { height: 18, width: 18, borderRadius: 9, borderWidth: 2, borderColor: "#555", marginRight: 8, backgroundColor: "#fff" },

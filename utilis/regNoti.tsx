@@ -14,10 +14,8 @@ export async function registerForPushNotificationsAsync() {
            lightColor: "#FF231F7C",
            sound: 'default',
          });
-       }
-      
-      
-
+       }                  
+ 
   if (Device.isDevice) {
     const { status: existingStatus } =
       await Notifications.getPermissionsAsync();
@@ -28,14 +26,14 @@ export async function registerForPushNotificationsAsync() {
     }
     if (finalStatus !== "granted") {
       throw new Error(
-        "Permission not granted to get push token for push notification!"
+        "No se otorgaron los permisos necesarios ."
       );
     }
     const projectId =
       Constants?.expoConfig?.extra?.eas?.projectId ??
       Constants?.easConfig?.projectId;
     if (!projectId) {
-      throw new Error("Project ID not found");
+      throw new Error("Proyecto ID no encontrado");
     }
     try {
       const pushTokenString = (
@@ -51,6 +49,6 @@ export async function registerForPushNotificationsAsync() {
       throw new Error(`${e}`);
     }
   } else {
-    throw new Error("Must use physical device for push notifications");
+    throw new Error("Debe usar un dispositivo físico para las notificaciones push");
   }
 }

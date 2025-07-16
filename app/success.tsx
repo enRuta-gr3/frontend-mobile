@@ -118,7 +118,6 @@ const handleDescargarPDF = async () => {
     const localPath = FileSystem.documentDirectory + `pasajes_${fechaHora}.pdf`;
 
     await FileSystem.copyAsync({ from: uri, to: localPath });
-    console.log('PDF guardado en:', localPath);
 
     if (Platform.OS === 'android') {
       await saveToDownloads(localPath, `pasajes_${fechaHora}.pdf`);

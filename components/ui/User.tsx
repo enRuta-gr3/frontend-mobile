@@ -49,13 +49,13 @@ export default function UserScreen() {
 
       <TouchableOpacity style={styles.linkBox} onPress={() => router.push('/(tabs)/usuario/ticketHistory')}>
         <FontAwesome5 name="ticket-alt" size={24} color="#f97316" style={styles.icon} />
-        <Text style={styles.linkText}>Historial de pasajes</Text>
+        <Text style={styles.linkText}>Mis pasajes</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.linkBox} onPress={() => router.push('/(tabs)/usuario/editProfileP')}>
         <MaterialIcons name="person-outline" size={24} color="#f97316" style={styles.icon} />
-        <Text style={styles.linkText}>Modificar perfil</Text>
-      </TouchableOpacity> 
+        <Text style={styles.linkText}>Mis datos</Text>
+      </TouchableOpacity>
 
       </View></>
   );

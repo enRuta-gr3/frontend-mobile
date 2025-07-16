@@ -36,9 +36,7 @@ export interface TicketHistoryItem {
 }
 export async function getHistoryTicket(userId: string) {
   try {
-   
-    //alert('Cargando historial de pasajes...'+ userId);
-    const response = await axios.post<TicketHistoryResponse>(
+       const response = await axios.post<TicketHistoryResponse>(
       'https://backend-production-2812f.up.railway.app/api/pasajes/solicitarHistorialPasajes',
       { uuidAuth: userId },
       { headers: { 'Content-Type': 'application/json' } }
