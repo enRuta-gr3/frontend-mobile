@@ -1,18 +1,15 @@
+import { listarLocalidades } from '@/controllers/listLocalidades';
 import StyleRuta from '@/hooks/styles';
+import { Localidad } from '@/interface/type';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
 import React, { useState } from 'react';
-import { ActivityIndicator, Alert, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, Modal, StyleSheet, Text, TextInput, TouchableOpacity, useColorScheme, View } from 'react-native';
 import searchTravel from '../../controllers/search';
-
-import { listarLocalidades } from '@/controllers/listLocalidades';
-import { Localidad } from '@/interface/type';
 
  
 
 export default function SearchScreen() {
-
-
   const buscar = new searchTravel();
   const [tipoViaje, setTipoViaje] = useState<'ida' | 'ida-vuelta'>('ida');
   const [origen, setOrigen] = useState<{ id: number; nombre: string } | null>(null);
@@ -28,6 +25,9 @@ export default function SearchScreen() {
 
   const [localidades, setLocalidades] = useState<Localidad[]>([]);
   const [loadingLocalidades, setLoadingLocalidades] = useState(true);
+  
+    const scheme = useColorScheme(); 
+    const isDark = scheme === 'dark';
   
   React.useEffect(() => {
   const fetchLocalidades = async () => {
@@ -45,9 +45,8 @@ export default function SearchScreen() {
       );
       const sortedData = Object.keys(grouped)
         .sort((a, b) => a.localeCompare(b))
-        .flatMap((depto) => grouped[depto]);
-      setLocalidades(sortedData);
- 
+        .flatMap((depto) => grouped[depto]);  //orden de ls localidad - dptos
+      setLocalidades(sortedData); 
 
     } catch (err) {
       Alert.alert('Error', 'No se pudieron cargar las localidades', [ {text: "Aceptar"} ]);
@@ -55,7 +54,6 @@ export default function SearchScreen() {
       setLoadingLocalidades(false);
     }
   };
-
     fetchLocalidades();
   }, []);
 
@@ -97,8 +95,6 @@ export default function SearchScreen() {
       setPasajes(pasajes.toString());
     }
   }
- 
-
   const handleDateChange = (event: any, selectedDate?: Date) => {
     if (selectedDate) {
       setDate(selectedDate);
@@ -126,7 +122,6 @@ export default function SearchScreen() {
      ndate.setDate(ndate.getDate() + 0)
      return ndate;
   }
-  
   return (
       <><Modal transparent={true} visible={loadingLocalidades} animationType="fade">
       <View style={styles.loadingOverlay}>
@@ -141,21 +136,19 @@ export default function SearchScreen() {
         <Text style={styles.title}>
           Tu viaje <Text style={styles.highlight}>comienza aquí</Text>
         </Text>
-
-        <View style={styles.radioGroup}>
+       <View style={styles.radioGroup}>
           {['ida', 'ida-vuelta'].map((tipo) => (
             <TouchableOpacity
               key={tipo}
               style={styles.radioContainer}
-              onPress={() => setTipoViaje(tipo as 'ida' | 'ida-vuelta')}
-            >
+              onPress={() => setTipoViaje(tipo as 'ida' | 'ida-vuelta')}>
               <View style={[styles.radioCircle, tipoViaje === tipo && styles.selectedRadio]} />
               <Text style={styles.radioText}>{tipo === 'ida' ? 'Ida' : 'Ida y vuelta'}</Text>
             </TouchableOpacity>
           ))}
         </View>
-       <View style={styles.pickerContainerInput}>
-            <Picker
+        <View style={styles.pickerContainerInput}>
+          <Picker
               selectedValue={origen ? JSON.stringify(origen) : ''}
               onValueChange={(value) => {
                 if (value) {
@@ -165,7 +158,7 @@ export default function SearchScreen() {
                   setOrigen(null);
                 }
               } }>
-              <Picker.Item label="¿Desde dónde viajas?" value="" />
+             <Picker.Item label="Buscar origen" value="" />
               {(() => {
                 let lastDepto = '';
                 return localidades.map((loc, idx) => {
@@ -191,6 +184,7 @@ export default function SearchScreen() {
               })()}
             </Picker>
         </View>
+     
           <View style={styles.pickerContainerInput}>
         <Picker 
           selectedValue={destino ? JSON.stringify(destino) : ''}
@@ -203,7 +197,8 @@ export default function SearchScreen() {
             }
           } }
         >
-          <Picker.Item label="¿Desde dónde viajas?" value="" />
+          
+          <Picker.Item label="Buscar destino" value="" />
               {(() => {
                 let lastDepto = '';
                 return localidades.map((loc, idx) => {
@@ -229,15 +224,14 @@ export default function SearchScreen() {
               })()}
         </Picker>
         </View>
-
+        <Text style={styles.hint}>Fecha viaje ida</Text>
         {/*fecha de viaje ida */}
         <TextInput
           style={styles.input}
           placeholder="Fecha de viaje (dd/mm/aaaa)"
           value={fecha}
           onFocus={() => setShow(true)} />
-
-        {show && (
+          {show && (
           <DateTimePicker
             value={date}
             mode="date"
@@ -246,10 +240,12 @@ export default function SearchScreen() {
             locale="es-ES"
             minimumDate={new Date()} />
         )}
-
+        
         {/* fecha de viaje vuelta*/}
         {tipoViaje === 'ida-vuelta' && (
+          
           <View>
+            <Text style={styles.hint}>Fecha viaje vuelta</Text>
             <TextInput
               style={styles.input}
               placeholder="Fecha de regreso (dd/mm/aaaa)"
@@ -269,7 +265,7 @@ export default function SearchScreen() {
           </View>
         )}
 
-        
+        <Text style={styles.hint}>Cantidad de pasajes</Text>
           <View style={styles.pickerContainer}>
               <Picker selectedValue={pasajes}  onValueChange={(itemValue) => setPasajes(itemValue)} style={styles.picker2}>
                 <Picker.Item label="1" value="1" />
@@ -289,6 +285,12 @@ export default function SearchScreen() {
 }
 
 const styles = StyleSheet.create({
+   hint: {
+    fontSize: 12,
+    color: "#000",
+    marginBottom: 8,
+    fontStyle: "italic"
+  },
   container: {
     padding: 20,
   },

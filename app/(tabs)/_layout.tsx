@@ -33,7 +33,7 @@ export default function TabLayout() {
       <Tabs.Screen
       name="logout"      
       options={{
-        href:"./logout",
+        href: "/logout",
         title: 'Cerrar sesión',
         tabBarIcon: ({ color, size }) => (<FontAwesome5 name="window-close" size={size} color={color} /> ),
       }}

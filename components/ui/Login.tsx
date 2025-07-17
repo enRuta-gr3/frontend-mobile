@@ -17,7 +17,7 @@ type Props = {
   password: string;
   setPassword: (password: string) => void;
   onLogin: () => void;
-   loading: boolean;
+  loading: boolean;
 };
 
 export default function LoginLayout({ email, setEmail, password, setPassword, onLogin }: Props) {

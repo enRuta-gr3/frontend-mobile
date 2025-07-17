@@ -3,8 +3,6 @@ import { TripItem } from '@/interface/type';
 import React from 'react';
 import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View, useColorScheme } from 'react-native';
 
-
-
 const TripResultItem: React.FC<TripItem> = ({
   fecha_partida,
   fecha_llegada,
@@ -22,11 +20,9 @@ const TripResultItem: React.FC<TripItem> = ({
   return (
  <SafeAreaView style={{ flex: 1 }}>
     <View style={styles.card}> 
-
-        <View style={[{justifyContent: 'space-between', alignItems: 'flex-end', borderBottomColor: 'green', borderBottomWidth: 1}]}>        
+       <View style={[{justifyContent: 'space-between', alignItems: 'flex-end', borderBottomColor: 'green', borderBottomWidth: 1}]}>        
              <Text style={[styles.empresa, estado === 'ABIERTO' ? styles.estadoAbierto : styles.estadoCerrado]}>{estado}</Text>
-            
-      </View>
+       </View>
        <View style={[styles.row, {paddingTop: 10}]}>        
         <Text style={styles.details}>Partida</Text>
         <Text style={styles.details}>Llegada</Text> 

@@ -172,7 +172,7 @@ export default function EditProfile() {
                 cedula={cedula}
                 setCedula={setCedula}
                 onSignup={clickSignup} error={''} descuento={''} setDescuento={function (value: string): void {
-              throw new Error('Function not implemented.');
+              throw new Error('Hay errores');
             } }               
                  />
             

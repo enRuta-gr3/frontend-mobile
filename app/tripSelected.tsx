@@ -43,7 +43,6 @@ const ResumenSeleccion: React.FC = () => {
           Alert.alert('Error', res.data.message || 'No se pudo calcular la venta.');
         }
       } catch (error) {
-        console.error('Error en calcularVenta:', error);
         Alert.alert('Error', 'No se pudo conectar con el servidor.');
       } finally {
         setLoading(false);

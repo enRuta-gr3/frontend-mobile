@@ -9,8 +9,6 @@ export default function PaypalWebView() {
   const { urlPaypal } = useLocalSearchParams();
   const webviewRef = useRef(null);
 
-  console.log('URL de PayPal:', urlPaypal);
-
     const handleNavigationStateChange = (navState: { url: string }) => {
     if (navState.url.startsWith('enruta://success')) {
       router.replace('/success');

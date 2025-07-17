@@ -26,7 +26,7 @@ const SeatSelector: React.FC<Props> = ({ viaje, etapa, tipoViaje, pasajes, fecha
   const [mensaje, setMensaje] = useState('Cargando asientos....');
   const [isSaving, setIsSaving] = useState(false);
 
-  const scheme = useColorScheme(); // puede ser 'light' o 'dark'
+  const scheme = useColorScheme(); 
   const isDark = scheme === 'dark';
 
   const cargarAsientos = async () => {
@@ -47,8 +47,6 @@ const SeatSelector: React.FC<Props> = ({ viaje, etapa, tipoViaje, pasajes, fecha
     setLoading(false);
   }
 };
-
-  
 
   const toggleAsiento = (item: AsientoData) => {
     if (isSaving || item.estado !== 'LIBRE') return;

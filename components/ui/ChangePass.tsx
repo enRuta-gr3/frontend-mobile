@@ -1,13 +1,11 @@
 import { changePass } from '@/controllers/changePassSer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
-import * as SystemUI from 'expo-system-ui';
 import React, { useEffect, useState } from "react";
-import { GestureResponderEvent, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, GestureResponderEvent, Modal, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ChangePass() {
-  SystemUI.setBackgroundColorAsync('#ffffff');
   
    const [documento, setDocumento] = useState<string>('');
    const [password, setPassword] = useState<string>('');
@@ -15,6 +13,7 @@ export default function ChangePass() {
    const [password2, setPassword2] = useState<string>('');
    const [mensajeError, setmensajeError] = useState<string>('');
    const [mensajeOK, setmensajeOK] = useState<string>('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const cargarDoc = async () => {
@@ -26,34 +25,43 @@ export default function ChangePass() {
 
   function limpiarCampos() {
       setPasswordback('');
-      setPassword('');
+      setPassword(''); 
       setPassword2('');
     }
 
 
  const clinkEdit = async (event: GestureResponderEvent) => {
   event.preventDefault();
+  setLoading(true);
   if (!password || !password2 || !passwordback) {
+    setLoading(false);
     setmensajeError('Por favor complete todos los campos');
     setTimeout(() => setmensajeError(''), 5000);
+    
     return;
   }
 
  if (password !== password2) {
    setmensajeError('Las contraseñas no coinciden');
+    setLoading(false);
+
    setTimeout(() => setmensajeError(''), 5000);
     return;
   } 
 
   if (password.length < 8 || password.length > 20) {
+    setLoading(false);
+
     setmensajeError('La contraseña debe tener entre 8 y 20 caracteres');
     setTimeout(() => setmensajeError(''), 5000);
     return;
   }
 
   if (documento.includes('@')) {
+   
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(documento)) {
+       setLoading(false);
       setmensajeError('El correo electrónico no es válido');
         setTimeout(() => setmensajeError(''), 5000);
       return;
@@ -61,6 +69,7 @@ export default function ChangePass() {
   } else {
     const ciRegex = /^\d{6,8}$/; 
     if (!ciRegex.test(documento)) {
+       setLoading(false);
       setmensajeError('El número de documento no es válido');
         setTimeout(() => setmensajeError(''), 5000);
       return;
@@ -69,22 +78,36 @@ export default function ChangePass() {
   try {
     const res = await changePass(documento, passwordback, password);  
     if (res.success){
+       setLoading(false);
         setmensajeOK('La contraseña se actualizo correctamente');
         limpiarCampos();
         setTimeout(() => setmensajeOK(''), 5000);
      }else{
+       setLoading(false);
        setmensajeError('Error 01 - Credenciales incorrectas');
          setTimeout(() => setmensajeError(''), 5000);
      }
 
-  } catch (error) {    
+  } catch (error) {  
+    setLoading(false);  
     setmensajeError('Consulte con soporte ' + String(error));
     setTimeout(() => setmensajeError(''), 5000);
   }
 };
 
+  
+
   return (
     <SafeAreaView edges={['bottom']} style={{ flex: 1}}>
+        <Modal transparent={true} visible={loading} animationType="fade">
+                <View style={styles.loadingOverlay}>
+                  <View style={styles.loadingBox}>
+                    <ActivityIndicator size="large" color="#fff" />
+                    <Text style={styles.loadingText}>Actualiando contraseña...</Text>
+                  </View>
+                </View>
+              </Modal>
+      
       <ScrollView >
       <View style={styles.btncontainer}>
           {mensajeOK !== '' && (
@@ -222,6 +245,24 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
   },
+  loadingOverlay: {
+  flex: 1,
+  backgroundColor: 'rgba(0,0,0,0.6)',
+  justifyContent: 'center',
+  alignItems: 'center',
+  zIndex: 999,
+},
+loadingBox: {
+  padding: 20,
+  backgroundColor: '#333',
+  borderRadius: 10,
+  alignItems: 'center',
+},
+loadingText: {
+  marginTop: 10,
+  color: '#fff',
+  fontSize: 16,
+},
 });
 
 

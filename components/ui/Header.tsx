@@ -4,8 +4,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 export default function Header() {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
-
-
     const logoLight = require('@/assets/images/logo.jpg');
     const logoDark = require('@/assets/images/logo_oscuro.png');
   
