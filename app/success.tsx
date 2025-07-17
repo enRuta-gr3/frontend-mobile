@@ -101,11 +101,11 @@ const handleDescargarPDF = async () => {
               <div class="info"><strong>Destino:</strong> ${p.viaje.localidadDestino.nombreLocalidad}</div>
               <div class="info"><strong>Salida:</strong> ${p.viaje.fecha_partida} - ${p.viaje.hora_partida}</div>
               <div class="info"><strong>Asiento:</strong> ${p.asiento.numero_asiento}</div>
-              <div class="info"><strong>Precio:</strong> $${Math.round(p.montoPago)}</div>
+              <div class="info"><strong>Precio:</strong> $${Math.round(p.precio)}</div>
             </div>
           `).join('')}
           <div class="card">
-            <h2>Total Pagado: $${Math.round(pasajesConfirmados.reduce((acc, p) => acc + Number(p.montoPago), 0))}</h2>
+            <h2>Total Pagado: $${Math.round(pasajesConfirmados.reduce((acc, p) => acc + Number(p.precio), 0))}</h2>
         </body>
       </html>
     `;
@@ -227,7 +227,7 @@ const handleDescargarPDF = async () => {
                       <Text style={styles.cardItem}><Text style={styles.cardLabel}>Horarios:</Text> </Text>
                       <Text style={styles.cardItem}>Salida: {p.viaje.fecha_partida} {p.viaje.hora_partida} </Text>
                       <Text style={styles.cardItem}>Llegada: {p.viaje.fecha_llegada} {p.viaje.hora_llegada}</Text>
-                      <Text style={styles.cardItem}><Text style={styles.cardLabel}>Precio:</Text>  <Text style={{ textAlign: 'right', color: '#f60' }}>${Math.round(p.montoPago)}</Text></Text>
+                      <Text style={styles.cardItem}><Text style={styles.cardLabel}>Precio:</Text>  <Text style={{ textAlign: 'right', color: '#f60' }}>${Math.round(p.precio)}</Text></Text>
                      
                      
                     </View>
@@ -235,7 +235,7 @@ const handleDescargarPDF = async () => {
 
                   <View style={[{ borderTopColor: '#f60', borderTopWidth: 1, paddingTop: 10, marginTop: 20 }]}>
                     <Text style={styles.cardItem}><Text style={styles.cardLabel}>Nro. de venta:</Text> {id_venta_}</Text>
-                    <Text style={[styles.cardItem, { fontSize: 16, fontWeight: 'bold', color: '#f60' }]}>Monto total: $  {Math.round(pasajesConfirmados.reduce((acc, p) => acc + Number(p.montoPago), 0))}</Text>
+                    <Text style={[styles.cardItem, { fontSize: 16, fontWeight: 'bold', color: '#f60' }]}>Monto total: $  {Math.round(pasajesConfirmados.reduce((acc, p) => acc + Number(p.precio), 0))}</Text>
                   </View>
                     
                  <View style={{ marginTop: 25}}>
